@@ -13,7 +13,7 @@ const config = defineConfig({
     viteTsConfigPaths({ projects: ["./tsconfig.json"] }),
     tailwindcss(),
     tanstackStart(),
-    viteReact(),
+    viteReact({ babel: { plugins: [["babel-plugin-react-compiler"]] } }),
   ],
 });
 

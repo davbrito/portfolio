@@ -1,8 +1,15 @@
 import { redirect } from "@tanstack/react-router";
-import { createMiddleware } from "@tanstack/react-start";
+import { createMiddleware, createServerOnlyFn } from "@tanstack/react-start";
 import { getSessionCookie } from "better-auth/cookies";
 import { auth } from "../auth";
 import { verifyAdminToken } from "./admin-secret";
+
+const getSession = createServerOnlyFn((headers: Headers) => {
+  return auth.api.getSession({ headers }).catch((error) => {
+    console.error(error);
+    return null;
+  });
+});
 
 export const softPrivateMiddleware = createMiddleware().server(
   async ({ next, request }) => {
@@ -21,9 +28,11 @@ export const softPrivateMiddleware = createMiddleware().server(
 
 const sessionMiddleware = createMiddleware().server(
   async ({ next, request }) => {
-    const session = await auth.api.getSession({
-      headers: request.headers,
-    });
+    const session = await getSession(request.headers);
+    if (session && "error" in session) {
+      console.error("Failed to get session:", session.error);
+      return await next({ context: { session: null } });
+    }
 
     return await next({ context: { session } });
   },
