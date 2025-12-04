@@ -15,6 +15,11 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1",
       },
       {
+        name: "icon",
+        href: "/favicon.png",
+        type: "image/png",
+      },
+      {
         title: "Portfolio",
       },
     ],
