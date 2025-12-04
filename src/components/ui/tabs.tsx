@@ -13,9 +13,9 @@ export type TabsProps = HTMLAttributes<HTMLDivElement> & {
   defaultSelectedId?: string;
 };
 
-const tabsClass = cva("flex gap-2");
+const tabsListClass = cva("bg-border flex gap-0.5 p-0.5");
 const tabClass = cva(
-  "px-3 py-2 text-sm rounded-md border border-border bg-popover text-popover-foreground",
+  "border-border bg-card text-popover-foreground aria-selected:text-primary-foreground aria-selected:bg-primary hover:bg-card/80 flex-1 px-3 py-2 text-sm [&>svg]:mr-2 [&>svg]:inline-block",
 );
 
 export function Tabs({
@@ -27,7 +27,7 @@ export function Tabs({
   const store = useTabStore({ defaultSelectedId });
   return (
     <TabProvider store={store}>
-      <div className={cn(tabsClass(), className)} {...props}>
+      <div className={cn(className)} {...props}>
         {children}
       </div>
     </TabProvider>
@@ -39,7 +39,7 @@ export type TabListProps = HTMLAttributes<HTMLDivElement> & {
 };
 export function TabList({ className, children, ...props }: TabListProps) {
   return (
-    <AriakitTabList className={cn(tabsClass(), className)} {...props}>
+    <AriakitTabList className={cn(tabsListClass(), className)} {...props}>
       {children}
     </AriakitTabList>
   );
@@ -62,14 +62,7 @@ export function TabPanel({
   ...props
 }: TabPanelProps) {
   return (
-    <AriakitTabPanel
-      className={cn(
-        "bg-card text-card-foreground border border-border rounded-lg shadow-sm p-4",
-        className,
-      )}
-      tabId={tabId}
-      {...props}
-    >
+    <AriakitTabPanel className={cn(className)} tabId={tabId} {...props}>
       {children}
     </AriakitTabPanel>
   );

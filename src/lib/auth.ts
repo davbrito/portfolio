@@ -2,6 +2,7 @@ import { passkey } from "@better-auth/passkey";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { APIError } from "better-auth/api";
+import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { verifyAdminToken } from "./auth/admin-secret";
 import { db } from "./db";
 
@@ -11,7 +12,7 @@ export const auth = betterAuth({
     transaction: true,
     usePlural: true,
   }),
-  plugins: [passkey()],
+  plugins: [passkey(), tanstackStartCookies()],
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,

@@ -1,4 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequestHeaders } from "@tanstack/react-start/server";
+import { auth } from "../auth";
 import { getAdminSecretHash } from "./admin-secret";
 
 export const createAdminSetupLink = createServerFn({ method: "POST" }).handler(
@@ -19,3 +21,8 @@ export const createAdminSetupLink = createServerFn({ method: "POST" }).handler(
     return { success: true };
   },
 );
+
+export const listPasskeys = createServerFn({ method: "GET" }).handler(() => {
+  const headers = getRequestHeaders();
+  return auth.api.listPasskeys({ headers });
+});

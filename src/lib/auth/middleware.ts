@@ -1,6 +1,5 @@
 import { redirect } from "@tanstack/react-router";
 import { createMiddleware, createServerOnlyFn } from "@tanstack/react-start";
-import { getSessionCookie } from "better-auth/cookies";
 import { auth } from "../auth";
 import { verifyAdminToken } from "./admin-secret";
 
@@ -10,21 +9,6 @@ const getSession = createServerOnlyFn((headers: Headers) => {
     return null;
   });
 });
-
-export const softPrivateMiddleware = createMiddleware().server(
-  async ({ next, request }) => {
-    const hasSessionCookie = !!getSessionCookie(request);
-
-    if (!hasSessionCookie) {
-      throw redirect({
-        to: "/admin/login",
-        search: { redirect: request.url },
-      });
-    }
-
-    return next();
-  },
-);
 
 const sessionMiddleware = createMiddleware().server(
   async ({ next, request }) => {
