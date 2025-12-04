@@ -1,4 +1,4 @@
-import AdminLoginPage from "@/components/pages/admin-login";
+import AdminLoginPage from "@/components/pages/admin/login";
 import { publicOnlyMiddleware } from "@/lib/auth/middleware";
 import { createFileRoute } from "@tanstack/react-router";
 
