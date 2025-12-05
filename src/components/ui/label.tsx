@@ -1,48 +1,22 @@
-import type { LabelHTMLAttributes, ReactNode } from "react";
-import { cn } from "../../lib/utils";
-import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react"
+import * as LabelPrimitive from "@radix-ui/react-label"
 
-const labelVariants = cva("inline-block", {
-  variants: {
-    size: {
-      xs: "text-xs",
-      sm: "text-sm",
-    },
-    tone: {
-      default: "text-foreground",
-      muted: "text-muted-foreground",
-    },
-    casing: {
-      normal: "",
-      uppercase: "tracking-wider uppercase",
-    },
-  },
-  defaultVariants: {
-    size: "xs",
-    tone: "muted",
-    casing: "uppercase",
-  },
-});
+import { cn } from "@/lib/utils"
 
-export type LabelProps = LabelHTMLAttributes<HTMLLabelElement> &
-  VariantProps<typeof labelVariants> & {
-    children?: ReactNode;
-  };
-
-export function Label({
+function Label({
   className,
-  size,
-  tone,
-  casing,
-  children,
   ...props
-}: LabelProps) {
+}: React.ComponentProps<typeof LabelPrimitive.Root>) {
   return (
-    <label
-      className={cn(labelVariants({ size, tone, casing }), className)}
+    <LabelPrimitive.Root
+      data-slot="label"
+      className={cn(
+        "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
+        className
+      )}
       {...props}
-    >
-      {children}
-    </label>
-  );
+    />
+  )
 }
+
+export { Label }

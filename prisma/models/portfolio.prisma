@@ -1,0 +1,13 @@
+model Profile {
+  userId          String   @id
+  user            Users    @relation(fields: [userId], references: [id])
+  name            String?
+  bio             String?
+  location        String?
+  experience      String?
+  description     String?
+  brief           String?
+  aboutImage      String?
+  aboutImageAlt   String?
+  aboutParagraphs String[]
+}

@@ -1,5 +1,12 @@
 {
-  "plugins": ["prettier-plugin-tailwindcss"],
-
-  "tailwindFunctions": ["clsx", "cn", "cva"]
+  "plugins": ["prettier-plugin-astro", "prettier-plugin-tailwindcss"],
+  "tailwindFunctions": ["clsx", "cn", "cva"],
+  "overrides": [
+    {
+      "files": "*.astro",
+      "options": {
+        "parser": "astro"
+      }
+    }
+  ]
 }

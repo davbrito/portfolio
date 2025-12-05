@@ -1,0 +1,15 @@
+---
+import AdminPage from "@/components/admin/admin-page";
+import AdminLayout from "@/layout/admin-layout.astro";
+
+export const prerender = false;
+
+if (!Astro.locals.session) {
+  console.log("no session, redirecting to /auth/sign-in");
+  return Astro.redirect("/auth/sign-in");
+}
+---
+
+<AdminLayout title="Admin Page">
+  <AdminPage client:load />
+</AdminLayout>

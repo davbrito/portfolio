@@ -3,21 +3,11 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signUp } from "@/lib/auth-client";
-import { adminTokenMiddleware } from "@/lib/auth/middleware";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { Eye, EyeOff, TerminalIcon } from "lucide-react";
 import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-export const Route = createFileRoute("/admin_/setup")({
-  server: { middleware: [adminTokenMiddleware] },
-  component: AdminSetup,
-  validateSearch: z.object({
-    token: z.string().nonempty(),
-  }),
-});
 
 const schema = z.object({
   name: z.string({ error: "El nombre es requerido" }),
@@ -27,10 +17,9 @@ const schema = z.object({
     .min(8, { error: "La contraseña debe tener al menos 8 caracteres" }),
 });
 
-function AdminSetup() {
+export default function AdminSetup({ token }: { token: string }) {
   const formId = useId();
-  const navigate = Route.useNavigate();
-  const { token } = Route.useSearch();
+
   const [showPassword, setShowPassword] = useState(false);
 
   async function submit(data: z.infer<typeof schema>) {
@@ -41,7 +30,7 @@ function AdminSetup() {
       fetchOptions: {
         throw: false,
         headers: {
-          "x-admin-token": token,
+          "x-admin-token": token!,
         },
       },
     });
@@ -56,7 +45,8 @@ function AdminSetup() {
       });
     }
 
-    navigate({ to: "/admin/login" });
+    // eslint-disable-next-line react-hooks/immutability
+    window.location.href = "/auth/sign-in";
   }
 
   const form = useForm({
@@ -164,11 +154,11 @@ function AdminSetup() {
           </form>
           <Button
             variant="link"
-            render={<Link to="/admin/login" />}
+            asChild
             size="sm"
             className="mx-auto mt-2 block w-fit"
           >
-            Volver al Inicio de Sesión
+            <a href="/auth/sign-in">Volver al Inicio de Sesión</a>
           </Button>
         </CardContent>
       </Card>

@@ -9,6 +9,7 @@ model Users {
   sessions      Sessions[]
   accounts      Accounts[]
   passkeys      Passkeys[]
+  profiles      Profile?
 
   @@unique([email])
   @@map("users")

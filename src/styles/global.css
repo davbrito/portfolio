@@ -1,0 +1,62 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@daveyplate/better-auth-ui/css";
+
+@import "@fontsource-variable/jetbrains-mono";
+@import "@fontsource-variable/inter";
+
+@import "./base.css";
+
+/* @custom-variant dark (&:is(.dark *)); */
+/* @custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    @slot;
+  }
+} */
+
+/* Dark developer portfolio theme - teal accent on dark blue-gray background */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply h-full scroll-pt-24 scroll-smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground m-0 flex min-h-full flex-col font-mono antialiased scheme-dark;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+/* Selection */
+::selection {
+  background: color-mix(in oklch, var(--primary) 30%, transparent);
+  color: var(--foreground);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:first-line {
+  font-size: initial;
+  line-height: inherit;
+  /* font-family: font name; */
+}

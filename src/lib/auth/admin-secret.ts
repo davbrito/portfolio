@@ -1,7 +1,8 @@
+import { ADMIN_SECRET } from "astro:env/server";
 import { createHash, timingSafeEqual } from "node:crypto";
 
 export function getAdminSecretHash() {
-  const secret = process.env.ADMIN_SECRET;
+  const secret = ADMIN_SECRET;
   if (!secret) {
     throw new Error("ADMIN_SECRET env variable is not set");
   }

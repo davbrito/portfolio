@@ -1,9 +1,10 @@
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../../generated/prisma/client";
+import { PrismaNeon } from "@prisma/adapter-neon";
+import { DATABASE_URL } from "astro:env/server";
+import { PrismaClient } from "../../prisma/generated/client";
 
-const connectionString = `${process.env.DATABASE_URL}`;
+const connectionString = `${DATABASE_URL}`;
 
-const adapter = new PrismaPg({ connectionString });
+const adapter = new PrismaNeon({ connectionString });
 const db = new PrismaClient({ adapter });
 
 export { db };

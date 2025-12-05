@@ -21,6 +21,15 @@ export default defineConfig([
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/consistent-type-imports": "warn",
+      "react/jsx-no-leaked-render": "warn",
+    },
+  },
+  {
+    name: "shadcnui components",
+    files: ["src/components/ui/**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/consistent-type-imports": "off",
     },
   },
 ]);

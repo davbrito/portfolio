@@ -8,5 +8,8 @@
   "files.readonlyInclude": {
     "**/routeTree.gen.ts": true
   },
-  "tailwindCSS.classFunctions": ["cva", "cx"]
+  "tailwindCSS.classFunctions": ["cva", "cn", "clsx"],
+  "[astro]": {
+    "editor.formatOnSave": true
+  }
 }

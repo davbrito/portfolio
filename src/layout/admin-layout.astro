@@ -1,0 +1,17 @@
+---
+import { AdminHeader } from "@/components/admin/admin-header";
+import SiteLayout from "./site-layout.astro";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<SiteLayout title={title}>
+  <AdminHeader client:load />
+  <main class="mx-auto w-full max-w-6xl px-6 py-8">
+    <slot />
+  </main>
+</SiteLayout>

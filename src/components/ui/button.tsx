@@ -1,53 +1,62 @@
-import {
-  Button as BaseButton,
-  ButtonProps as BaseButtonProps,
-} from "@ariakit/react";
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+
+import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "focus-visible:ring-ring inline-flex items-center justify-center gap-2 border-2 px-4 py-2 text-sm font-medium transition-colors select-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50",
+  "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive inline-flex shrink-0 items-center justify-center gap-2 text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        default:
-          "bg-secondary text-secondary-foreground border-border enabled:hover:brightness-120",
-        primary:
-          "bg-primary text-primary-foreground border-transparent enabled:hover:brightness-120",
-        outline: "text-foreground border-border hover:bg-muted bg-transparent",
-        ghost:
-          "text-foreground hover:bg-primary hover:text-primary-foreground border-0 bg-transparent",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
         destructive:
-          "text-destructive border-destructive hover:bg-destructive/10 bg-transparent font-medium",
-        link: "text-primary border-0 bg-transparent underline-offset-4 hover:underline",
+          "bg-destructive hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 text-white",
+        outline:
+          "bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 dark:hover:text-accent border shadow-xs",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost:
+          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+        link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        sm: "px-3 py-1.5 text-xs",
-        md: "",
-        lg: "px-5 py-3 text-base",
+        default: "h-9 px-4 py-2 has-[>svg]:px-3",
+        sm: "h-8 gap-1.5 px-3 has-[>svg]:px-2.5",
+        lg: "h-10 px-6 has-[>svg]:px-4",
+        icon: "size-9",
+        "icon-sm": "size-8",
+        "icon-lg": "size-10",
       },
     },
     defaultVariants: {
       variant: "default",
-      size: "md",
+      size: "default",
     },
   },
 );
 
-export interface ButtonProps
-  extends BaseButtonProps, VariantProps<typeof buttonVariants> {}
-
-export function Button({
-  variant = "default",
-  size = "md",
+function Button({
   className,
+  variant = "default",
+  size = "default",
+  asChild = false,
   ...props
-}: ButtonProps) {
+}: React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+  }) {
+  const Comp = asChild ? Slot : "button";
+
   return (
-    <BaseButton
-      type="button"
-      className={cn(buttonVariants({ variant, size }), className)}
+    <Comp
+      data-slot="button"
+      data-variant={variant}
+      data-size={size}
+      className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />
   );
 }
+
+export { Button, buttonVariants };

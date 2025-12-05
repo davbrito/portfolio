@@ -1,21 +1,23 @@
 {
-  "include": ["**/*.ts", "**/*.tsx"],
+  "extends": "astro/tsconfigs/strict",
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.astro",
+    "${configDir}/.astro/types.d.ts"
+  ],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "module": "ESNext",
     "lib": ["ES2024", "DOM", "DOM.Iterable", "ESNext.Iterator"],
-    "types": ["vite/client"],
-
-    /* Bundler mode */
+    "types": ["astro/client"],
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": false,
+    "verbatimModuleSyntax": true,
     "noEmit": true,
-
-    /* Linting */
     "skipLibCheck": true,
-    "strict": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
