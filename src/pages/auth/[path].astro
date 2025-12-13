@@ -1,14 +1,26 @@
 ---
 import AuthPage from "@/components/pages/auth";
 import SiteLayout from "@/layout/site-layout.astro";
+import { authViewPaths } from "@daveyplate/better-auth-ui";
+import type { GetStaticPathsItem, GetStaticPathsResult } from "astro";
 
 export const prerender = false;
+
+export function getStaticPaths(): GetStaticPathsResult {
+  return Object.values(authViewPaths).map(
+    (path): GetStaticPathsItem => ({
+      params: { path },
+    }),
+  );
+}
+
+const path = Astro.params.path as string;
 
 // if (Astro.locals.session) {
 //   return Astro.redirect("/admin");
 // }
 ---
 
-<SiteLayout>
-  <AuthPage client:load path={Astro.params.path!} />
+<SiteLayout title="Admin">
+  <AuthPage client:load path={path} />
 </SiteLayout>
