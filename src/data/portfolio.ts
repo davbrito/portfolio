@@ -8,7 +8,7 @@ export interface ExperienceData {
 }
 
 export const getPortfolioData = async () =>
-  import("./.env.data.ts")
+  import("./" + ".env.data.ts")
     .then((module) => module.data)
     .catch((): typeof import("./.env.data.ts").data => ({
       socialLinks: [],
