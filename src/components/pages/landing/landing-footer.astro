@@ -1,0 +1,37 @@
+---
+import type { SocialLink } from "@/data/portfolio";
+
+interface Props {
+  socialLinks: SocialLink[];
+  name: string;
+}
+
+const { socialLinks, name } = Astro.props;
+---
+
+<footer class="text-muted-foreground mt-16 flex flex-col items-center gap-2 pb-6 text-center text-xs">
+  <div class="text-foreground flex items-center gap-4">
+    {
+      socialLinks.map((link) => (
+        <a
+          href={link.href}
+          target="_blank"
+          rel="noreferrer"
+          class="hover:text-primary transition"
+          data-ob={link.obfuscated ? "href" : undefined}
+          data-ob-key={link.obfuscated ? link.obfuscationKey : undefined}
+        >
+          {link.label}
+        </a>
+      ))
+    }
+  </div>
+  <p>
+    Diseñado y desarrollado por{" "}
+    <span class="text-primary">{name}</span>. Hecho con Astro, React y Tailwind CSS.
+  </p>
+  <p class="text-[11px]">
+    © {new Date().getFullYear()}
+    {name}. Todos los derechos reservados.
+  </p>
+</footer>

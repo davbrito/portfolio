@@ -20,7 +20,7 @@ export function FormInputField({
   ...field
 }: React.ComponentProps<typeof Input> & FormFieldProps) {
   const _id = useId();
-  const id = `${_id}-${field.name || "input"}`;
+  const id = field.id || `${_id}-${field.name || "input"}`;
 
   return (
     <Field data-invalid={invalid} className={containerClassName}>
@@ -45,9 +45,7 @@ export function FormTextareaField({
     <Field data-invalid={invalid} className={containerClassName}>
       <FieldLabel htmlFor={id}>{label}</FieldLabel>
       <Textarea {...field} id={id} aria-invalid={invalid} />
-      {field.description ? (
-        <FieldDescription>{field.description}</FieldDescription>
-      ) : null}
+      {field.description ? <FieldDescription>{field.description}</FieldDescription> : null}
       {invalid ? <FieldError errors={[error]} /> : null}
     </Field>
   );

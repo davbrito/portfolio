@@ -52,6 +52,12 @@ export function Hero({ socialLinks, profile }: HeroProps) {
             target="_blank"
             rel="noreferrer"
             className="hover:bg-primary/10 hover:text-primary flex h-10 w-10 items-center justify-center rounded-lg transition"
+            {...(link.obfuscated
+              ? {
+                  "data-ob": link.obfuscationTarget,
+                  "data-ob-key": link.obfuscationKey,
+                }
+              : {})}
           >
             {icons[link.icon]("h-5 w-5")}
           </a>

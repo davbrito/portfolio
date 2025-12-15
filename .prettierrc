@@ -8,5 +8,6 @@
         "parser": "astro"
       }
     }
-  ]
+  ],
+  "printWidth": 120
 }

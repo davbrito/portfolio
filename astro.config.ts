@@ -43,6 +43,18 @@ export default defineConfig({
         context: "server",
         optional: false,
       }),
+
+      // Cloudflare Turnstile
+      CF_TURNSTILE_SITE_KEY: envField.string({
+        access: "public",
+        context: "client",
+        optional: true,
+      }),
+      CF_TURNSTILE_SECRET_KEY: envField.string({
+        access: "secret",
+        context: "server",
+        optional: true,
+      }),
     },
   },
 });

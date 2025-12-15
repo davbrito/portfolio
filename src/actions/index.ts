@@ -1,5 +1,6 @@
 import { getAdminSecretHash } from "@/lib/auth/admin-secret";
 import { ActionError, defineAction } from "astro:actions";
+import { contactFormAction } from "./contact";
 import { profileActions } from "./profile";
 
 export const server = {
@@ -27,4 +28,5 @@ export const server = {
       },
     }),
   },
+  contactForm: contactFormAction,
 };
