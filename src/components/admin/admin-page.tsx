@@ -1,68 +1,112 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import * as tabs from "@/components/ui/tabs";
-import { authUiProps, settingsCardsClassnames } from "@/lib/auth-client";
+import { authUiProps } from "@/lib/auth-client";
+import { QueryProvider } from "@/lib/query";
 import {
   AccountSettingsCards,
   AuthUIProvider,
   SecuritySettingsCards,
+  type SettingsCardClassNames,
 } from "@daveyplate/better-auth-ui";
-import { BarChart3, LockIcon, Settings, UserIcon, Users } from "lucide-react";
+import {
+  BarChart3,
+  IdCard,
+  LockIcon,
+  Settings,
+  UserIcon,
+  Users,
+} from "lucide-react";
+import { Suspense } from "react";
+import { Skeleton } from "../ui/skeleton";
+import { Toaster } from "../ui/sonner";
+import { ProfileSettings } from "./profile-settings";
+
+const settingCardClassnames: SettingsCardClassNames = {
+  // base: "rounded-none",
+  // button: "rounded-none",
+  // // button: buttonVariants(),
+  outlineButton: "hover:text-accent-foreground",
+  // skeleton: "rounded-none",
+  // cell: "rounded-none",
+  // input: "rounded-none",
+  // dialog: {
+  //   content: "rounded-none",
+  // },
+  // footer: "rounded-none",
+};
+
+export const settingsCardsClassnames = {
+  card: settingCardClassnames,
+};
 
 export default function AdminPage() {
   return (
-    <AuthUIProvider {...authUiProps}>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Panel de Control
-          </h1>
-          <p className="text-muted-foreground">
-            Gestiona tu aplicación, usuarios y configuraciones de seguridad.
-          </p>
+    <QueryProvider>
+      <AuthUIProvider {...authUiProps}>
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">
+              Panel de Control
+            </h1>
+            <p className="text-muted-foreground">
+              Gestiona tu aplicación, usuarios y configuraciones de seguridad.
+            </p>
+          </div>
+
+          <tabs.Tabs defaultValue="profile" className="dark flex-col">
+            <tabs.TabsList className="mb-4 w-full flex-wrap *:flex-1">
+              <tabs.TabsTrigger value="profile">
+                <IdCard />
+                Perfil
+              </tabs.TabsTrigger>
+              <tabs.TabsTrigger value="dashboard">
+                <BarChart3 />
+                Resumen
+              </tabs.TabsTrigger>
+              <tabs.TabsTrigger value="users">
+                <Users />
+                Usuarios
+              </tabs.TabsTrigger>
+              <tabs.TabsTrigger value="settings">
+                <Settings />
+                Configuración
+              </tabs.TabsTrigger>
+              <tabs.TabsTrigger value="account">
+                <UserIcon />
+                Cuenta
+              </tabs.TabsTrigger>
+              <tabs.TabsTrigger value="security">
+                <LockIcon />
+                Seguridad
+              </tabs.TabsTrigger>
+            </tabs.TabsList>
+
+            <tabs.TabsContent value="profile">
+              <Suspense fallback={<Skeleton />}>
+                <ProfileSettings />
+              </Suspense>
+            </tabs.TabsContent>
+            <tabs.TabsContent value="dashboard">
+              <DashboardSection />
+            </tabs.TabsContent>
+            <tabs.TabsContent value="users">
+              <UsersSection />
+            </tabs.TabsContent>
+            <tabs.TabsContent value="settings">
+              <SettingsSection />
+            </tabs.TabsContent>
+            <tabs.TabsContent value="account">
+              <AccountSettingsCards classNames={settingsCardsClassnames} />
+            </tabs.TabsContent>
+            <tabs.TabsContent value="security">
+              <SecuritySettingsCards classNames={settingsCardsClassnames} />
+            </tabs.TabsContent>
+          </tabs.Tabs>
         </div>
 
-        <tabs.Tabs defaultValue="dashboard" className="dark flex-col">
-          <tabs.TabsList className="mb-4 w-full flex-wrap *:flex-1">
-            <tabs.TabsTrigger value="dashboard">
-              <BarChart3 />
-              Resumen
-            </tabs.TabsTrigger>
-            <tabs.TabsTrigger value="users">
-              <Users />
-              Usuarios
-            </tabs.TabsTrigger>
-            <tabs.TabsTrigger value="settings">
-              <Settings />
-              Configuración
-            </tabs.TabsTrigger>
-            <tabs.TabsTrigger value="account">
-              <UserIcon />
-              Cuenta
-            </tabs.TabsTrigger>
-            <tabs.TabsTrigger value="security">
-              <LockIcon />
-              Seguridad
-            </tabs.TabsTrigger>
-          </tabs.TabsList>
-
-          <tabs.TabsContent value="dashboard">
-            <DashboardSection />
-          </tabs.TabsContent>
-          <tabs.TabsContent value="users">
-            <UsersSection />
-          </tabs.TabsContent>
-          <tabs.TabsContent value="settings">
-            <SettingsSection />
-          </tabs.TabsContent>
-          <tabs.TabsContent value="account">
-            <AccountSettingsCards classNames={settingsCardsClassnames} />
-          </tabs.TabsContent>
-          <tabs.TabsContent value="security">
-            <SecuritySettingsCards classNames={settingsCardsClassnames} />
-          </tabs.TabsContent>
-        </tabs.Tabs>
-      </div>
-    </AuthUIProvider>
+        <Toaster />
+      </AuthUIProvider>
+    </QueryProvider>
   );
 }
 

@@ -48,21 +48,27 @@ export function AdminHeader() {
           </h1>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" asChild>
-            <a href="/" target="_blank" rel="noreferrer">
-              <HomeIcon />
-              Ver sitio
-            </a>
+          <Button
+            variant="outline"
+            size="sm"
+            nativeButton={false}
+            render={<a href="/" target="_blank" rel="noreferrer" />}
+          >
+            <HomeIcon />
+            Ver sitio
           </Button>
           <Button variant="outline" size="sm" onClick={handleReset}>
             <RotateCcwIcon />
             Reset
           </Button>
-          <Button size="sm" onClick={handleLogout} asChild>
-            <a href="/auth/sign-out">
-              <LogOutIcon />
-              Logout
-            </a>
+          <Button
+            size="sm"
+            onClick={handleLogout}
+            nativeButton={false}
+            render={<a href="/auth/sign-out" />}
+          >
+            <LogOutIcon />
+            Logout
           </Button>
           <AuthUIProvider {...authUiProps}>
             <UserButton

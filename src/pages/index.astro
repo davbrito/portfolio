@@ -13,6 +13,13 @@ import { ArrowDown } from "lucide-react";
 
 const data = await getPortfolioData();
 const { socialLinks, experience, technologies, profile } = data;
+
+if (!profile || !profile.active) {
+  return Response.json(
+    { message: "Profile is not active or not found." },
+    { status: 404 },
+  );
+}
 ---
 
 <SiteLayout title={`${profile.name} - ${profile.title}`}>

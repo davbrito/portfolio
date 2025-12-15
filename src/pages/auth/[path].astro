@@ -4,7 +4,7 @@ import SiteLayout from "@/layout/site-layout.astro";
 import { authViewPaths } from "@daveyplate/better-auth-ui";
 import type { GetStaticPathsItem, GetStaticPathsResult } from "astro";
 
-export const prerender = false;
+export const prerender = true;
 
 export function getStaticPaths(): GetStaticPathsResult {
   return Object.values(authViewPaths).map(
@@ -15,10 +15,6 @@ export function getStaticPaths(): GetStaticPathsResult {
 }
 
 const path = Astro.params.path as string;
-
-// if (Astro.locals.session) {
-//   return Astro.redirect("/admin");
-// }
 ---
 
 <SiteLayout title="Admin">

@@ -1,7 +1,9 @@
 import { getAdminSecretHash } from "@/lib/auth/admin-secret";
 import { ActionError, defineAction } from "astro:actions";
+import { profileActions } from "./profile";
 
 export const server = {
+  profile: profileActions,
   admin: {
     setupLink: defineAction({
       handler() {

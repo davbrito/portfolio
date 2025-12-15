@@ -73,6 +73,26 @@ CREATE TABLE "passkeys" (
     CONSTRAINT "passkeys_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Profile" (
+    "userId" TEXT NOT NULL,
+    "name" TEXT NOT NULL DEFAULT '',
+    "title" TEXT NOT NULL DEFAULT '',
+    "location" TEXT NOT NULL DEFAULT '',
+    "experience" TEXT NOT NULL DEFAULT '',
+    "description" TEXT NOT NULL DEFAULT '',
+    "brief" TEXT NOT NULL DEFAULT '',
+    "aboutImage" TEXT,
+    "aboutImageAlt" TEXT NOT NULL DEFAULT '',
+    "aboutText" TEXT NOT NULL DEFAULT '',
+    "githubUrl" TEXT NOT NULL DEFAULT '',
+    "linkedinUrl" TEXT NOT NULL DEFAULT '',
+    "email" TEXT NOT NULL DEFAULT '',
+    "active" BOOLEAN NOT NULL DEFAULT true,
+
+    CONSTRAINT "Profile_pkey" PRIMARY KEY ("userId")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
@@ -102,3 +122,6 @@ ALTER TABLE "accounts" ADD CONSTRAINT "accounts_userId_fkey" FOREIGN KEY ("userI
 
 -- AddForeignKey
 ALTER TABLE "passkeys" ADD CONSTRAINT "passkeys_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Profile" ADD CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

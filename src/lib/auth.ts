@@ -1,4 +1,5 @@
 import { passkey } from "@better-auth/passkey";
+import { ADMIN_EMAIL } from "astro:env/server";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { APIError } from "better-auth/api";
@@ -34,7 +35,7 @@ export const auth = betterAuth({
             });
           }
 
-          if (user.email !== process.env.ADMIN_EMAIL) {
+          if (user.email !== ADMIN_EMAIL) {
             throw new APIError("UNAUTHORIZED", {
               message: "Only admin user can be created",
             });

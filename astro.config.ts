@@ -33,6 +33,11 @@ export default defineConfig({
         context: "server",
         optional: true,
       }),
+      ADMIN_EMAIL: envField.string({
+        access: "secret",
+        context: "server",
+        optional: false,
+      }),
       DATABASE_URL: envField.string({
         access: "secret",
         context: "server",

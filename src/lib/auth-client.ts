@@ -1,8 +1,5 @@
 import { passkeyClient as passkeyClientPlugin } from "@better-auth/passkey/client";
-import type {
-  AuthUIProviderProps,
-  SettingsCardClassNames,
-} from "@daveyplate/better-auth-ui";
+import type { AuthUIProviderProps } from "@daveyplate/better-auth-ui";
 import { createAuthClient } from "better-auth/react";
 
 export const authClient = createAuthClient({
@@ -30,21 +27,4 @@ export const authUiProps: Omit<AuthUIProviderProps, "children"> = {
       (window as any).__navigated = true;
     }
   },
-};
-
-const settingCardClassnames: SettingsCardClassNames = {
-  base: "rounded-none",
-  button: "rounded-none",
-  outlineButton: "hover:text-accent-foreground",
-  skeleton: "rounded-none",
-  cell: "rounded-none",
-  input: "rounded-none",
-  dialog: {
-    content: "rounded-none",
-  },
-  footer: "rounded-none",
-};
-
-export const settingsCardsClassnames = {
-  card: settingCardClassnames,
 };

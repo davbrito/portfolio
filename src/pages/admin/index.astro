@@ -1,15 +1,17 @@
 ---
 import AdminPage from "@/components/admin/admin-page";
 import AdminLayout from "@/layout/admin-layout.astro";
+import { findProfile } from "@/service/profile";
 
 export const prerender = false;
 
 if (!Astro.locals.session) {
-  console.log("no session, redirecting to /auth/sign-in");
   return Astro.redirect("/auth/sign-in");
 }
+
+const profile = await findProfile(Astro.locals.session.userId);
 ---
 
 <AdminLayout title="Admin Page">
-  <AdminPage client:load />
+  <AdminPage client:load profile={profile} />
 </AdminLayout>

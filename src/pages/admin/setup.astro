@@ -1,11 +1,12 @@
 ---
+import AdminSetup from "@/components/admin/admin-setup";
 import SiteLayout from "@/layout/site-layout.astro";
 import { adminTokenCheck } from "@/lib/auth/helpers";
-import AdminSetup from "@/routes/admin_/setup";
 
 export const prerender = false;
 
 const token = Astro.url.searchParams.get("token");
+
 if (!adminTokenCheck(token)) {
   return Astro.redirect("/auth/sign-in");
 }
