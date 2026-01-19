@@ -11,7 +11,7 @@ export default defineConfig({
     plugins: [viteTsConfigPaths({ projects: ["./tsconfig.json"] }), tailwindcss()],
 
     ssr: {
-      noExternal: ["@hcaptcha/react-hcaptcha"],
+      external: ["@hcaptcha/react-hcaptcha"],
     },
   },
 
