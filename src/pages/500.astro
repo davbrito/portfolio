@@ -1,5 +1,21 @@
 ---
 import SiteLayout from "@/layout/site-layout.astro";
+interface Props {
+  error: unknown;
+}
+
+const { error } = Astro.props as Props;
+
+const formatError = (err: unknown) => {
+  if (!err) return "";
+  if (typeof err === "string") return err;
+  if (err instanceof Error) return `${err.message}\n\n${err.stack ?? ""}`;
+  try {
+    return JSON.stringify(err, undefined, 2);
+  } catch {
+    return String(err);
+  }
+};
 ---
 
 <SiteLayout title="500 — Server Error" description="500 Internal Server Error — Something went wrong on the server.">
@@ -13,7 +29,7 @@ import SiteLayout from "@/layout/site-layout.astro";
     <div
       class="grid w-full max-w-225 grid-cols-1 items-center gap-7 rounded-[14px] bg-linear-to-b from-[rgba(255,255,255,0.02)] to-transparent p-9 shadow-[0_6px_30px_rgba(2,6,23,0.6)] md:grid-cols-[1fr_360px]"
     >
-      <div class="text-left">
+      <div class="min-w-0 text-left">
         <div class="mb-2 text-[72px] font-extrabold tracking-[-2px] text-[#7c3aed]" aria-hidden="true">500</div>
         <h1 id="error-heading" class="m-0 mb-3 text-[22px]">Something went wrong</h1>
         <p class="mb-4 leading-relaxed text-[#9aa4b2]">
@@ -74,6 +90,17 @@ import SiteLayout from "@/layout/site-layout.astro";
         </div>
         <p class="m-0 text-[13px] text-[#9aa4b2]">We're looking into it — thanks for your patience.</p>
       </div>
+
+      {
+        import.meta.env.DEV && error ? (
+          <div class="mt-4 md:col-span-2">
+            <h2 class="sr-only">Error details</h2>
+            <pre class="max-h-60 overflow-auto rounded bg-[#071124] p-4 text-sm text-[#ffb4b4]">
+              <code>{formatError(error)}</code>
+            </pre>
+          </div>
+        ) : null
+      }
     </div>
   </div>
 </SiteLayout>
