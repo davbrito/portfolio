@@ -17,6 +17,10 @@ export default defineConfig({
     }),
   ],
 
+  experimental: {
+    csp: true,
+  },
+
   env: {
     schema: {
       ENABLE_ADMIN_SETUP: envField.boolean({
