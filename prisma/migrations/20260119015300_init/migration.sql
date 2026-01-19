@@ -85,12 +85,25 @@ CREATE TABLE "Profile" (
     "aboutImage" TEXT,
     "aboutImageAlt" TEXT NOT NULL DEFAULT '',
     "aboutText" TEXT NOT NULL DEFAULT '',
-    "githubUrl" TEXT NOT NULL DEFAULT '',
-    "linkedinUrl" TEXT NOT NULL DEFAULT '',
-    "email" TEXT NOT NULL DEFAULT '',
+    "githubUrl" TEXT,
+    "linkedinUrl" TEXT,
+    "email" TEXT,
     "active" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "Profile_pkey" PRIMARY KEY ("userId")
+);
+
+-- CreateTable
+CREATE TABLE "Messages" (
+    "id" UUID NOT NULL,
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "subject" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "read" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "Messages_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
