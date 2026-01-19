@@ -20,6 +20,7 @@ export default defineConfig({
   experimental: {
     csp: {
       scriptDirective: { resources: ["'self'", "https://challenges.cloudflare.com"] },
+      styleDirective: { resources: ["'self'", "'unsafe-inline'"] },
     },
   },
 
