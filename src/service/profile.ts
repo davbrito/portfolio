@@ -15,7 +15,6 @@ export async function upsertProfile(
   userId: string,
   data: Omit<ProfileModel, "userId">,
 ): Promise<ProfileModel> {
-  console.log("data received for upsertProfile:", userId);
   const profile = await db.profile.upsert({
     where: { userId },
     update: {

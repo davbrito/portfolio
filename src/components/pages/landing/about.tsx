@@ -6,15 +6,12 @@ interface Props {
 }
 
 export default function About({ profile }: Props) {
-  const aboutParagraphs = profile.aboutText.split(/\n+/).filter(Boolean);
+  const aboutParagraphs = profile.aboutText.split(/\n{2,}/).filter((p) => p.trim().length > 0);
   return (
     <div className="flex flex-col gap-10 md:flex-row md:items-center">
       <div className="space-y-4">
         {aboutParagraphs.map((paragraph, index) => (
-          <p
-            key={index}
-            className="text-muted-foreground leading-relaxed text-balance"
-          >
+          <p key={index} className="text-muted-foreground leading-relaxed text-balance">
             {paragraph}
           </p>
         ))}

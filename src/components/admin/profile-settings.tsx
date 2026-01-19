@@ -2,22 +2,24 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { profilePayloadSchema } from "@/lib/validators/profile";
+import { cn } from "@/lib/utils";
+import { profilePayloadSchema, type ProfilePayload, type ProfilePayloadInput } from "@/lib/validators/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { actions, isInputError } from "astro:actions";
 import { AlertCircle, CheckCircle2, Loader2Icon, SaveIcon } from "lucide-react";
-import { Controller, useForm } from "react-hook-form";
-import { FormInputField, FormTextareaField } from "../form-fields";
+import { ErrorCode, useDropzone, type FileRejection } from "react-dropzone";
 import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSeparator,
-  FieldSet,
-} from "../ui/field";
+  Controller,
+  useController,
+  useForm,
+  useWatch,
+  type Control,
+  type UseFormClearErrors,
+  type UseFormSetError,
+} from "react-hook-form";
+import { FormInputField, FormTextareaField } from "../form-fields";
+import { Field, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet } from "../ui/field";
 import { Spinner } from "../ui/spinner";
 import { Switch } from "../ui/switch";
 
@@ -44,8 +46,7 @@ export function ProfileSettings() {
       } else {
         setError("root", {
           type: "server",
-          message:
-            error?.message || "No se pudieron guardar los cambios del perfil",
+          message: error?.message || "No se pudieron guardar los cambios del perfil",
         });
       }
     },
@@ -54,7 +55,7 @@ export function ProfileSettings() {
     resolver: zodResolver(profilePayloadSchema),
     values: query.data || undefined,
   });
-  const { handleSubmit, formState, register, reset, setError } = form;
+  const { handleSubmit, formState, register, reset, setError, clearErrors } = form;
   const { errors, isSubmitting, isSubmitSuccessful, isLoading } = formState;
 
   const rootError = errors.root?.message;
@@ -84,13 +85,9 @@ export function ProfileSettings() {
       <CardHeader>
         <div className="flex items-center justify-between gap-4">
           <div className="space-y-1">
-            <p className="text-muted-foreground text-xs tracking-widest uppercase">
-              Perfil público
-            </p>
+            <p className="text-muted-foreground text-xs tracking-widest uppercase">Perfil público</p>
             <h2 className="text-2xl font-bold">Información del perfil</h2>
-            <p className="text-muted-foreground text-sm">
-              Estos datos se muestran en la página principal.
-            </p>
+            <p className="text-muted-foreground text-sm">Estos datos se muestran en la página principal.</p>
           </div>
           {statusBadge}
         </div>
@@ -101,9 +98,7 @@ export function ProfileSettings() {
             <FieldSet>
               <FieldGroup className="grid md:grid-cols-2">
                 <Field className="col-span-2">
-                  <FieldLabel htmlFor="active">
-                    Habilitar Perfil Público
-                  </FieldLabel>
+                  <FieldLabel htmlFor="active">Habilitar Perfil Público</FieldLabel>
                   <Controller
                     control={form.control}
                     name="active"
@@ -117,16 +112,8 @@ export function ProfileSettings() {
                     )}
                   />
                 </Field>
-                <FormInputField
-                  label="Nombre"
-                  error={errors.name}
-                  {...register("name")}
-                />
-                <FormInputField
-                  label="Título"
-                  error={errors.title}
-                  {...register("title")}
-                />
+                <FormInputField label="Nombre" error={errors.name} {...register("name")} />
+                <FormInputField label="Título" error={errors.title} {...register("title")} />
                 <FormInputField
                   label="Ubicación"
                   error={errors.location}
@@ -138,11 +125,7 @@ export function ProfileSettings() {
                     <option key={country} value={country} />
                   ))}
                 </datalist>
-                <FormInputField
-                  {...register("experience")}
-                  label="Experiencia"
-                  error={errors.experience}
-                />
+                <FormInputField {...register("experience")} label="Experiencia" error={errors.experience} />
                 <FormInputField
                   {...register("description")}
                   label="Descripción corta"
@@ -168,17 +151,16 @@ export function ProfileSettings() {
             <FieldSet>
               <FieldLegend>Imagen de sección {'"Sobre mí"'}</FieldLegend>
               <FieldGroup className="grid gap-4 md:grid-cols-2">
-                <FormInputField
-                  {...register("aboutImage")}
-                  label="URL de imagen"
-                  error={errors.aboutImage}
-                  placeholder="https://"
-                />
-                <FormInputField
-                  {...register("aboutImageAlt")}
-                  label="Texto alternativo"
-                  error={errors.aboutImageAlt}
-                />
+                <Field className="col-span-2" data-invalid={!!errors.aboutImage}>
+                  <FieldLabel>Imagen</FieldLabel>
+                  <ImageUpload
+                    error={errors.aboutImage?.message}
+                    control={form.control}
+                    setError={setError}
+                    clearErrors={clearErrors}
+                  />
+                </Field>
+                <FormInputField {...register("aboutImageAlt")} label="Texto alternativo" error={errors.aboutImageAlt} />
               </FieldGroup>
             </FieldSet>
             <FieldSeparator />
@@ -248,4 +230,97 @@ function getCountries(lang = "es-VE"): string[] {
     }
   }
   return Array.from(countries).sort();
+}
+
+function ImageUpload({
+  error,
+  control,
+  clearErrors,
+  setError,
+}: {
+  error: string | undefined;
+  control: Control<ProfilePayloadInput>;
+  setError: UseFormSetError<ProfilePayload>;
+  clearErrors: UseFormClearErrors<ProfilePayload>;
+}) {
+  const { field } = useController({ name: "aboutImage", control });
+  const { value: aboutImageValue, onChange } = field;
+
+  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
+    onDrop: async ([file]) => {
+      if (!file) return;
+      const buffer = await file.bytes();
+      const base64String = (buffer as any).toBase64();
+      const dataUrl = `data:${file.type};base64,${base64String}`;
+      onChange(dataUrl);
+      clearErrors("aboutImage");
+    },
+    onDropRejected: (fileRejections: FileRejection[]) => {
+      const firstError = fileRejections[0]?.errors?.[0];
+      const code = firstError?.code;
+
+      switch (code as ErrorCode) {
+        case ErrorCode.FileTooLarge:
+          setError("aboutImage", {
+            type: "manual",
+            message: "La imagen supera 2MB.",
+          });
+          return;
+        case ErrorCode.FileInvalidType:
+          setError("aboutImage", {
+            type: "manual",
+            message: "Formato de imagen no soportado.",
+          });
+          return;
+      }
+    },
+    accept: { "image/*": [".png", ".jpg", ".jpeg", ".webp"] },
+    multiple: false,
+    maxSize: 2 * 1024 * 1024,
+    noClick: true,
+    noKeyboard: true,
+    useFsAccessApi: true,
+  });
+
+  const aboutImageAlt = useWatch({
+    control,
+    name: "aboutImageAlt",
+  });
+
+  return (
+    <div className="space-y-3">
+      <div
+        {...getRootProps({
+          className: cn(
+            "flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed p-6 text-center text-sm transition",
+            isDragActive ? "border-primary/70 bg-primary/5" : "border-muted-foreground/30",
+          ),
+        })}
+      >
+        <input {...getInputProps()} />
+        <p className="text-muted-foreground">Arrastra una imagen o selecciona un archivo.</p>
+        <p className="text-muted-foreground text-xs">PNG, JPG o WebP. Máx 2MB.</p>
+      </div>
+      {typeof aboutImageValue === "string" && aboutImageValue ? (
+        <div className="overflow-hidden rounded-xl border">
+          <img
+            src={aboutImageValue}
+            alt={typeof aboutImageAlt === "string" && aboutImageAlt ? aboutImageAlt : "Vista previa"}
+            className="h-48 w-full object-cover"
+          />
+        </div>
+      ) : null}
+      <div className="flex flex-wrap items-center gap-2">
+        <Button type="button" variant="secondary" onClick={open}>
+          Seleccionar imagen
+        </Button>
+        {typeof aboutImageValue === "string" && aboutImageValue ? (
+          <Button type="button" variant="ghost" onClick={() => onChange("")}>
+            Quitar
+          </Button>
+        ) : null}
+      </div>
+      <FieldError>{error}</FieldError>
+    </div>
+  );
 }

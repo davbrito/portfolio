@@ -10,19 +10,6 @@ export interface ExperienceData {
   highlights: string[];
 }
 
-const mergeProfile = (profile: any) => {
-  if (!profile) return envData.profile;
-
-  return {
-    ...envData.profile,
-    ...profile,
-    aboutParagraphs:
-      profile.aboutParagraphs && profile.aboutParagraphs.length
-        ? profile.aboutParagraphs
-        : envData.profile.aboutParagraphs,
-  };
-};
-
 export const getPortfolioData = async () => {
   const profile = await db.profile.findFirst();
 

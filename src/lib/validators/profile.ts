@@ -1,4 +1,4 @@
-import { z } from "astro/zod";
+import * as z from "astro/zod";
 
 export const profilePayloadSchema = z.object({
   active: z.boolean().default(false),
@@ -45,7 +45,12 @@ export const profilePayloadSchema = z.object({
     .transform((val) => val || ""),
   aboutImage: z.preprocess(
     (value) => value || null,
-    z.string().trim().url({ message: "URL inválida" }).max(500).nullable(),
+    z
+      .string()
+      .trim()
+      .url({ message: "URL inválida" })
+      .max(2 * 1024 * 1024)
+      .nullable(),
   ),
   aboutImageAlt: z
     .string()
@@ -53,28 +58,25 @@ export const profilePayloadSchema = z.object({
     .max(200, { message: "El texto alternativo es muy largo" })
     .nullish()
     .transform((val) => val || ""),
-  githubUrl: z.preprocess(
-    (val) => val || null,
-    z
-      .string()
-      .trim()
-      .url({ message: "URL de GitHub inválida" })
-      .max(500)
-      .nullable(),
-  ),
-  linkedinUrl: z.preprocess(
-    (val) => val || null,
-    z
-      .string()
-      .trim()
-      .url({ message: "URL de LinkedIn inválida" })
-      .max(500)
-      .nullable(),
-  ),
-  email: z.preprocess(
-    (val) => val || null,
-    z.string().trim().email({ message: "Email inválido" }).max(500).nullable(),
-  ),
+  githubUrl: z
+    .string()
+    .trim()
+    .nullable()
+    .transform((val) => val || null)
+    .pipe(z.string().trim().url({ message: "URL de GitHub inválida" }).max(500).nullable()),
+  linkedinUrl: z
+    .string()
+    .trim()
+    .nullable()
+    .transform((val) => val || null)
+    .pipe(z.string().url({ message: "URL de LinkedIn inválida" }).max(500).nullable()),
+  email: z
+    .string()
+    .trim()
+    .nullable()
+    .transform((val) => val || null)
+    .pipe(z.string().trim().email({ message: "Email inválido" }).max(500).nullable()),
 });
 
 export type ProfilePayload = z.infer<typeof profilePayloadSchema>;
+export type ProfilePayloadInput = z.input<typeof profilePayloadSchema>;

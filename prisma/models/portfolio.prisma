@@ -1,19 +1,20 @@
 model Profile {
-  userId        String  @id
-  user          Users   @relation(fields: [userId], references: [id])
-  name          String  @default("")
-  title         String  @default("")
-  location      String  @default("")
-  experience    String  @default("")
-  description   String  @default("")
-  brief         String  @default("")
+  userId        String       @id
+  user          Users        @relation(fields: [userId], references: [id])
+  name          String       @default("")
+  title         String       @default("")
+  location      String       @default("")
+  experience    String       @default("")
+  description   String       @default("")
+  brief         String       @default("")
   aboutImage    String?
-  aboutImageAlt String  @default("")
-  aboutText     String  @default("")
+  aboutImageAlt String       @default("")
+  aboutText     String       @default("")
   githubUrl     String?
   linkedinUrl   String?
   email         String?
-  active        Boolean @default(true)
+  active        Boolean      @default(true)
+  experiences   Experience[]
 }
 
 model Messages {
@@ -24,4 +25,15 @@ model Messages {
   message   String
   createdAt DateTime @default(now())
   read      Boolean  @default(false)
+}
+
+model Experience {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  userId     String
+  profile    Profile  @relation(fields: [userId], references: [userId])
+  title      String
+  company    String
+  location   String
+  period     String
+  highlights String[]
 }
