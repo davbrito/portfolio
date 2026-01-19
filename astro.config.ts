@@ -17,13 +17,6 @@ export default defineConfig({
     }),
   ],
 
-  experimental: {
-    csp: {
-      scriptDirective: { resources: ["'self'", "https://challenges.cloudflare.com"] },
-      styleDirective: { resources: ["'self'", "'unsafe-inline'"] },
-    },
-  },
-
   env: {
     schema: {
       ENABLE_ADMIN_SETUP: envField.boolean({
