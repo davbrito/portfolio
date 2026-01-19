@@ -33,3 +33,5 @@ pnpm-debug.log*
 /prisma/generated
 
 *.tsbuildinfo
+.vercel
+.env*.local
