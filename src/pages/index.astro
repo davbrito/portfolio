@@ -21,8 +21,6 @@ const { socialLinks, experience, technologies, profile } = data;
 if (!profile || !profile.active) {
   return Response.json({ message: "Profile is not active or not found." }, { status: 404 });
 }
-
-Astro.csp.insertScriptResource("https://challenges.cloudflare.com");
 ---
 
 <SiteLayout title={`${profile.name} - ${profile.title}`}>

@@ -18,7 +18,9 @@ export default defineConfig({
   ],
 
   experimental: {
-    csp: true,
+    csp: {
+      scriptDirective: { resources: ["'self'", "https://challenges.cloudflare.com"] },
+    },
   },
 
   env: {
