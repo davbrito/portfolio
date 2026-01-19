@@ -306,7 +306,7 @@ function ImageUpload({
           <img
             src={aboutImageValue}
             alt={typeof aboutImageAlt === "string" && aboutImageAlt ? aboutImageAlt : "Vista previa"}
-            className="h-48 w-full object-cover"
+            className="h-48 w-full object-contain"
           />
         </div>
       ) : null}
