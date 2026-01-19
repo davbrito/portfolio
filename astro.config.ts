@@ -9,10 +9,6 @@ export default defineConfig({
   adapter: vercel(),
   vite: {
     plugins: [viteTsConfigPaths({ projects: ["./tsconfig.json"] }), tailwindcss()],
-
-    ssr: {
-      external: ["@hcaptcha/react-hcaptcha"],
-    },
   },
 
   integrations: [
