@@ -15,3 +15,13 @@ model Profile {
   email         String?
   active        Boolean @default(true)
 }
+
+model Messages {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+  read      Boolean  @default(false)
+}
