@@ -8,10 +8,7 @@ import viteTsConfigPaths from "vite-tsconfig-paths";
 export default defineConfig({
   adapter: vercel(),
   vite: {
-    plugins: [
-      viteTsConfigPaths({ projects: ["./tsconfig.json"] }),
-      tailwindcss(),
-    ],
+    plugins: [viteTsConfigPaths({ projects: ["./tsconfig.json"] }), tailwindcss()],
   },
 
   integrations: [
@@ -38,7 +35,8 @@ export default defineConfig({
         context: "server",
         optional: false,
       }),
-      DATABASE_URL: envField.string({
+
+      POSTGRES_PRISMA_URL: envField.string({
         access: "secret",
         context: "server",
         optional: false,
