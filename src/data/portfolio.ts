@@ -1,7 +1,7 @@
 import type { IconName } from "@/components/icons";
 import { db } from "@/lib/db";
 import { obfuscate } from "@/lib/obfuscation";
-import { data as envData } from "./.env.data";
+// import { data as envData } from "./.env.data";
 
 export interface ExperienceData {
   role: string;
@@ -39,8 +39,8 @@ export const getPortfolioData = async () => {
   }
 
   return {
-    experience: envData.experience,
-    technologies: envData.technologies,
+    experience: [],
+    technologies: [],
     profile: profile,
     socialLinks: socialLinks.filter((link) => link.href),
   };
