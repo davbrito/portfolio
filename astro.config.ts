@@ -68,12 +68,12 @@ export default defineConfig({
       CF_TURNSTILE_SITE_KEY: envField.string({
         access: "public",
         context: "client",
-        optional: true,
+        optional: false,
       }),
       CF_TURNSTILE_SECRET_KEY: envField.string({
         access: "secret",
         context: "server",
-        optional: true,
+        optional: false,
       }),
     },
   },

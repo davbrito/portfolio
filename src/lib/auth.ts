@@ -1,10 +1,11 @@
 import { passkey } from "@better-auth/passkey";
-import { ADMIN_EMAIL } from "astro:env/server";
+import { ADMIN_EMAIL, CF_TURNSTILE_SECRET_KEY } from "astro:env/server";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { APIError } from "better-auth/api";
 import { verifyAdminToken } from "./auth/admin-secret";
 import { db } from "./db";
+import { captcha } from "better-auth/plugins";
 
 export const auth = betterAuth({
   database: prismaAdapter(db, {
@@ -12,7 +13,13 @@ export const auth = betterAuth({
     transaction: true,
     usePlural: true,
   }),
-  plugins: [passkey()],
+  plugins: [
+    passkey(),
+    captcha({
+      provider: "cloudflare-turnstile",
+      secretKey: CF_TURNSTILE_SECRET_KEY,
+    }),
+  ],
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,

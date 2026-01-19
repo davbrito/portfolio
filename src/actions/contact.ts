@@ -1,5 +1,5 @@
+import { validateTurnstileToken } from "@/lib/captcha";
 import { ActionError, defineAction } from "astro:actions";
-import { CF_TURNSTILE_SECRET_KEY } from "astro:env/server";
 import { z } from "astro:schema";
 
 export const contactFormAction = defineAction({
@@ -28,9 +28,7 @@ export const contactFormAction = defineAction({
         message: "Turnstile token is required",
       });
     }
-    const ipAddress =
-      context.request.headers.get("x-forwarded-for") || context.request.headers.get("cf-connecting-ip") || "unknown";
-    const validation = await validateTurnstileToken(token, ipAddress);
+    const validation = await validateTurnstileToken(token, context.clientAddress);
     console.log("Contact form submitted:", validation, input);
 
     if (!validation.success) {
@@ -44,23 +42,3 @@ export const contactFormAction = defineAction({
     return { success: true };
   },
 });
-
-async function validateTurnstileToken(token: string, ipAddress: string) {
-  if (!CF_TURNSTILE_SECRET_KEY) {
-    console.error("CF_TURNSTILE_SECRET_KEY is not set");
-    throw new ActionError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Internal error",
-    });
-  }
-
-  const formData = new URLSearchParams();
-  formData.append("secret", CF_TURNSTILE_SECRET_KEY);
-  formData.append("response", token);
-  formData.append("remoteip", ipAddress);
-  const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-    method: "POST",
-    body: formData,
-  });
-  return await res.json();
-}
