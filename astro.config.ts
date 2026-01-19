@@ -36,7 +36,13 @@ export default defineConfig({
         optional: false,
       }),
 
-      POSTGRES_PRISMA_URL: envField.string({
+      POSTGRES_URL: envField.string({
+        access: "secret",
+        context: "server",
+        optional: false,
+      }),
+
+      POSTGRES_URL_NON_POOLING: envField.string({
         access: "secret",
         context: "server",
         optional: false,
