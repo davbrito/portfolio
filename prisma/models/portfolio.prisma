@@ -30,7 +30,7 @@ model Messages {
 
 model Experience {
   id         String   @id @default(uuid(7)) @db.Uuid
-  userId     String   @db.Uuid
+  userId     String
   profile    Profile  @relation(fields: [userId], references: [userId])
   title      String
   company    String
@@ -41,7 +41,7 @@ model Experience {
 
 model Skills {
   id      String  @id @default(uuid(7)) @db.Uuid
-  userId  String  @db.Uuid
+  userId  String
   profile Profile @relation(fields: [userId], references: [userId])
   name    String
   level   String

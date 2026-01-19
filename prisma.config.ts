@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 import { defineConfig, env } from "prisma/config";
 
-config({ path: [".env", ".vercel/.env.development.local"] });
+config({ path: [".env", ".vercel/.env.development.local"], quiet: true });
 
 export default defineConfig({
   schema: "prisma",
