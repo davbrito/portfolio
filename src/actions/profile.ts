@@ -1,11 +1,6 @@
 import { profilePayloadSchema } from "@/lib/validators/profile";
 import { findProfile, upsertProfile } from "@/service/profile";
-import type { ProfileModel } from "@prisma-generated/models";
-import {
-  ActionError,
-  defineAction,
-  type ActionAPIContext,
-} from "astro:actions";
+import { ActionError, defineAction, type ActionAPIContext } from "astro:actions";
 import { ADMIN_EMAIL } from "astro:env/server";
 
 async function ensureAdminSession(context: ActionAPIContext) {
@@ -37,7 +32,7 @@ const getProfileAction = defineAction({
 
 const upsertProfileAction = defineAction({
   input: profilePayloadSchema,
-  async handler(input, context): Promise<ProfileModel> {
+  async handler(input, context) {
     const session = await authenticateAction(context);
 
     return await upsertProfile(session.user.id, input);

@@ -1,17 +1,13 @@
 import type { IconName } from "@/components/icons";
 import { db } from "@/lib/db";
 import { obfuscate } from "@/lib/obfuscation";
-// import { data as envData } from "./.env.data";
 
-export interface ExperienceData {
-  role: string;
-  company: string;
-  period: string;
-  highlights: string[];
-}
+export async function getPortfolioData() {
+  const profile = await db.profile.findFirst({
+    include: { experiences: true, skills: true },
+  });
 
-export const getPortfolioData = async () => {
-  const profile = await db.profile.findFirst();
+  if (!profile) return null;
 
   const socialLinks: SocialLink[] = [
     {
@@ -39,14 +35,20 @@ export const getPortfolioData = async () => {
   }
 
   return {
-    experience: [],
-    technologies: [],
     profile: profile,
+    experience: profile?.experiences || [],
+    technologies: Map.groupBy(profile?.skills || [], (skill) => skill.group || "Otros")
+      .entries()
+      .map(([group, skills]) => ({
+        title: group,
+        skills: skills.map((skill) => ({ name: skill.name, level: skill.level })),
+      }))
+      .toArray(),
     socialLinks: socialLinks.filter((link) => link.href),
   };
-};
+}
 
-type PortfolioData = Awaited<ReturnType<typeof getPortfolioData>>;
+export type PortfolioData = NonNullable<Awaited<ReturnType<typeof getPortfolioData>>>;
 
 export type Profile = PortfolioData["profile"];
 

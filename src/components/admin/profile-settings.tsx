@@ -3,25 +3,31 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { profilePayloadSchema, type ProfilePayload, type ProfilePayloadInput } from "@/lib/validators/profile";
+import { profilePayloadSchema, SKILL_LEVELS, type ProfilePayloadInput } from "@/lib/validators/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { actions, isInputError } from "astro:actions";
 import { AlertCircle, CheckCircle2, Loader2Icon, SaveIcon } from "lucide-react";
+import { useId } from "react";
 import { ErrorCode, useDropzone, type FileRejection } from "react-dropzone";
 import {
   Controller,
   useController,
+  useFieldArray,
   useForm,
   useWatch,
   type Control,
+  type FieldErrors,
   type UseFormClearErrors,
+  type UseFormRegister,
   type UseFormSetError,
 } from "react-hook-form";
-import { FormInputField, FormTextareaField } from "../form-fields";
+import { FormInputField, FormSelectField, FormTextareaField } from "../form-fields";
 import { Field, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet } from "../ui/field";
 import { Spinner } from "../ui/spinner";
 import { Switch } from "../ui/switch";
+
+const DEFAULT_SKILL_GROUPS = ["Frontend", "Backend", "Herramientas & Cloud"];
 
 export function ProfileSettings() {
   const query = useQuery({
@@ -51,11 +57,22 @@ export function ProfileSettings() {
       }
     },
   });
+
+  const defaultValues: ProfilePayloadInput | undefined = query.data
+    ? {
+        ...query.data,
+        experiences: query.data.experiences.map((exp) => ({
+          ...exp,
+          highlights: exp.highlights.join("\n\n"),
+        })),
+      }
+    : undefined;
+
   const form = useForm({
     resolver: zodResolver(profilePayloadSchema),
-    values: query.data || undefined,
+    values: defaultValues,
   });
-  const { handleSubmit, formState, register, reset, setError, clearErrors } = form;
+  const { handleSubmit, formState, register, reset, setError, clearErrors, control } = form;
   const { errors, isSubmitting, isSubmitSuccessful, isLoading } = formState;
 
   const rootError = errors.root?.message;
@@ -80,27 +97,29 @@ export function ProfileSettings() {
     await mutation.mutateAsync(formValues);
   });
 
+  const skillGroups = [...new Set(query.data?.skills?.map((skill) => skill.group).concat(DEFAULT_SKILL_GROUPS))];
+
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between gap-4">
-          <div className="space-y-1">
-            <p className="text-muted-foreground text-xs tracking-widest uppercase">Perfil público</p>
-            <h2 className="text-2xl font-bold">Información del perfil</h2>
-            <p className="text-muted-foreground text-sm">Estos datos se muestran en la página principal.</p>
+    <form className="space-y-6" onSubmit={onSubmit}>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between gap-4">
+            <div className="space-y-1">
+              <p className="text-muted-foreground text-xs tracking-widest uppercase">Perfil público</p>
+              <h2 className="text-2xl font-bold">Información del perfil</h2>
+              <p className="text-muted-foreground text-sm">Estos datos se muestran en la página principal.</p>
+            </div>
+            {statusBadge}
           </div>
-          {statusBadge}
-        </div>
-      </CardHeader>
-      <CardContent>
-        <form className="space-y-6" onSubmit={onSubmit}>
+        </CardHeader>
+        <CardContent className="space-y-6">
           <FieldGroup>
             <FieldSet>
               <FieldGroup className="grid md:grid-cols-2">
                 <Field className="col-span-2">
                   <FieldLabel htmlFor="active">Habilitar Perfil Público</FieldLabel>
                   <Controller
-                    control={form.control}
+                    control={control}
                     name="active"
                     render={({ field }) => (
                       <Switch
@@ -147,6 +166,21 @@ export function ProfileSettings() {
                 />
               </FieldGroup>
             </FieldSet>
+          </FieldGroup>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent className="space-y-6">
+          <FieldGroup>
+            <FieldSet>
+              <FieldLegend>Experiencia</FieldLegend>
+              <ExperienceSection control={control} register={register} errors={errors} />
+            </FieldSet>
+            <FieldSeparator />
+            <FieldSet>
+              <FieldLegend>Skills</FieldLegend>
+              <SkillsSection control={control} register={register} errors={errors} groups={skillGroups} />
+            </FieldSet>
             <FieldSeparator />
             <FieldSet>
               <FieldLegend>Imagen de sección {'"Sobre mí"'}</FieldLegend>
@@ -155,7 +189,7 @@ export function ProfileSettings() {
                   <FieldLabel>Imagen</FieldLabel>
                   <ImageUpload
                     error={errors.aboutImage?.message}
-                    control={form.control}
+                    control={control}
                     setError={setError}
                     clearErrors={clearErrors}
                   />
@@ -190,25 +224,25 @@ export function ProfileSettings() {
                 />
               </FieldGroup>
             </FieldSet>
-            <FieldError>{rootError}</FieldError>
-            <Field orientation="horizontal">
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <>
-                    <Loader2Icon className="animate-spin" /> Guardando
-                  </>
-                ) : (
-                  <>
-                    <SaveIcon />
-                    Guardar cambios
-                  </>
-                )}
-              </Button>
-            </Field>
           </FieldGroup>
-        </form>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+      <Field orientation="horizontal">
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <Loader2Icon className="animate-spin" /> Guardando
+            </>
+          ) : (
+            <>
+              <SaveIcon />
+              Guardar cambios
+            </>
+          )}
+        </Button>
+        <FieldError>{rootError}</FieldError>
+      </Field>
+    </form>
   );
 }
 
@@ -240,8 +274,8 @@ function ImageUpload({
 }: {
   error: string | undefined;
   control: Control<ProfilePayloadInput>;
-  setError: UseFormSetError<ProfilePayload>;
-  clearErrors: UseFormClearErrors<ProfilePayload>;
+  setError: UseFormSetError<ProfilePayloadInput>;
+  clearErrors: UseFormClearErrors<ProfilePayloadInput>;
 }) {
   const { field } = useController({ name: "aboutImage", control });
   const { value: aboutImageValue, onChange } = field;
@@ -322,5 +356,162 @@ function ImageUpload({
       </div>
       <FieldError>{error}</FieldError>
     </div>
+  );
+}
+
+function ExperienceSection({
+  control,
+  register,
+  errors,
+}: {
+  control: Control<ProfilePayloadInput>;
+  register: UseFormRegister<ProfilePayloadInput>;
+  errors: FieldErrors<ProfilePayloadInput>;
+}) {
+  const experienceFields = useFieldArray({
+    control,
+    name: "experiences",
+  });
+  return (
+    <FieldGroup className="space-y-4">
+      {experienceFields.fields.length === 0 ? (
+        <p className="text-muted-foreground text-sm">
+          Agrega tu experiencia profesional para mostrarla en la sección principal.
+        </p>
+      ) : null}
+      {experienceFields.fields.map((field, index) => (
+        <div key={field.id} className="space-y-4 rounded-xl border p-4">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm font-semibold">Experiencia {index + 1}</p>
+            <Button type="button" variant="ghost" onClick={() => experienceFields.remove(index)}>
+              Eliminar
+            </Button>
+          </div>
+          <FieldGroup className="grid gap-4 md:grid-cols-2">
+            <FormInputField
+              {...register(`experiences.${index}.title`)}
+              label="Cargo"
+              error={errors.experiences?.[index]?.title}
+            />
+            <FormInputField
+              {...register(`experiences.${index}.company`)}
+              label="Empresa"
+              error={errors.experiences?.[index]?.company}
+            />
+            <FormInputField
+              {...register(`experiences.${index}.location`)}
+              label="Ubicación"
+              error={errors.experiences?.[index]?.location}
+            />
+            <FormInputField
+              {...register(`experiences.${index}.period`)}
+              label="Periodo"
+              error={errors.experiences?.[index]?.period}
+            />
+            <FormTextareaField
+              {...register(`experiences.${index}.highlights`)}
+              label="Logros"
+              description="Un logro por línea"
+              error={errors.experiences?.[index]?.highlights}
+              containerClassName="col-span-2"
+            />
+          </FieldGroup>
+        </div>
+      ))}
+      <Button
+        type="button"
+        variant="secondary"
+        onClick={() =>
+          experienceFields.append({
+            title: "",
+            company: "",
+            location: "",
+            period: "",
+            highlights: "",
+          })
+        }
+      >
+        Agregar experiencia
+      </Button>
+    </FieldGroup>
+  );
+}
+
+function SkillsSection({
+  control,
+  register,
+  errors,
+  groups,
+}: {
+  control: Control<ProfilePayloadInput>;
+  register: UseFormRegister<ProfilePayloadInput>;
+  errors: FieldErrors<ProfilePayloadInput>;
+  groups: string[];
+}) {
+  const id = useId();
+  const skillFields = useFieldArray({ control, name: "skills" });
+
+  return (
+    <FieldGroup className="space-y-4">
+      <datalist id={`${id}-skill-groups`}>
+        {groups.map((group) => (
+          <option key={group} value={group} />
+        ))}
+      </datalist>
+      {skillFields.fields.length === 0 ? (
+        <p className="text-muted-foreground text-sm">Añade las tecnologías y habilidades que deseas destacar.</p>
+      ) : null}
+      {skillFields.fields.map((field, index) => (
+        <div key={field.id} className="space-y-4 rounded-xl border p-4">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm font-semibold">Skill {index + 1}</p>
+            <Button type="button" variant="ghost" onClick={() => skillFields.remove(index)}>
+              Eliminar
+            </Button>
+          </div>
+          <FieldGroup className="grid gap-4 md:grid-cols-2">
+            <FormInputField {...register(`skills.${index}.name`)} label="Nombre" error={errors.skills?.[index]?.name} />
+            <FormInputField
+              {...register(`skills.${index}.level`)}
+              label="Nivel"
+              error={errors.skills?.[index]?.level}
+            />
+            <Controller
+              control={control}
+              name={`skills.${index}.level` as const}
+              render={({ field, fieldState }) => (
+                <FormSelectField
+                  label="Nivel"
+                  error={fieldState.error}
+                  {...field}
+                  options={SKILL_LEVELS.map((level) => ({ value: level, label: level }))}
+                  placeholder="Selecciona un nivel..."
+                />
+              )}
+            />
+            <FormInputField
+              {...register(`skills.${index}.group`)}
+              label="Grupo"
+              error={errors.skills?.[index]?.group}
+              containerClassName="col-span-2"
+              list={`${id}-skill-groups`}
+            />
+          </FieldGroup>
+        </div>
+      ))}
+      <Button
+        type="button"
+        variant="secondary"
+        onClick={() =>
+          skillFields.append({
+            name: "",
+            level: "",
+            group: "",
+          })
+        }
+      >
+        Agregar skill
+      </Button>
+    </FieldGroup>
   );
 }

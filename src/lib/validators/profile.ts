@@ -1,5 +1,58 @@
 import * as z from "astro/zod";
 
+export const SKILL_LEVELS = ["Principiante", "Intermedio", "Avanzado", "Experto"] as const;
+
+const skillLevelSchema = z
+  .string()
+  .nonempty({ message: "El nivel no puede estar vacío" })
+  .pipe(
+    z.enum(SKILL_LEVELS, {
+      invalid_type_error: "Nivel de habilidad inválido",
+    }),
+  );
+
+const experienceItemSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .max(120, { message: "El cargo es muy largo" })
+    .nullish()
+    .transform((val) => val || ""),
+  company: z
+    .string()
+    .trim()
+    .max(120, { message: "La empresa es muy larga" })
+    .nullish()
+    .transform((val) => val || ""),
+  location: z
+    .string()
+    .trim()
+    .max(120, { message: "La ubicación es muy larga" })
+    .nullish()
+    .transform((val) => val || ""),
+  period: z
+    .string()
+    .trim()
+    .max(120, { message: "El periodo es muy largo" })
+    .nullish()
+    .transform((val) => val || ""),
+  highlights: z.string().trim().max(300, { message: "El texto es muy largo" }).default(""),
+});
+
+const skillItemSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .nonempty({ message: "El nombre no puede estar vacío" })
+    .max(120, { message: "El nombre es muy largo" }),
+  level: skillLevelSchema,
+  group: z
+    .string()
+    .trim()
+    .nonempty({ message: "El grupo no puede estar vacío" })
+    .max(120, { message: "El grupo es muy largo" }),
+});
+
 export const profilePayloadSchema = z.object({
   active: z.boolean().default(false),
   name: z
@@ -58,6 +111,8 @@ export const profilePayloadSchema = z.object({
     .max(200, { message: "El texto alternativo es muy largo" })
     .nullish()
     .transform((val) => val || ""),
+  experiences: z.array(experienceItemSchema).default([]),
+  skills: z.array(skillItemSchema).default([]),
   githubUrl: z
     .string()
     .trim()

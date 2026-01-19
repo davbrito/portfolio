@@ -1,7 +1,7 @@
-import type { ExperienceData } from "@/data/portfolio";
+import type { ExperienceModel } from "@prisma-generated/models";
 import { useState } from "react";
 
-export function Experience({ experience }: { experience: ExperienceData[] }) {
+export function Experience({ experience }: { experience: ExperienceModel[] }) {
   const [selected, setSelected] = useState(0);
 
   const item = experience[selected];
@@ -16,7 +16,7 @@ export function Experience({ experience }: { experience: ExperienceData[] }) {
             onClick={() => setSelected(index)}
             className="aria-selected:bg-primary/8 border-primary text-primary mb-4 inline-flex items-center gap-2 px-6 py-2 font-mono text-sm aria-selected:border-l-2"
           >
-            {exp.role}
+            {exp.title}
           </div>
         ))}
       </div>
@@ -27,10 +27,8 @@ export function Experience({ experience }: { experience: ExperienceData[] }) {
           <div className="text-foreground flex flex-col gap-2">
             <div className="flex items-center gap-3">
               <h3 className="text-foreground flex items-center gap-2 text-sm font-semibold">
-                {item.role}
-                <span className="text-primary underline-offset-4 hover:underline">
-                  @ {item.company}
-                </span>
+                {item.title}
+                <span className="text-primary underline-offset-4 hover:underline">@ {item.company}</span>
               </h3>
             </div>
 
@@ -42,9 +40,7 @@ export function Experience({ experience }: { experience: ExperienceData[] }) {
           <ul className="text-foreground/80 mt-6 space-y-4 text-sm leading-relaxed">
             {item.highlights.map((item) => (
               <li key={item} className="flex gap-3">
-                <span className="text-primary mt-1 text-lg leading-none">
-                  ▹
-                </span>
+                <span className="text-primary mt-1 text-lg leading-none">▹</span>
                 <span className="leading-relaxed">{item}</span>
               </li>
             ))}
