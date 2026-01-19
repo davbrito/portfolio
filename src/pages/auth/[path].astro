@@ -7,7 +7,12 @@ import type { GetStaticPathsItem, GetStaticPathsResult } from "astro";
 export const prerender = true;
 
 export function getStaticPaths(): GetStaticPathsResult {
-  return Object.values(authViewPaths).map(
+  return [
+    authViewPaths.SIGN_IN,
+    authViewPaths.SIGN_UP,
+    authViewPaths.FORGOT_PASSWORD,
+    authViewPaths.RESET_PASSWORD,
+  ].map(
     (path): GetStaticPathsItem => ({
       params: { path },
     }),
