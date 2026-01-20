@@ -2,15 +2,29 @@ import react from "@astrojs/react";
 import vercel from "@astrojs/vercel";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, envField } from "astro/config";
+import { loadEnv } from "vite";
 import viteTsConfigPaths from "vite-tsconfig-paths";
+
+const { ISR_BYPASS_TOKEN } = loadEnv(process.env.NODE_ENV!, process.cwd());
 
 // https://astro.build/config
 export default defineConfig({
-  adapter: vercel(),
+  adapter: vercel({
+    isr: {
+      exclude: [/^\/auth\/.*/, /^\/admin\/.*/],
+      bypassToken: ISR_BYPASS_TOKEN,
+    },
+  }),
   vite: {
     plugins: [viteTsConfigPaths({ projects: ["./tsconfig.json"] }), tailwindcss()],
+    server: {
+      hmr: {
+        clientPort: 443,
+        path: "/_hmr",
+        protocol: "wss",
+      },
+    },
   },
-
   integrations: [
     react({
       babel: { plugins: [["babel-plugin-react-compiler"]] },
@@ -67,6 +81,12 @@ export default defineConfig({
         optional: false,
       }),
       CF_TURNSTILE_SECRET_KEY: envField.string({
+        access: "secret",
+        context: "server",
+        optional: false,
+      }),
+
+      ISR_BYPASS_TOKEN: envField.string({
         access: "secret",
         context: "server",
         optional: false,
