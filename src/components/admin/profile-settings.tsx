@@ -37,7 +37,6 @@ export function ProfileSettings() {
   const mutation = useMutation({
     mutationFn: actions.profile.upsert.orThrow,
     onSuccess(data, variables, onMutateResult, context) {
-      reset(data);
       context.client.invalidateQueries({ queryKey: ["profile"] });
     },
     onError(error) {
@@ -76,7 +75,7 @@ export function ProfileSettings() {
     resolver: zodResolver(profilePayloadSchema),
     values: defaultValues,
   });
-  const { handleSubmit, formState, register, reset, setError, clearErrors, control } = form;
+  const { handleSubmit, formState, register, setError, clearErrors, control } = form;
   const { errors, isSubmitting, isSubmitSuccessful, isLoading } = formState;
 
   const rootError = errors.root?.message;

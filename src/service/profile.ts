@@ -25,8 +25,8 @@ export async function upsertProfile(userId: string, data: ProfilePayload) {
     [skill.name, skill.level, skill.group].some((value) => value.length > 0),
   );
 
-  const profile = await db.$transaction(async (tx) => {
-    const savedProfile = await tx.profile.upsert({
+  await db.$transaction(async (tx) => {
+    await tx.profile.upsert({
       where: { userId },
       update: {
         ...profileData,
@@ -56,35 +56,5 @@ export async function upsertProfile(userId: string, data: ProfilePayload) {
         })),
       });
     }
-
-    return savedProfile;
   });
-
-  return {
-    active: profile.active,
-    name: profile.name,
-    title: profile.title,
-    location: profile.location,
-    experience: profile.experience,
-    description: profile.description,
-    brief: profile.brief,
-    aboutText: profile.aboutText,
-    aboutImage: profile.aboutImage ?? null,
-    aboutImageAlt: profile.aboutImageAlt,
-    githubUrl: profile.githubUrl ?? null,
-    linkedinUrl: profile.linkedinUrl ?? null,
-    email: profile.email ?? null,
-    experiences: cleanedExperiences.map((exp) => ({
-      title: exp.title,
-      company: exp.company,
-      location: exp.location,
-      period: exp.period,
-      highlights: exp.highlights.join("\n"),
-    })),
-    skills: cleanedSkills.map((skill) => ({
-      name: skill.name,
-      level: skill.level,
-      group: skill.group,
-    })),
-  };
 }

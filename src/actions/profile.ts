@@ -35,7 +35,7 @@ const upsertProfileAction = defineAction({
   async handler(input, context) {
     const session = await authenticateAction(context);
 
-    const result = await upsertProfile(session.user.id, input);
+    await upsertProfile(session.user.id, input);
 
     if (context.site) {
       const urlToRevalidate = new URL("/", context.site);
@@ -45,8 +45,6 @@ const upsertProfileAction = defineAction({
         headers: { "x-prerender-revalidate": ISR_BYPASS_TOKEN },
       });
     }
-
-    return result;
   },
 });
 
