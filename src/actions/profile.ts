@@ -1,7 +1,7 @@
 import { profilePayloadSchema } from "@/lib/validators/profile";
 import { findProfile, upsertProfile } from "@/service/profile";
 import { ActionError, defineAction, type ActionAPIContext } from "astro:actions";
-import { ADMIN_EMAIL } from "astro:env/server";
+import { ADMIN_EMAIL, ISR_BYPASS_TOKEN } from "astro:env/server";
 
 async function ensureAdminSession(context: ActionAPIContext) {
   const session = context.locals.session;
@@ -35,7 +35,11 @@ const upsertProfileAction = defineAction({
   async handler(input, context) {
     const session = await authenticateAction(context);
 
-    return await upsertProfile(session.user.id, input);
+    const result = await upsertProfile(session.user.id, input);
+
+    fetch(new URL("/", context.site), { method: "HEAD", headers: { "x-prerender-revalidate": ISR_BYPASS_TOKEN } });
+
+    return result;
   },
 });
 
