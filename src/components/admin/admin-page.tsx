@@ -8,14 +8,7 @@ import {
   SecuritySettingsCards,
   type SettingsCardClassNames,
 } from "@daveyplate/better-auth-ui";
-import {
-  BarChart3,
-  IdCard,
-  LockIcon,
-  Settings,
-  UserIcon,
-  Users,
-} from "lucide-react";
+import { BarChart3, IdCard, LockIcon, Settings, UserIcon, Users } from "lucide-react";
 import { Suspense } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { Toaster } from "../ui/sonner";
@@ -43,17 +36,13 @@ export default function AdminPage() {
   return (
     <QueryProvider>
       <AuthUIProvider {...authUiProps}>
-        <div className="space-y-6">
+        <div className="flex grow flex-col space-y-6">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">
-              Panel de Control
-            </h1>
-            <p className="text-muted-foreground">
-              Gestiona tu aplicación, usuarios y configuraciones de seguridad.
-            </p>
+            <h1 className="text-3xl font-bold tracking-tight">Panel de Control</h1>
+            <p className="text-muted-foreground">Gestiona tu aplicación, usuarios y configuraciones de seguridad.</p>
           </div>
 
-          <tabs.Tabs defaultValue="profile" className="dark flex-col">
+          <tabs.Tabs defaultValue="profile" className="dark grow flex-col">
             <tabs.TabsList className="mb-4 w-full flex-wrap *:flex-1">
               <tabs.TabsTrigger value="profile">
                 <IdCard />
@@ -81,7 +70,7 @@ export default function AdminPage() {
               </tabs.TabsTrigger>
             </tabs.TabsList>
 
-            <tabs.TabsContent value="profile">
+            <tabs.TabsContent value="profile" className="flex grow flex-col">
               <Suspense fallback={<Skeleton />}>
                 <ProfileSettings />
               </Suspense>
@@ -120,15 +109,11 @@ function DashboardSection() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <div className="bg-card text-card-foreground rounded-xl border p-6 shadow">
             <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <h3 className="text-sm font-medium tracking-tight">
-                Usuarios Totales
-              </h3>
+              <h3 className="text-sm font-medium tracking-tight">Usuarios Totales</h3>
               <Users className="text-muted-foreground h-4 w-4" />
             </div>
             <div className="text-2xl font-bold">--</div>
-            <p className="text-muted-foreground text-xs">
-              +0% desde el mes pasado
-            </p>
+            <p className="text-muted-foreground text-xs">+0% desde el mes pasado</p>
           </div>
           {/* Más tarjetas de estadísticas podrían ir aquí */}
         </div>
@@ -144,9 +129,7 @@ function UsersSection() {
         <h2 className="heading-3">Gestión de Usuarios</h2>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground">
-          La gestión de usuarios estará disponible próximamente.
-        </p>
+        <p className="text-muted-foreground">La gestión de usuarios estará disponible próximamente.</p>
       </CardContent>
     </Card>
   );
@@ -159,9 +142,7 @@ function SettingsSection() {
         <h2 className="heading-3">Configuración del Sistema</h2>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground">
-          Las configuraciones globales estarán disponibles próximamente.
-        </p>
+        <p className="text-muted-foreground">Las configuraciones globales estarán disponibles próximamente.</p>
       </CardContent>
     </Card>
   );

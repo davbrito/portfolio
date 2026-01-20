@@ -19,7 +19,7 @@ const data = await getPortfolioData();
 if (!data || !data.profile.active) {
   return Response.json({ message: "Profile is not active or not found." }, { status: 404 });
 }
-const { socialLinks, experience, technologies, profile } = data;
+const { socialLinks, experience, technologies, profile, projects } = data;
 ---
 
 <SiteLayout title={`${profile.name} - ${profile.title}`}>
@@ -65,7 +65,7 @@ const { socialLinks, experience, technologies, profile } = data;
         <section id="proyectos" class="mx-auto max-w-4xl">
           <SectionHeader number={4} title="Proyectos" />
 
-          <Projects />
+          <Projects projects={projects} />
         </section>
 
         <section id="contacto" class="mx-auto max-w-prose space-y-8">

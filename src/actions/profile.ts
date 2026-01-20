@@ -1,7 +1,7 @@
-import { profilePayloadSchema } from "@/lib/validators/profile";
-import { findProfile, upsertProfile } from "@/service/profile";
+import { profilePayloadSchema, type ProfilePayloadInput } from "@/lib/validators/profile";
+import { findProfile, revalidatePortfolioPage, upsertProfile } from "@/service/profile";
 import { ActionError, defineAction, type ActionAPIContext } from "astro:actions";
-import { ADMIN_EMAIL, ISR_BYPASS_TOKEN } from "astro:env/server";
+import { ADMIN_EMAIL } from "astro:env/server";
 
 async function ensureAdminSession(context: ActionAPIContext) {
   const session = context.locals.session;
@@ -27,16 +27,21 @@ const getProfileAction = defineAction({
     const session = await authenticateAction(context);
 
     const data = await findProfile(session.user.id);
-    return (
-      data && {
-        ...data,
-        experiences:
-          data?.experiences.map((exp) => ({
-            ...exp,
-            highlights: exp.highlights.join("\n\n"),
-          })) || [],
-      }
-    );
+    if (!data) return null;
+
+    const payload: ProfilePayloadInput = {
+      ...data,
+      experiences:
+        data.experiences.map((exp) => ({
+          title: exp.title,
+          company: exp.company,
+          location: exp.location,
+          period: exp.period,
+          highlights: exp.highlights.join("\n\n"),
+        })) || [],
+    };
+
+    return payload;
   },
 });
 
@@ -48,12 +53,17 @@ const upsertProfileAction = defineAction({
     await upsertProfile(session.user.id, input);
 
     if (context.site) {
-      const urlToRevalidate = new URL("/", context.site);
-      console.log("Revalidating ISR for", urlToRevalidate.toString());
-      await fetch(urlToRevalidate, {
-        method: "HEAD",
-        headers: { "x-prerender-revalidate": ISR_BYPASS_TOKEN },
-      });
+      await revalidatePortfolioPage(context.site);
+    }
+  },
+});
+
+const revalidateProfileAction = defineAction({
+  async handler(_, context) {
+    await authenticateAction(context);
+
+    if (context.site) {
+      await revalidatePortfolioPage(context.site);
     }
   },
 });
@@ -61,4 +71,5 @@ const upsertProfileAction = defineAction({
 export const profileActions = {
   get: getProfileAction,
   upsert: upsertProfileAction,
+  revalidate: revalidateProfileAction,
 };

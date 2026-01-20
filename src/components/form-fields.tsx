@@ -70,8 +70,7 @@ export function FormSelectField({
   name?: string;
   placeholder?: string;
 } & FormFieldProps) {
-  const _id = useId();
-  const id = `${_id}-${name || "select"}`;
+  const id = `${useId()}-${name || ""}-select`;
   return (
     <Field data-invalid={invalid} className={containerClassName}>
       <FieldLabel htmlFor={id}>{label}</FieldLabel>

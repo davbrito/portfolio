@@ -53,6 +53,44 @@ const skillItemSchema = z.object({
     .max(120, { message: "El grupo es muy largo" }),
 });
 
+const projectItemSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .nullish()
+    .transform((val) => val || ""),
+  description: z
+    .string()
+    .trim()
+    .nullish()
+    .transform((val) => val || ""),
+  url: z
+    .string()
+    .trim()
+    .nullable()
+    .transform((val) => val || null)
+    .pipe(z.string().url({ message: "URL inválida" }).max(500).nullable()),
+  repoUrl: z
+    .string()
+    .trim()
+    .nullable()
+    .transform((val) => val || null)
+    .pipe(z.string().url({ message: "URL inválida" }).max(500).nullable()),
+  image: z
+    .string()
+    .trim()
+    .nullable()
+    .transform((val) => val || null)
+    .pipe(z.string().url({ message: "URL inválida" }).max(500).nullable()),
+  imageAlt: z
+    .string()
+    .trim()
+    .max(200, { message: "El texto alternativo es muy largo" })
+    .nullish()
+    .transform((val) => val || ""),
+  tags: z.array(z.string().trim().nonempty({ message: "La etiqueta no puede estar vacía" })).default([]),
+});
+
 export const profilePayloadSchema = z.object({
   active: z.boolean().default(false),
   name: z
@@ -113,6 +151,7 @@ export const profilePayloadSchema = z.object({
     .transform((val) => val || ""),
   experiences: z.array(experienceItemSchema).default([]),
   skills: z.array(skillItemSchema).default([]),
+  projects: z.array(projectItemSchema).default([]),
   githubUrl: z
     .string()
     .trim()

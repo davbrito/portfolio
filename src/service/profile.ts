@@ -1,17 +1,18 @@
 import { db } from "@/lib/db";
 import type { ProfilePayload } from "@/lib/validators/profile";
+import { ISR_BYPASS_TOKEN } from "astro:env/server";
 
 export async function findProfile(userId: string) {
   const profile = await db.profile.findUnique({
     where: { userId },
-    include: { experiences: true, skills: true },
+    include: { experiences: true, skills: true, projects: true },
   });
 
   return profile;
 }
 
 export async function upsertProfile(userId: string, data: ProfilePayload) {
-  const { experiences, skills, ...profileData } = data;
+  const { experiences, skills, projects, ...profileData } = data;
 
   const cleanedExperiences = experiences.map((exp) => ({
     ...exp,
@@ -24,6 +25,13 @@ export async function upsertProfile(userId: string, data: ProfilePayload) {
   const cleanedSkills = skills.filter((skill) =>
     [skill.name, skill.level, skill.group].some((value) => value.length > 0),
   );
+
+  const cleanedProjects = projects
+    .map((project) => ({
+      ...project,
+      tags: project.tags.map((tag) => tag.trim()).filter(Boolean),
+    }))
+    .filter((project) => [project.title, project.description].some((value) => value.length > 0));
 
   await db.$transaction(async (tx) => {
     await tx.profile.upsert({
@@ -56,5 +64,24 @@ export async function upsertProfile(userId: string, data: ProfilePayload) {
         })),
       });
     }
+
+    await tx.projects.deleteMany({ where: { userId } });
+    if (cleanedProjects.length > 0) {
+      await tx.projects.createMany({
+        data: cleanedProjects.map((project) => ({
+          ...project,
+          userId,
+        })),
+      });
+    }
+  });
+}
+
+export async function revalidatePortfolioPage(site: URL) {
+  const urlToRevalidate = new URL("/", site);
+  console.log("Revalidating ISR for", urlToRevalidate.toString());
+  await fetch(urlToRevalidate, {
+    method: "HEAD",
+    headers: { "x-prerender-revalidate": ISR_BYPASS_TOKEN },
   });
 }

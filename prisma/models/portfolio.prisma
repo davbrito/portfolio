@@ -16,7 +16,7 @@ model Profile {
   active        Boolean      @default(true)
   experiences   Experience[]
   skills        Skills[]
-  proyects      Proyects[]
+  projects      Proyects[]
 }
 
 model Messages {

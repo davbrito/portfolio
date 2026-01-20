@@ -24,7 +24,17 @@ import {
   type UseFormSetError,
 } from "react-hook-form";
 import { FormInputField, FormSelectField, FormTextareaField } from "../form-fields";
-import { Field, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet } from "../ui/field";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSeparator,
+  FieldSet,
+} from "../ui/field";
+import { Input } from "../ui/input";
 import { Spinner } from "../ui/spinner";
 import { Switch } from "../ui/switch";
 
@@ -55,14 +65,23 @@ export function ProfileSettings() {
     },
   });
 
-  const form = useForm({
+  console.log("Profile data:", data);
+
+  const { handleSubmit, formState, register, setError, clearErrors, control } = useForm({
     resolver: zodResolver(profilePayloadSchema),
     values: data ?? undefined,
   });
-  const { handleSubmit, formState, register, setError, clearErrors, control } = form;
   const { errors, isSubmitting, isSubmitSuccessful, isLoading } = formState;
 
   const rootError = errors.root?.message;
+
+  if (!data) {
+    return (
+      <div className="m-auto">
+        <Spinner />
+      </div>
+    );
+  }
 
   const statusBadge = isSubmitting ? (
     <span className="text-primary inline-flex items-center gap-2 text-sm">
@@ -100,6 +119,15 @@ export function ProfileSettings() {
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              actions.profile.revalidate();
+            }}
+          >
+            Regenerar portafolio
+          </Button>
           <FieldGroup>
             <FieldSet>
               <FieldGroup className="grid md:grid-cols-2">
@@ -167,6 +195,11 @@ export function ProfileSettings() {
             <FieldSet>
               <FieldLegend>Tecnologías</FieldLegend>
               <SkillsSection control={control} register={register} errors={errors} groups={skillGroups} />
+            </FieldSet>
+            <FieldSeparator />
+            <FieldSet>
+              <FieldLegend>Proyectos</FieldLegend>
+              <ProjectsSection control={control} register={register} errors={errors} />
             </FieldSet>
             <FieldSeparator />
             <FieldSet>
@@ -392,8 +425,9 @@ function ExperienceSection({
             />
             <FormInputField
               {...register(`experiences.${index}.period`)}
-              label="Periodo"
+              label="Período"
               error={errors.experiences?.[index]?.period}
+              placeholder="Ene 2020 - Dic 2022"
             />
             <FormTextareaField
               {...register(`experiences.${index}.highlights`)}
@@ -498,5 +532,163 @@ function SkillsSection({
         Agregar skill
       </Button>
     </FieldGroup>
+  );
+}
+
+function ProjectsSection({
+  control,
+  register,
+  errors,
+}: {
+  control: Control<ProfilePayloadInput>;
+  register: UseFormRegister<ProfilePayloadInput>;
+  errors: FieldErrors<ProfilePayloadInput>;
+}) {
+  const projectFields = useFieldArray({ control, name: "projects" });
+  console.log("Project errors:", projectFields.fields);
+  const tagError = (index: number) => errors.projects?.[index]?.tags;
+  return (
+    <FieldGroup className="space-y-4">
+      {projectFields.fields.length === 0 ? (
+        <p className="text-muted-foreground text-sm">
+          Comparte algunos proyectos destacados para mostrarlos en el portafolio.
+        </p>
+      ) : null}
+      {projectFields.fields.map((field, index) => (
+        <div key={field.id} className="space-y-4 rounded-xl border p-4">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm font-semibold">Proyecto {index + 1}</p>
+            <Button type="button" variant="ghost" onClick={() => projectFields.remove(index)}>
+              Eliminar
+            </Button>
+          </div>
+          <FieldGroup className="grid gap-4 md:grid-cols-2">
+            <FormInputField
+              {...register(`projects.${index}.title`)}
+              label="Título"
+              error={errors.projects?.[index]?.title}
+            />
+            <FormInputField
+              {...register(`projects.${index}.url`)}
+              label="URL"
+              type="url"
+              error={errors.projects?.[index]?.url}
+              placeholder="https://..."
+            />
+            <FormInputField
+              {...register(`projects.${index}.repoUrl`)}
+              label="Repositorio"
+              type="url"
+              error={errors.projects?.[index]?.repoUrl}
+              placeholder="https://github.com/..."
+            />
+            <FormInputField
+              {...register(`projects.${index}.image`)}
+              label="Imagen"
+              type="url"
+              error={errors.projects?.[index]?.image}
+              placeholder="https://..."
+            />
+            <FormInputField
+              {...register(`projects.${index}.imageAlt`)}
+              label="Texto alternativo"
+              error={errors.projects?.[index]?.imageAlt}
+            />
+            <FormTextareaField
+              {...register(`projects.${index}.description`)}
+              label="Descripción"
+              error={errors.projects?.[index]?.description}
+              containerClassName="col-span-2"
+            />
+            <Controller
+              control={control}
+              name={`projects.${index}.tags`}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={!!fieldState.error} className="col-span-2">
+                  <FieldLabel>Tags</FieldLabel>
+                  <TagsInput
+                    value={field.value ?? []}
+                    onChange={field.onChange}
+                    placeholder="Escribe y presiona Enter"
+                  />
+                  <FieldDescription>Presiona Enter o coma para agregar.</FieldDescription>
+                  {fieldState.error || tagError(index) ? (
+                    <FieldError errors={[fieldState.error, tagError(index)]} />
+                  ) : null}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+        </div>
+      ))}
+      <Button
+        type="button"
+        variant="secondary"
+        onClick={() =>
+          projectFields.append({
+            title: "",
+            description: "",
+            url: "",
+            repoUrl: "",
+            image: "",
+            imageAlt: "",
+            tags: [],
+          })
+        }
+      >
+        Agregar proyecto
+      </Button>
+    </FieldGroup>
+  );
+}
+
+function TagsInput({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: string[];
+  onChange: (value: string[]) => void;
+  placeholder?: string;
+}) {
+  return (
+    <div className="border-input dark:bg-input/30 focus-within:border-ring focus-within:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 flex flex-wrap items-center gap-2 rounded-none border bg-transparent px-2.5 py-2 text-xs transition-colors focus-within:ring-1">
+      {value.map((tag) => (
+        <span
+          key={tag}
+          className="bg-primary/10 text-primary inline-flex items-center gap-2 rounded-full border px-2 py-1 text-[11px]"
+        >
+          {tag}
+          <button
+            type="button"
+            className="text-muted-foreground hover:text-primary"
+            onClick={() => onChange(value.filter((item) => item !== tag))}
+            aria-label={`Eliminar ${tag}`}
+          >
+            ×
+          </button>
+        </span>
+      ))}
+      <Input
+        className="h-auto min-w-40 flex-1 border-0 p-0 text-xs shadow-none focus-visible:ring-0"
+        placeholder={placeholder}
+        onKeyDown={(event) => {
+          if (event.key !== "Enter" && event.key !== ",") return;
+          event.preventDefault();
+          const target = event.target as HTMLInputElement;
+          const nextTag = target.value.trim().replace(/,$/, "");
+          if (!nextTag || value.includes(nextTag)) return;
+          onChange([...value, nextTag]);
+          target.value = "";
+        }}
+        onBlur={(event) => {
+          const nextTag = event.currentTarget.value.trim();
+          if (nextTag && !value.includes(nextTag)) {
+            onChange([...value, nextTag]);
+          }
+          event.currentTarget.value = "";
+        }}
+      />
+    </div>
   );
 }

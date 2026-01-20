@@ -4,7 +4,7 @@ import { obfuscate } from "@/lib/obfuscation";
 
 export async function getPortfolioData() {
   const profile = await db.profile.findFirst({
-    include: { experiences: true, skills: true },
+    include: { experiences: true, skills: true, projects: true },
   });
 
   if (!profile) return null;
@@ -37,6 +37,7 @@ export async function getPortfolioData() {
   return {
     profile: profile,
     experience: profile?.experiences || [],
+    projects: profile?.projects || [],
     technologies: Map.groupBy(profile?.skills || [], (skill) => skill.group || "Otros")
       .entries()
       .map(([group, skills]) => ({
@@ -62,3 +63,5 @@ export interface SocialLink {
 }
 
 export type TechnologyGroup = PortfolioData["technologies"][number];
+
+export type Project = PortfolioData["projects"][number];
