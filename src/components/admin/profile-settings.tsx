@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { actions, isInputError } from "astro:actions";
 import { AlertCircle, CheckCircle2, Loader2Icon, SaveIcon } from "lucide-react";
-import { useId } from "react";
+import { useId, useMemo } from "react";
 import { ErrorCode, useDropzone, type FileRejection } from "react-dropzone";
 import {
   Controller,
@@ -58,15 +58,19 @@ export function ProfileSettings() {
     },
   });
 
-  const defaultValues: ProfilePayloadInput | undefined = query.data
-    ? {
-        ...query.data,
-        experiences: query.data.experiences.map((exp) => ({
-          ...exp,
-          highlights: exp.highlights.join("\n\n"),
-        })),
-      }
-    : undefined;
+  const defaultValues: ProfilePayloadInput | undefined = useMemo(
+    () =>
+      query.data
+        ? {
+            ...query.data,
+            experiences: query.data.experiences.map((exp) => ({
+              ...exp,
+              highlights: exp.highlights.join("\n\n"),
+            })),
+          }
+        : undefined,
+    [query.data],
+  );
 
   const form = useForm({
     resolver: zodResolver(profilePayloadSchema),
