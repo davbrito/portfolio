@@ -37,12 +37,14 @@ const upsertProfileAction = defineAction({
 
     const result = await upsertProfile(session.user.id, input);
 
-    const urlToRevalidate = new URL("/", context.site);
-    console.log("Revalidating ISR for", urlToRevalidate.toString());
-    await fetch(urlToRevalidate, {
-      method: "HEAD",
-      headers: { "x-prerender-revalidate": ISR_BYPASS_TOKEN },
-    });
+    if (context.site) {
+      const urlToRevalidate = new URL("/", context.site);
+      console.log("Revalidating ISR for", urlToRevalidate.toString());
+      await fetch(urlToRevalidate, {
+        method: "HEAD",
+        headers: { "x-prerender-revalidate": ISR_BYPASS_TOKEN },
+      });
+    }
 
     return result;
   },
