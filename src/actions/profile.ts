@@ -26,7 +26,17 @@ const getProfileAction = defineAction({
   async handler(_, context) {
     const session = await authenticateAction(context);
 
-    return await findProfile(session.user.id);
+    const data = await findProfile(session.user.id);
+    return (
+      data && {
+        ...data,
+        experiences:
+          data?.experiences.map((exp) => ({
+            ...exp,
+            highlights: exp.highlights.join("\n\n"),
+          })) || [],
+      }
+    );
   },
 });
 

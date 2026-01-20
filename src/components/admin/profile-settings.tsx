@@ -2,13 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { useActionQuery } from "@/lib/query";
 import { cn } from "@/lib/utils";
 import { profilePayloadSchema, SKILL_LEVELS, type ProfilePayloadInput } from "@/lib/validators/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { actions, isInputError } from "astro:actions";
-import { AlertCircle, CheckCircle2, Loader2Icon, SaveIcon } from "lucide-react";
-import { useId, useMemo } from "react";
+import { AlertCircle, CheckCircle2, Loader2Icon, SaveIcon, Trash2Icon } from "lucide-react";
+import { useId } from "react";
 import { ErrorCode, useDropzone, type FileRejection } from "react-dropzone";
 import {
   Controller,
@@ -30,14 +31,11 @@ import { Switch } from "../ui/switch";
 const DEFAULT_SKILL_GROUPS = ["Frontend", "Backend", "Herramientas & Cloud"];
 
 export function ProfileSettings() {
-  const query = useQuery({
-    queryKey: ["profile"],
-    queryFn: () => actions.profile.get.orThrow(),
-  });
+  const { data } = useActionQuery({ action: actions.profile.get });
   const mutation = useMutation({
     mutationFn: actions.profile.upsert.orThrow,
     onSuccess(data, variables, onMutateResult, context) {
-      context.client.invalidateQueries({ queryKey: ["profile"] });
+      context.client.invalidateQueries({ queryKey: [actions.profile.get.toString()] });
     },
     onError(error) {
       if (isInputError(error)) {
@@ -57,23 +55,9 @@ export function ProfileSettings() {
     },
   });
 
-  const defaultValues: ProfilePayloadInput | undefined = useMemo(
-    () =>
-      query.data
-        ? {
-            ...query.data,
-            experiences: query.data.experiences.map((exp) => ({
-              ...exp,
-              highlights: exp.highlights.join("\n\n"),
-            })),
-          }
-        : undefined,
-    [query.data],
-  );
-
   const form = useForm({
     resolver: zodResolver(profilePayloadSchema),
-    values: defaultValues,
+    values: data ?? undefined,
   });
   const { handleSubmit, formState, register, setError, clearErrors, control } = form;
   const { errors, isSubmitting, isSubmitSuccessful, isLoading } = formState;
@@ -100,7 +84,7 @@ export function ProfileSettings() {
     await mutation.mutateAsync(formValues);
   });
 
-  const skillGroups = [...new Set(query.data?.skills?.map((skill) => skill.group).concat(DEFAULT_SKILL_GROUPS))];
+  const skillGroups = [...new Set(data?.skills?.map((skill) => skill.group).concat(DEFAULT_SKILL_GROUPS))];
 
   return (
     <form className="space-y-6" onSubmit={onSubmit}>
@@ -181,7 +165,7 @@ export function ProfileSettings() {
             </FieldSet>
             <FieldSeparator />
             <FieldSet>
-              <FieldLegend>Skills</FieldLegend>
+              <FieldLegend>Tecnologías</FieldLegend>
               <SkillsSection control={control} register={register} errors={errors} groups={skillGroups} />
             </FieldSet>
             <FieldSeparator />
@@ -455,7 +439,7 @@ function SkillsSection({
   const skillFields = useFieldArray({ control, name: "skills" });
 
   return (
-    <FieldGroup className="space-y-4">
+    <FieldGroup className="gap-0">
       <datalist id={`${id}-skill-groups`}>
         {groups.map((group) => (
           <option key={group} value={group} />
@@ -465,14 +449,15 @@ function SkillsSection({
         <p className="text-muted-foreground text-sm">Añade las tecnologías y habilidades que deseas destacar.</p>
       ) : null}
       {skillFields.fields.map((field, index) => (
-        <div key={field.id} className="space-y-4 rounded-xl border p-4">
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-sm font-semibold">Skill {index + 1}</p>
-            <Button type="button" variant="ghost" onClick={() => skillFields.remove(index)}>
-              Eliminar
-            </Button>
-          </div>
-          <FieldGroup className="grid gap-4 md:grid-cols-2">
+        <div key={field.id} className="space-y-1 rounded-xl border-b p-4">
+          <FieldGroup className="flex-row">
+            <FormInputField
+              {...register(`skills.${index}.group`)}
+              label="Grupo"
+              error={errors.skills?.[index]?.group}
+              containerClassName="col-span-2"
+              list={`${id}-skill-groups`}
+            />
             <FormInputField {...register(`skills.${index}.name`)} label="Nombre" error={errors.skills?.[index]?.name} />
             <Controller
               control={control}
@@ -487,13 +472,15 @@ function SkillsSection({
                 />
               )}
             />
-            <FormInputField
-              {...register(`skills.${index}.group`)}
-              label="Grupo"
-              error={errors.skills?.[index]?.group}
-              containerClassName="col-span-2"
-              list={`${id}-skill-groups`}
-            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="self-center"
+              onClick={() => skillFields.remove(index)}
+            >
+              <Trash2Icon />
+            </Button>
           </FieldGroup>
         </div>
       ))}
