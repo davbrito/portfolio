@@ -53,6 +53,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.90.19
         version: 5.90.19(react@19.2.3)
+      '@vercel/analytics':
+        specifier: ^1.6.1
+        version: 1.6.1(react@19.2.3)
       astro:
         specifier: ^5.16.11
         version: 5.16.11(@types/node@24.10.9)(@vercel/functions@2.2.13)(db0@0.3.4(@electric-sql/pglite@0.3.2)(mysql2@3.15.3))(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.55.2)(tsx@4.21.0)(typescript@5.9.3)
