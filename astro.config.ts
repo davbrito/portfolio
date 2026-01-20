@@ -5,10 +5,11 @@ import { defineConfig, envField } from "astro/config";
 import { loadEnv } from "vite";
 import viteTsConfigPaths from "vite-tsconfig-paths";
 
-const { ISR_BYPASS_TOKEN } = loadEnv(process.env.NODE_ENV!, process.cwd());
+const { ISR_BYPASS_TOKEN, VERCEL_URL } = loadEnv(process.env.NODE_ENV!, process.cwd(), "");
 
 // https://astro.build/config
 export default defineConfig({
+  site: VERCEL_URL ? `https://${VERCEL_URL}` : undefined,
   adapter: vercel({
     isr: {
       exclude: [/^\/.+/],
