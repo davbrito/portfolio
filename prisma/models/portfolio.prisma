@@ -1,6 +1,6 @@
 model Profile {
   userId        String       @id
-  user          Users        @relation(fields: [userId], references: [id])
+  user          Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
   name          String       @default("")
   title         String       @default("")
   location      String       @default("")
@@ -32,7 +32,7 @@ model Messages {
 model Experience {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId     String
-  profile    Profile  @relation(fields: [userId], references: [userId])
+  profile    Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
   title      String
   company    String
   location   String
@@ -43,7 +43,7 @@ model Experience {
 model Skills {
   id      String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId  String
-  profile Profile @relation(fields: [userId], references: [userId])
+  profile Profile @relation(fields: [userId], references: [userId], onDelete: Cascade)
   name    String
   level   String
   group   String
@@ -52,7 +52,7 @@ model Skills {
 model Proyects {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId      String
-  profile     Profile  @relation(fields: [userId], references: [userId])
+  profile     Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
   title       String
   description String
   url         String?
