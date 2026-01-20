@@ -16,6 +16,7 @@ model Profile {
   active        Boolean      @default(true)
   experiences   Experience[]
   skills        Skills[]
+  proyects      Proyects[]
 }
 
 model Messages {
@@ -46,4 +47,17 @@ model Skills {
   name    String
   level   String
   group   String
+}
+
+model Proyects {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String
+  profile     Profile  @relation(fields: [userId], references: [userId])
+  title       String
+  description String
+  url         String?
+  repoUrl     String?
+  image       String?
+  imageAlt    String?
+  tags        String[]
 }
