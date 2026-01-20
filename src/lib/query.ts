@@ -1,30 +1,15 @@
 import { QueryClient, QueryClientProvider, useQuery, type QueryClientProviderProps } from "@tanstack/react-query";
-import type z from "astro/zod";
-import type { ActionAccept, ActionClient } from "astro:actions";
+import type { ActionClient } from "astro:actions";
 import { cache, createElement, useState } from "react";
 
-interface ActionKey<TOutput, TAccept extends ActionAccept | undefined, TInputSchema extends z.ZodType | undefined> {
-  action: ActionClient<TOutput, TAccept, TInputSchema> & string;
-  data?: TAccept extends "form" ? FormData : TInputSchema extends z.ZodType ? z.input<TInputSchema> : never;
-}
-
-export function useActionQuery<
-  TOutput,
-  TAccept extends ActionAccept | undefined,
-  TInputSchema extends z.ZodType | undefined,
->(key: ActionKey<TOutput, TAccept, TInputSchema>) {
+export function useActionQuery<TAction extends ActionClient<any, any, any>>(
+  action: TAction,
+  data?: Parameters<NoInfer<TAction>>[0],
+) {
   return useQuery({
-    queryKey: [key.action.toString(), key.data],
-    queryFn: () => key.action.orThrow(key.data!),
+    queryKey: [action.toString(), data],
+    queryFn: (): Promise<Awaited<ReturnType<TAction["orThrow"]>>> => action.orThrow(data!),
   });
-}
-
-export function actionFetcher<
-  TOutput,
-  TAccept extends ActionAccept | undefined,
-  TInputSchema extends z.ZodType | undefined,
->(key: ActionKey<TOutput, TAccept, TInputSchema>) {
-  return key.action.orThrow(key.data!);
 }
 
 const getQueryClient = cache(() => new QueryClient());

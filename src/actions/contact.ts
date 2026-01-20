@@ -55,12 +55,16 @@ export const contactFormAction = defineAction({
 
 export const messagesActions = {
   list: defineAction({
-    async handler(_, context) {
+    input: z.object({
+      filter: z.enum(["all", "read", "unread"]).default("all"),
+    }),
+    async handler(input, context) {
       await authenticateAction(context);
 
       return await db.messages.findMany({
         orderBy: [{ createdAt: "desc" }, { id: "desc" }],
         take: 500,
+        where: input.filter === "read" ? { readAt: { not: null } } : input.filter === "unread" ? { readAt: null } : {},
       });
     },
   }),

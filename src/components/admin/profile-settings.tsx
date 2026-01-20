@@ -41,7 +41,7 @@ import { Switch } from "../ui/switch";
 const DEFAULT_SKILL_GROUPS = ["Frontend", "Backend", "Herramientas & Cloud"];
 
 export function ProfileSettings() {
-  const { data } = useActionQuery({ action: actions.profile.get });
+  const { data } = useActionQuery(actions.profile.get);
   const mutation = useMutation({
     mutationFn: actions.profile.upsert.orThrow,
     onSuccess(data, variables, onMutateResult, context) {

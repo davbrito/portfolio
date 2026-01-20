@@ -3,10 +3,12 @@
 import { useActionQuery } from "@/lib/query";
 import { useMutation } from "@tanstack/react-query";
 import { actions } from "astro:actions";
+import { Eye, EyeOff, Layers } from "lucide-react";
+import { useState } from "react";
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { Spinner } from "../ui/spinner";
-import { Badge } from "../ui/badge";
 
 function formatDate(value: string | Date) {
   const date = typeof value === "string" ? new Date(value) : value;
@@ -17,7 +19,8 @@ function formatDate(value: string | Date) {
 }
 
 export function MessagesSection() {
-  const { data, isLoading } = useActionQuery({ action: actions.messages.list });
+  const [filter, setFilter] = useState<"all" | "read" | "unread">("all");
+  const { data, isLoading } = useActionQuery(actions.messages.list, { filter });
   const markReadMutation = useMutation({
     mutationFn: actions.messages.markRead.orThrow,
     onSuccess(data, variables, onMutateResult, context) {
@@ -31,31 +34,63 @@ export function MessagesSection() {
     },
   });
 
-  if (isLoading) {
-    return (
-      <div className="m-auto">
-        <Spinner />
-      </div>
-    );
-  }
-
-  const messages = data ?? [];
+  const filteredMessages =
+    filter === "all"
+      ? data
+      : filter === "read"
+        ? data?.filter((message) => !!message.readAt)
+        : data?.filter((message) => !message.readAt);
 
   return (
     <Card>
       <CardHeader>
-        <h2 className="heading-3">Mensajes recibidos</h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="heading-3">Mensajes recibidos</h2>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              size="sm"
+              variant={filter === "all" ? "secondary" : "ghost"}
+              onClick={() => setFilter("all")}
+            >
+              <Layers className="h-4 w-4" />
+              Todos
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant={filter === "unread" ? "secondary" : "ghost"}
+              onClick={() => setFilter("unread")}
+            >
+              <EyeOff className="h-4 w-4" />
+              No leídos
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant={filter === "read" ? "secondary" : "ghost"}
+              onClick={() => setFilter("read")}
+            >
+              <Eye className="h-4 w-4" />
+              Leídos
+            </Button>
+          </div>
+        </div>
       </CardHeader>
-      <CardContent>
-        {messages.length === 0 ? (
+      <CardContent className="flex flex-col">
+        {isLoading ? (
+          <div className="m-auto p-6">
+            <Spinner />
+          </div>
+        ) : !filteredMessages?.length ? (
           <p className="text-muted-foreground">No hay mensajes por mostrar.</p>
         ) : (
           <div className="space-y-4">
-            {messages.map((message) => {
+            {filteredMessages.map((message) => {
               const isRead = !!message.readAt;
               return (
                 <div key={message.id} className="rounded-xl border p-4">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center justify-between gap-2">
                     <div>
                       <p className="text-sm font-semibold">{message.subject}</p>
                       <p className="text-muted-foreground text-xs">
