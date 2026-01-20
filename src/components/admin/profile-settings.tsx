@@ -65,8 +65,6 @@ export function ProfileSettings() {
     },
   });
 
-  console.log("Profile data:", data);
-
   const { handleSubmit, formState, register, setError, clearErrors, control } = useForm({
     resolver: zodResolver(profilePayloadSchema),
     values: data ?? undefined,
@@ -545,7 +543,6 @@ function ProjectsSection({
   errors: FieldErrors<ProfilePayloadInput>;
 }) {
   const projectFields = useFieldArray({ control, name: "projects" });
-  console.log("Project errors:", projectFields.fields);
   const tagError = (index: number) => errors.projects?.[index]?.tags;
   return (
     <FieldGroup className="space-y-4">

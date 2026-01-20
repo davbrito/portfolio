@@ -7,7 +7,11 @@ import { CF_TURNSTILE_SITE_KEY } from "astro:env/client";
 import { SendIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 
-export default function ContactForm() {
+interface ContactFormProps {
+  profileId: string;
+}
+
+export default function ContactForm({ profileId }: ContactFormProps) {
   const form = useForm({
     defaultValues: {
       name: "",
@@ -40,7 +44,8 @@ export default function ContactForm() {
           const token = document.querySelector<HTMLInputElement>(
             '#contact-form input[name="cf-turnstile-response"]',
           )?.value;
-          const result = await actions.contactForm({ ...data, cfTurnstileResponse: token || "" });
+
+          const result = await actions.contactForm({ ...data, profileId, cfTurnstileResponse: token || "" });
 
           if (isInputError(result.error)) {
             result.error.issues.forEach((issue) => {
@@ -49,7 +54,10 @@ export default function ContactForm() {
           } else if (result.error) {
             setError("root", { type: "server", message: result.error.message });
           } else {
-            form.reset();
+            form.setValue("name", "");
+            form.setValue("email", "");
+            form.setValue("subject", "");
+            form.setValue("message", "");
           }
         })}
       >

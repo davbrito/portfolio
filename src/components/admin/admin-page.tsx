@@ -8,10 +8,11 @@ import {
   SecuritySettingsCards,
   type SettingsCardClassNames,
 } from "@daveyplate/better-auth-ui";
-import { BarChart3, IdCard, LockIcon, Settings, UserIcon, Users } from "lucide-react";
+import { BarChart3, IdCard, LockIcon, MailIcon, Settings, UserIcon, Users } from "lucide-react";
 import { Suspense } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { Toaster } from "../ui/sonner";
+import { MessagesSection } from "./messages";
 import { ProfileSettings } from "./profile-settings";
 
 const settingCardClassnames: SettingsCardClassNames = {
@@ -43,7 +44,7 @@ export default function AdminPage() {
           </div>
 
           <tabs.Tabs defaultValue="profile" className="dark grow flex-col">
-            <tabs.TabsList className="mb-4 w-full flex-wrap *:flex-1">
+            <tabs.TabsList className="mb-4 w-full flex-wrap *:flex-1 *:p-2">
               <tabs.TabsTrigger value="profile">
                 <IdCard />
                 Perfil
@@ -59,6 +60,10 @@ export default function AdminPage() {
               <tabs.TabsTrigger value="settings">
                 <Settings />
                 Configuración
+              </tabs.TabsTrigger>
+              <tabs.TabsTrigger value="messages">
+                <MailIcon />
+                Mensajes
               </tabs.TabsTrigger>
               <tabs.TabsTrigger value="account">
                 <UserIcon />
@@ -83,6 +88,9 @@ export default function AdminPage() {
             </tabs.TabsContent>
             <tabs.TabsContent value="settings">
               <SettingsSection />
+            </tabs.TabsContent>
+            <tabs.TabsContent value="messages" className="flex grow flex-col">
+              <MessagesSection />
             </tabs.TabsContent>
             <tabs.TabsContent value="account">
               <AccountSettingsCards classNames={settingsCardsClassnames} />

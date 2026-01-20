@@ -1,26 +1,7 @@
+import { authenticateAction } from "@/lib/auth/helpers";
 import { profilePayloadSchema, type ProfilePayloadInput } from "@/lib/validators/profile";
 import { findProfile, revalidatePortfolioPage, upsertProfile } from "@/service/profile";
-import { ActionError, defineAction, type ActionAPIContext } from "astro:actions";
-import { ADMIN_EMAIL } from "astro:env/server";
-
-async function ensureAdminSession(context: ActionAPIContext) {
-  const session = context.locals.session;
-  const user = context.locals.user;
-  if (!session || !user) return null;
-
-  if (ADMIN_EMAIL && user.email !== ADMIN_EMAIL) return null;
-
-  return { session, user };
-}
-
-async function authenticateAction(context: ActionAPIContext) {
-  const session = await ensureAdminSession(context);
-  if (!session) {
-    throw new ActionError({ code: "UNAUTHORIZED", message: "Unauthorized" });
-  }
-
-  return session;
-}
+import { defineAction } from "astro:actions";
 
 const getProfileAction = defineAction({
   async handler(_, context) {

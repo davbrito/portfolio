@@ -17,10 +17,13 @@ model Profile {
   experiences   Experience[]
   skills        Skills[]
   projects      Proyects[]
+  messages      Messages[]
 }
 
 model Messages {
-  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id        String    @id @default(uuid(7)) @db.Uuid
+  profileId String
+  profile   Profile   @relation(fields: [profileId], references: [userId], onDelete: Cascade)
   name      String
   email     String
   subject   String
@@ -30,9 +33,9 @@ model Messages {
 }
 
 model Experience {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId     String
-  profile    Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  id         String   @id @default(uuid(7)) @db.Uuid
+  profileId  String
+  profile    Profile  @relation(fields: [profileId], references: [userId], onDelete: Cascade)
   title      String
   company    String
   location   String
@@ -41,18 +44,18 @@ model Experience {
 }
 
 model Skills {
-  id      String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId  String
-  profile Profile @relation(fields: [userId], references: [userId], onDelete: Cascade)
-  name    String
-  level   String
-  group   String
+  id        String  @id @default(uuid(7)) @db.Uuid
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [userId], onDelete: Cascade)
+  name      String
+  level     String
+  group     String
 }
 
 model Proyects {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId      String
-  profile     Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  id          String   @id @default(uuid(7)) @db.Uuid
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [userId], onDelete: Cascade)
   title       String
   description String
   url         String?

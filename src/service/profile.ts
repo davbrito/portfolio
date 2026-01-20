@@ -45,32 +45,34 @@ export async function upsertProfile(userId: string, data: ProfilePayload) {
       },
     });
 
-    await tx.experience.deleteMany({ where: { userId } });
+    const profileId = userId;
+
+    await tx.experience.deleteMany({ where: { profileId } });
     if (cleanedExperiences.length > 0) {
       await tx.experience.createMany({
         data: cleanedExperiences.map((exp) => ({
           ...exp,
-          userId,
+          profileId,
         })),
       });
     }
 
-    await tx.skills.deleteMany({ where: { userId } });
+    await tx.skills.deleteMany({ where: { profileId } });
     if (cleanedSkills.length > 0) {
       await tx.skills.createMany({
         data: cleanedSkills.map((skill) => ({
           ...skill,
-          userId,
+          profileId,
         })),
       });
     }
 
-    await tx.proyects.deleteMany({ where: { userId } });
+    await tx.proyects.deleteMany({ where: { profileId } });
     if (cleanedProjects.length > 0) {
       await tx.proyects.createMany({
         data: cleanedProjects.map((project) => ({
           ...project,
-          userId,
+          profileId,
         })),
       });
     }
