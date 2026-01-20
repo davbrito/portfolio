@@ -1,13 +1,17 @@
 import { passkey } from "@better-auth/passkey";
-import { ADMIN_EMAIL, CF_TURNSTILE_SECRET_KEY } from "astro:env/server";
+import { ADMIN_EMAIL, BETTER_AUTH_SECRET, CF_TURNSTILE_SECRET_KEY } from "astro:env/server";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { APIError } from "better-auth/api";
+import { captcha } from "better-auth/plugins";
 import { verifyAdminToken } from "./auth/admin-secret";
 import { db } from "./db";
-import { captcha } from "better-auth/plugins";
+
+const vercelUrl = import.meta.env.VERCEL_PROJECT_PRODUCTION_URL || import.meta.env.VERCEL_URL;
 
 export const auth = betterAuth({
+  secret: BETTER_AUTH_SECRET,
+  trustedOrigins: [vercelUrl ? `https://${vercelUrl}` : ""].filter(Boolean),
   database: prismaAdapter(db, {
     provider: "postgresql",
     transaction: true,

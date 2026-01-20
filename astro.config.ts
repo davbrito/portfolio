@@ -92,6 +92,12 @@ export default defineConfig({
         context: "server",
         optional: false,
       }),
+
+      BETTER_AUTH_SECRET: envField.string({
+        access: "secret",
+        context: "server",
+        optional: false,
+      }),
     },
   },
 });
