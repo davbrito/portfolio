@@ -11,7 +11,7 @@ const { ISR_BYPASS_TOKEN } = loadEnv(process.env.NODE_ENV!, process.cwd());
 export default defineConfig({
   adapter: vercel({
     isr: {
-      exclude: [/^\/auth.*/, /^\/admin.*/],
+      exclude: [/^\/.+/],
       bypassToken: ISR_BYPASS_TOKEN,
     },
   }),
