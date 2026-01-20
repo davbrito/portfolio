@@ -12,7 +12,7 @@ export default defineConfig({
   site: VERCEL_URL ? `https://${VERCEL_URL}` : undefined,
   adapter: vercel({
     isr: {
-      exclude: [/^\/.+/],
+      exclude: [/^\/admin\/.*/, /^\/api\/.*/, /^\/auth\/.*/, /^\/_actions\/.*/],
       bypassToken: ISR_BYPASS_TOKEN,
     },
   }),
