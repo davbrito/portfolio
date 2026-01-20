@@ -25,6 +25,7 @@ const { socialLinks, experience, technologies, profile, projects } = data;
 <SiteLayout title={`${profile.name} - ${profile.title}`}>
   <div class="bg-background text-foreground relative min-h-screen font-sans">
     <LandingHeader
+      client:load
       navItems={[
         { href: "#sobre-mi", label: "Sobre mi" },
         { href: "#experiencia", label: "Experiencia" },

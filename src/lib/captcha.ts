@@ -1,7 +1,15 @@
 import { ActionError } from "astro:actions";
 import { CF_TURNSTILE_SECRET_KEY } from "astro:env/server";
 
-export async function validateTurnstileToken(token: string, ipAddress: string) {
+export async function validateTurnstileToken(
+  token: string,
+  ipAddress: string,
+): Promise<{
+  success: boolean;
+  challenge_ts: string;
+  hostname: string;
+  "error-codes"?: string[];
+}> {
   if (!CF_TURNSTILE_SECRET_KEY) {
     console.error("CF_TURNSTILE_SECRET_KEY is not set");
     throw new ActionError({

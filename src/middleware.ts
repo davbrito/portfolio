@@ -5,6 +5,7 @@ const PUBLIC_PATTERNS = [
   new URLPattern({ pathname: "/" }),
   new URLPattern({ pathname: "/api/auth/*" }),
   new URLPattern({ pathname: "/auth/*" }),
+  new URLPattern({ pathname: "/curriculum.pdf" }),
 ];
 
 export const onRequest = defineMiddleware(async (context, next) => {
