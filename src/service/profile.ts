@@ -65,9 +65,9 @@ export async function upsertProfile(userId: string, data: ProfilePayload) {
       });
     }
 
-    await tx.projects.deleteMany({ where: { userId } });
+    await tx.proyects.deleteMany({ where: { userId } });
     if (cleanedProjects.length > 0) {
-      await tx.projects.createMany({
+      await tx.proyects.createMany({
         data: cleanedProjects.map((project) => ({
           ...project,
           userId,
