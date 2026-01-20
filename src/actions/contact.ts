@@ -1,4 +1,5 @@
 import { validateTurnstileToken } from "@/lib/captcha";
+import { db } from "@/lib/db";
 import { ActionError, defineAction } from "astro:actions";
 import { z } from "astro:schema";
 
@@ -20,24 +21,30 @@ export const contactFormAction = defineAction({
       .nonempty({ message: "El mensaje es requerido" }),
   }),
   async handler(input, context) {
-    console.log("Contact form action invoked");
     const token = input.cfTurnstileResponse;
+
     if (!token) {
       throw new ActionError({
         code: "BAD_REQUEST",
         message: "Turnstile token is required",
       });
     }
+
     const validation = await validateTurnstileToken(token, context.clientAddress);
-    console.log("Contact form submitted:", validation, input);
 
     if (!validation.success) {
       console.error("Turnstile validation failed: %O", validation);
-      throw new ActionError({
-        code: "BAD_REQUEST",
-        message: "Verificación fallida",
-      });
+      throw new ActionError({ code: "BAD_REQUEST", message: "Verificación fallida" });
     }
+
+    await db.messages.create({
+      data: {
+        email: input.email,
+        name: input.name,
+        subject: input.subject,
+        message: input.message,
+      },
+    });
 
     return { success: true };
   },
