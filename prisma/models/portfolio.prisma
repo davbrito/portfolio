@@ -20,13 +20,13 @@ model Profile {
 }
 
 model Messages {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String
   email     String
   subject   String
   message   String
-  createdAt DateTime @default(now())
-  read      Boolean  @default(false)
+  createdAt DateTime  @default(now())
+  readAt    DateTime?
 }
 
 model Experience {
