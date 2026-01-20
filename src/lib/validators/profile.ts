@@ -36,7 +36,7 @@ const experienceItemSchema = z.object({
     .max(120, { message: "El periodo es muy largo" })
     .nullish()
     .transform((val) => val || ""),
-  highlights: z.string().trim().max(300, { message: "El texto es muy largo" }).default(""),
+  highlights: z.string().trim().default(""),
 });
 
 const skillItemSchema = z.object({

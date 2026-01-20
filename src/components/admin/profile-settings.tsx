@@ -471,11 +471,6 @@ function SkillsSection({
           </div>
           <FieldGroup className="grid gap-4 md:grid-cols-2">
             <FormInputField {...register(`skills.${index}.name`)} label="Nombre" error={errors.skills?.[index]?.name} />
-            <FormInputField
-              {...register(`skills.${index}.level`)}
-              label="Nivel"
-              error={errors.skills?.[index]?.level}
-            />
             <Controller
               control={control}
               name={`skills.${index}.level` as const}

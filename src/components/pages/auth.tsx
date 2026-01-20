@@ -26,14 +26,23 @@ export default function AuthPage({ path }: { path: string }) {
                 className="self-center"
                 onClick={() => {
                   actions.admin.setupLink();
-                  alert(
-                    "Revisa la consola del servidor para el enlace de configuración",
-                  );
+                  alert("Revisa la consola del servidor para el enlace de configuración");
                 }}
               >
                 Generar Enlace de Configuración (Solo Dev)
               </Button>
             ) : null}
+            <Button
+              type="button"
+              size="sm"
+              variant="link"
+              className="self-center"
+              onClick={() => {
+                window.location.href = "/";
+              }}
+            >
+              Volver a mi Portafolio
+            </Button>
           </>
         ) : null}
       </main>
