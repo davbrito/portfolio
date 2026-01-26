@@ -15,8 +15,7 @@ import { z } from "zod";
 
 const schema = z.object({
   email: z.email({
-    error: (ctx) =>
-      !ctx.input ? "El correo electrónico es requerido" : "Correo inválido",
+    error: (ctx) => (!ctx.input ? "El correo electrónico es requerido" : "Correo inválido"),
   }),
   password: z.string().min(1, { error: "La contraseña es requerida" }),
 });
@@ -36,10 +35,7 @@ const passkeyLogin = async () => {
 export default function AdminLoginPage() {
   const isSupportedPasskey = useIsPasskeysSupported();
 
-  const [passkeyState, passkeyAction, passkeyPending] = useActionState(
-    passkeyLogin,
-    undefined,
-  );
+  const [passkeyState, passkeyAction, passkeyPending] = useActionState(passkeyLogin, undefined);
 
   const form = useForm({
     resolver: zodResolver(schema),
@@ -59,10 +55,7 @@ export default function AdminLoginPage() {
     if (result.error) {
       form.setError("root", {
         type: "server",
-        message:
-          result.error.message ||
-          result.error.code ||
-          "Error al iniciar sesión",
+        message: result.error.message || result.error.code || "Error al iniciar sesión",
       });
       return;
     }
@@ -76,9 +69,7 @@ export default function AdminLoginPage() {
         {/* Barra de encabezado */}
         <div className="bg-primary text-primary-foreground border-primary flex items-center gap-2 border-b-2 px-4 py-3">
           <Terminal className="h-5 w-5" />
-          <span className="text-sm font-bold tracking-wider uppercase">
-            Panel de Administración
-          </span>
+          <span className="text-sm font-bold tracking-wider uppercase">Panel de Administración</span>
         </div>
 
         {/* Contenido */}
@@ -88,12 +79,8 @@ export default function AdminLoginPage() {
               <Lock className="text-primary h-6 w-6" />
             </div>
             <div>
-              <h1 className="text-foreground text-lg font-bold tracking-wide uppercase">
-                Acceso Restringido
-              </h1>
-              <p className="text-muted-foreground text-sm">
-                Ingresa tus credenciales
-              </p>
+              <h1 className="text-foreground text-lg font-bold tracking-wide uppercase">Acceso Restringido</h1>
+              <p className="text-muted-foreground text-sm">Ingresa tus credenciales</p>
             </div>
           </div>
 
@@ -112,30 +99,20 @@ export default function AdminLoginPage() {
               </form>
               {passkeyState?.error ? (
                 <div className="text-destructive text-sm">
-                  {passkeyState?.error.message ||
-                    passkeyState?.error?.statusText}
+                  {passkeyState?.error.message || passkeyState?.error?.statusText}
                 </div>
               ) : null}
               <div className="flex items-center gap-3">
                 <div className="bg-border h-px flex-1" />
-                <span className="text-muted-foreground text-xs tracking-wider uppercase">
-                  o usa tu contraseña
-                </span>
+                <span className="text-muted-foreground text-xs tracking-wider uppercase">o usa tu contraseña</span>
                 <div className="bg-border h-px flex-1" />
               </div>
             </div>
           ) : null}
 
-          <form
-            noValidate
-            onSubmit={handleSubmit(handleCredentialsLogin)}
-            className="flex flex-col gap-4"
-          >
+          <form noValidate onSubmit={handleSubmit(handleCredentialsLogin)} className="flex flex-col gap-4">
             <div className="space-y-2">
-              <Label
-                htmlFor="email"
-                className="text-muted-foreground text-xs tracking-wider uppercase"
-              >
+              <Label htmlFor="email" className="text-muted-foreground text-xs tracking-wider uppercase">
                 Correo Electrónico_
               </Label>
               <Input
@@ -147,17 +124,10 @@ export default function AdminLoginPage() {
                 autoComplete="email webauthn"
                 {...register("email")}
               />
-              {errors.email ? (
-                <p className="text-destructive text-sm">
-                  {errors.email.message}
-                </p>
-              ) : null}
+              {errors.email ? <p className="text-destructive text-sm">{errors.email.message}</p> : null}
             </div>
             <div className="space-y-2">
-              <Label
-                htmlFor="password"
-                className="text-muted-foreground text-xs tracking-wider uppercase"
-              >
+              <Label htmlFor="password" className="text-muted-foreground text-xs tracking-wider uppercase">
                 Contraseña_
               </Label>
               <Input
@@ -169,15 +139,10 @@ export default function AdminLoginPage() {
                 autoComplete="current-password webauthn"
                 {...register("password")}
               />
-              {errors.password ? (
-                <p className="text-destructive text-sm">
-                  {errors.password.message}
-                </p>
-              ) : null}
+              {errors.password ? <p className="text-destructive text-sm">{errors.password.message}</p> : null}
               {errors.root?.message ? (
                 <p className="text-destructive font-mono text-sm">
-                  <span className="text-destructive/60">[ERROR]</span>{" "}
-                  {errors.root?.message}
+                  <span className="text-destructive/60">[ERROR]</span> {errors.root?.message}
                 </p>
               ) : null}
             </div>
@@ -196,10 +161,8 @@ export default function AdminLoginPage() {
                 className="self-center"
                 onClick={() => {
                   console.log("Generating admin setup link...");
-                  actions.admin.setupLink();
-                  alert(
-                    "Revisa la consola del servidor para el enlace de configuración",
-                  );
+                  actions.admin.generateAdminSetupToken();
+                  alert("Revisa la consola del servidor para el enlace de configuración");
                 }}
               >
                 Generar Enlace de Configuración (Solo Dev)

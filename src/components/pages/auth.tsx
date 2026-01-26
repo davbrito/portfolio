@@ -1,5 +1,5 @@
 import { authUiProps } from "@/lib/auth-client";
-import { AuthUIProvider, AuthView, SignedIn } from "@daveyplate/better-auth-ui";
+import { AuthUIProvider, AuthView, authViewPaths, SignedIn } from "@daveyplate/better-auth-ui";
 import { actions } from "astro:actions";
 import { ENABLE_ADMIN_SETUP } from "astro:env/client";
 import { useEffect } from "react";
@@ -11,12 +11,12 @@ export default function AuthPage({ path }: { path: string }) {
     <AuthUIProvider {...authUiProps}>
       <main className="flex min-h-screen flex-col items-center justify-center gap-2 px-6 py-12">
         <AuthView path={path} redirectTo="/admin" />
-        {["sign-up", "sign-in"].includes(path) ? (
+        {[authViewPaths.SIGN_UP, authViewPaths.SIGN_IN].includes(path) ? (
           <SignedIn>
             <RedirectToAdmin />
           </SignedIn>
         ) : null}
-        {path === "sign-in" ? (
+        {path === authViewPaths.SIGN_UP ? (
           <>
             {ENABLE_ADMIN_SETUP ? (
               <Button
@@ -25,7 +25,7 @@ export default function AuthPage({ path }: { path: string }) {
                 variant="link"
                 className="self-center"
                 onClick={() => {
-                  actions.admin.setupLink();
+                  actions.admin.generateAdminSetupToken();
                   alert("Revisa la consola del servidor para el enlace de configuración");
                 }}
               >

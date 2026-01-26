@@ -25,6 +25,7 @@ export default defineConfig({
   vite: {
     plugins: [viteTsConfigPaths({ projects: ["./tsconfig.json"] }), tailwindcss()],
     server: {
+      allowedHosts: url ? [url] : [],
       hmr: {
         clientPort: 443,
         path: "/_hmr",

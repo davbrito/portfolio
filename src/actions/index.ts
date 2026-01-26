@@ -7,7 +7,7 @@ export const server = {
   profile: profileActions,
   messages: messagesActions,
   admin: {
-    setupLink: defineAction({
+    generateAdminSetupToken: defineAction({
       handler() {
         if (!import.meta.env.ENABLE_ADMIN_SETUP) {
           throw new ActionError({
@@ -16,14 +16,10 @@ export const server = {
           });
         }
 
-        const hash = getAdminSecretHash();
-        const url = `http://localhost:3000/admin/setup?token=${hash}`;
-        console.log(
-          "----------------------------------------\n" +
-            "ADMIN SETUP LINK:\n" +
-            url +
-            "\n----------------------------------------",
-        );
+        const token = getAdminSecretHash();
+
+        console.log("Token para creción de usuario admin:", token);
+
         return { success: true };
       },
     }),
