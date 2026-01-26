@@ -11,6 +11,7 @@ import { db } from "./db";
 const vercelUrl = import.meta.env.VERCEL_PROJECT_PRODUCTION_URL || import.meta.env.VERCEL_URL;
 
 export const auth = betterAuth({
+  baseURL: vercelUrl ? `https://${vercelUrl}` : undefined,
   secret: BETTER_AUTH_SECRET,
   trustedOrigins: [vercelUrl ? `https://${vercelUrl}` : ""].filter(Boolean),
   database: prismaAdapter(db, {
