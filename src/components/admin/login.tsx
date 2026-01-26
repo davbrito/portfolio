@@ -160,7 +160,6 @@ export default function AdminLoginPage() {
                 variant="link"
                 className="self-center"
                 onClick={() => {
-                  console.log("Generating admin setup link...");
                   actions.admin.generateAdminSetupToken();
                   alert("Revisa la consola del servidor para el enlace de configuración");
                 }}
