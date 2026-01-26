@@ -10,9 +10,7 @@ async function ensureAdminSession(context: ActionAPIContext) {
   const session = context.locals.session;
   const user = context.locals.user;
 
-  if (!session || !user) return null;
-
-  if (ADMIN_EMAIL && user.email !== ADMIN_EMAIL) return null;
+  if (!session || !user || !isAdminEmail(user.email)) return null;
 
   return { session, user };
 }
@@ -24,4 +22,9 @@ export async function authenticateAction(context: ActionAPIContext) {
   }
 
   return session;
+}
+
+export function isAdminEmail(email: string): boolean {
+  const allowedEmails = ADMIN_EMAIL.split(",").map((e) => e.trim().toLowerCase());
+  return allowedEmails.includes(email.toLowerCase());
 }
