@@ -34,6 +34,7 @@ export const auth = betterAuth({
     maxAge: 5 * 60, // Cache duration in seconds (5 minutes)
   },
   rateLimit: {
+    enabled: true,
     storage: "database",
   },
   databaseHooks: {

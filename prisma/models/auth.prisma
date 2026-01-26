@@ -1,3 +1,4 @@
+
 model Users {
   id            String     @id
   name          String
@@ -80,4 +81,13 @@ model Passkeys {
   @@index([userId])
   @@index([credentialID])
   @@map("passkeys")
+}
+
+model RateLimits {
+  id          String  @id
+  key         String?
+  count       Int?
+  lastRequest BigInt?
+
+  @@map("rateLimits")
 }
