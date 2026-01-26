@@ -33,7 +33,13 @@ export const settingsCardsClassnames = {
   card: settingCardClassnames,
 };
 
-export default function AdminPage() {
+export default function AdminPage({ defaultTab }: { defaultTab?: string | null }) {
+  const onChangeTab = (value: string) => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("tab", value);
+    window.history.replaceState({}, "", url.href);
+  };
+
   return (
     <QueryProvider>
       <AuthUIProvider {...authUiProps}>
@@ -43,7 +49,7 @@ export default function AdminPage() {
             <p className="text-muted-foreground">Gestiona tu aplicación, usuarios y configuraciones de seguridad.</p>
           </div>
 
-          <tabs.Tabs defaultValue="profile" className="dark grow flex-col">
+          <tabs.Tabs defaultValue={defaultTab || "profile"} onValueChange={onChangeTab} className="dark grow flex-col">
             <tabs.TabsList className="mb-4 w-full flex-wrap *:flex-1 *:p-2">
               <tabs.TabsTrigger value="profile">
                 <IdCard />

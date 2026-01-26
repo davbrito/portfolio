@@ -7,8 +7,10 @@ export const prerender = false;
 if (!Astro.locals.session) {
   return Astro.redirect("/auth/sign-in");
 }
+
+const tab = Astro.url.searchParams.get("tab");
 ---
 
 <AdminLayout title="Admin Page">
-  <AdminPage client:load />
+  <AdminPage client:load defaultTab={tab} />
 </AdminLayout>
