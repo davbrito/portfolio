@@ -1,5 +1,5 @@
-import { ADMIN_SECRET } from "astro:env/server";
 import { createHash, timingSafeEqual } from "node:crypto";
+import { ADMIN_SECRET } from "../server-env";
 
 export function getAdminSecretHash() {
   const secret = ADMIN_SECRET;

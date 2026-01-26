@@ -1,4 +1,4 @@
-import { authenticateAction } from "@/lib/auth/helpers";
+import { authenticateAction } from "@/lib/auth/actions";
 import { validateTurnstileToken } from "@/lib/captcha";
 import { db } from "@/lib/db";
 import { ActionError, defineAction } from "astro:actions";

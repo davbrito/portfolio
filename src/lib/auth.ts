@@ -1,14 +1,12 @@
 import { passkey } from "@better-auth/passkey";
-import { BETTER_AUTH_SECRET, CF_TURNSTILE_SECRET_KEY } from "astro:env/server";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { APIError } from "better-auth/api";
 import { captcha } from "better-auth/plugins";
-import { verifyAdminToken } from "./auth/admin-secret";
-import { isAdminEmail } from "./auth/helpers";
+import { validateUserCreation } from "./auth/db-hooks";
 import { db } from "./db";
+import { BETTER_AUTH_SECRET, CF_TURNSTILE_SECRET_KEY, VERCEL_PROJECT_PRODUCTION_URL, VERCEL_URL } from "./server-env";
 
-const vercelUrl = import.meta.env.VERCEL_PROJECT_PRODUCTION_URL || import.meta.env.VERCEL_URL;
+const vercelUrl = VERCEL_PROJECT_PRODUCTION_URL || VERCEL_URL;
 
 export const auth = betterAuth({
   baseURL: vercelUrl ? `https://${vercelUrl}` : undefined,
@@ -35,24 +33,14 @@ export const auth = betterAuth({
     enabled: true,
     maxAge: 5 * 60, // Cache duration in seconds (5 minutes)
   },
+  rateLimit: {
+    storage: "database",
+  },
   databaseHooks: {
     user: {
       create: {
         async before(user, context) {
-          const token = context?.body?.adminToken || context?.request?.headers.get("x-admin-token");
-          console.log("Creating user with admin token:", token);
-
-          if (!token || !verifyAdminToken(token)) {
-            throw new APIError("UNAUTHORIZED", {
-              message: "Invalid admin token",
-            });
-          }
-
-          if (!isAdminEmail(user.email)) {
-            throw new APIError("UNAUTHORIZED", {
-              message: "This email is not authorized to create an admin account",
-            });
-          }
+          validateUserCreation(user, context);
         },
       },
     },

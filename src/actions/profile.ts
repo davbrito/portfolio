@@ -1,4 +1,4 @@
-import { authenticateAction } from "@/lib/auth/helpers";
+import { authenticateAction } from "@/lib/auth/actions";
 import { profilePayloadSchema, type ProfilePayloadInput } from "@/lib/validators/profile";
 import { findProfile, revalidatePortfolioPage, upsertProfile } from "@/service/profile";
 import { defineAction } from "astro:actions";

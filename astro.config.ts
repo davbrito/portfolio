@@ -105,6 +105,17 @@ export default defineConfig({
         context: "server",
         optional: false,
       }),
+
+      VERCEL_PROJECT_PRODUCTION_URL: envField.string({
+        access: "public",
+        context: "server",
+        optional: true,
+      }),
+      VERCEL_URL: envField.string({
+        access: "public",
+        context: "server",
+        optional: true,
+      }),
     },
   },
 });
