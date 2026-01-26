@@ -26,7 +26,7 @@ export default function AuthPage({ path }: { path: string }) {
                 className="self-center"
                 onClick={() => {
                   actions.admin.generateAdminSetupToken();
-                  alert("Revisa la consola del servidor para el enlace de configuración");
+                  alert("Revisa la consola del servidor para el token de configuración");
                 }}
               >
                 Generar Enlace de Configuración (Solo Dev)
