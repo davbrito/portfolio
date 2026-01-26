@@ -37,7 +37,7 @@ export const auth = betterAuth({
     user: {
       create: {
         async before(user, context) {
-          const token = context?.request?.headers.get("x-admin-token");
+          const token = context?.body?.adminToken || context?.request?.headers.get("x-admin-token");
           console.log("Creating user with admin token:", token);
 
           if (!token || !verifyAdminToken(token)) {
@@ -48,7 +48,7 @@ export const auth = betterAuth({
 
           if (user.email !== ADMIN_EMAIL) {
             throw new APIError("UNAUTHORIZED", {
-              message: "Only admin user can be created",
+              message: "This email is not authorized to create an admin account",
             });
           }
         },
