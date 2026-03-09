@@ -16,9 +16,7 @@ const url = VERCEL_PROJECT_PRODUCTION_URL || VERCEL_URL;
 // https://astro.build/config
 export default defineConfig({
   site: url ? `https://${url}` : undefined,
-  security: {
-    checkOrigin: false,
-  },
+  security: { checkOrigin: true, allowedDomains: url ? [{ protocol: "https", hostname: url }] : undefined },
   adapter: vercel({
     isr: {
       exclude: [/^\/.+/],
