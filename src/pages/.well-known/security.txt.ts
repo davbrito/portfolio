@@ -10,10 +10,16 @@ import {
 export const prerender = false;
 
 export function GET() {
+  // Validate the Expires field is a valid RFC 3339 date-time
+  const expires = new Date(SECURITY_EXPIRES);
+  if (isNaN(expires.getTime())) {
+    return new Response("SECURITY_EXPIRES is not a valid RFC 3339 date-time.", { status: 500 });
+  }
+
   const lines: string[] = [];
 
   lines.push(`Contact: ${SECURITY_CONTACT}`);
-  lines.push(`Expires: ${SECURITY_EXPIRES}`);
+  lines.push(`Expires: ${expires.toISOString()}`);
 
   if (SECURITY_ENCRYPTION) {
     lines.push(`Encryption: ${SECURITY_ENCRYPTION}`);
@@ -34,7 +40,7 @@ export function GET() {
   return new Response(lines.join("\n") + "\n", {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
-      "Cache-Control": "no-store",
+      "Cache-Control": "max-age=3600",
     },
   });
 }
