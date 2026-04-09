@@ -63,4 +63,5 @@ model Proyects {
   image       String?
   imageAlt    String?
   tags        String[]
+  order       Int      @default(0)
 }

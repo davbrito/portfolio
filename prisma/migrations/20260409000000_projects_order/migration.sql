@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Proyects" ADD COLUMN "order" INTEGER NOT NULL DEFAULT 0;

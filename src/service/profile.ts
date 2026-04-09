@@ -5,7 +5,7 @@ import { ISR_BYPASS_TOKEN } from "astro:env/server";
 export async function findProfile(userId: string) {
   const profile = await db.profile.findUnique({
     where: { userId },
-    include: { experiences: true, skills: true, projects: true },
+    include: { experiences: true, skills: true, projects: { orderBy: { order: "asc" } } },
   });
 
   return profile;
@@ -70,9 +70,10 @@ export async function upsertProfile(userId: string, data: ProfilePayload) {
     await tx.proyects.deleteMany({ where: { profileId } });
     if (cleanedProjects.length > 0) {
       await tx.proyects.createMany({
-        data: cleanedProjects.map((project) => ({
+        data: cleanedProjects.map((project, index) => ({
           ...project,
           profileId,
+          order: index,
         })),
       });
     }

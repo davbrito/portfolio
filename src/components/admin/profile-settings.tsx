@@ -8,7 +8,7 @@ import { profilePayloadSchema, SKILL_LEVELS, type ProfilePayloadInput } from "@/
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { actions, isInputError } from "astro:actions";
-import { AlertCircle, CheckCircle2, Loader2Icon, SaveIcon, Trash2Icon } from "lucide-react";
+import { AlertCircle, ArrowDownIcon, ArrowUpIcon, CheckCircle2, Loader2Icon, SaveIcon, Trash2Icon } from "lucide-react";
 import { useId } from "react";
 import { ErrorCode, useDropzone, type FileRejection } from "react-dropzone";
 import {
@@ -555,9 +555,31 @@ function ProjectsSection({
         <div key={field.id} className="space-y-4 rounded-xl border p-4">
           <div className="flex items-center justify-between gap-2">
             <p className="text-sm font-semibold">Proyecto {index + 1}</p>
-            <Button type="button" variant="ghost" onClick={() => projectFields.remove(index)}>
-              Eliminar
-            </Button>
+            <div className="flex items-center gap-1">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                disabled={index === 0}
+                onClick={() => projectFields.move(index, index - 1)}
+                aria-label="Mover arriba"
+              >
+                <ArrowUpIcon />
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                disabled={index === projectFields.fields.length - 1}
+                onClick={() => projectFields.move(index, index + 1)}
+                aria-label="Mover abajo"
+              >
+                <ArrowDownIcon />
+              </Button>
+              <Button type="button" variant="ghost" onClick={() => projectFields.remove(index)}>
+                Eliminar
+              </Button>
+            </div>
           </div>
           <FieldGroup className="grid gap-4 md:grid-cols-2">
             <FormInputField
