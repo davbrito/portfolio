@@ -59,28 +59,10 @@ export default defineConfig({
         optional: false,
       }),
 
-      POSTGRES_URL: envField.string({
+      DATABASE_URL: envField.string({
         access: "secret",
         context: "server",
         optional: false,
-      }),
-
-      POSTGRES_PRISMA_URL: envField.string({
-        access: "secret",
-        context: "server",
-        optional: false,
-      }),
-
-      POSTGRES_URL_NON_POOLING: envField.string({
-        access: "secret",
-        context: "server",
-        optional: false,
-      }),
-
-      DATABASE_SSL_CERT: envField.string({
-        access: "secret",
-        context: "server",
-        optional: true,
       }),
 
       // Cloudflare Turnstile
