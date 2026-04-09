@@ -65,6 +65,12 @@ export default defineConfig({
         optional: false,
       }),
 
+      DATABASE_URL_UNPOOLED: envField.string({
+        access: "secret",
+        context: "server",
+        optional: false,
+      }),
+
       // Cloudflare Turnstile
       CF_TURNSTILE_SITE_KEY: envField.string({
         access: "public",
