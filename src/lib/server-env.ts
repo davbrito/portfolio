@@ -7,6 +7,5 @@ export const {
   VERCEL_URL,
   ADMIN_EMAIL,
   ADMIN_SECRET,
-  DATABASE_SSL_CERT,
-  POSTGRES_PRISMA_URL,
+  DATABASE_URL,
 } = import.meta.env as any as typeof ServerEnv;
