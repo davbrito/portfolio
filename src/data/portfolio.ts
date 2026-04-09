@@ -4,7 +4,7 @@ import { obfuscate } from "@/lib/obfuscation";
 
 export async function getPortfolioData() {
   const profile = await db.profile.findFirst({
-    include: { experiences: true, skills: true, projects: true },
+    include: { experiences: true, skills: true, projects: { orderBy: { order: "asc" } } },
   });
 
   if (!profile) return null;
