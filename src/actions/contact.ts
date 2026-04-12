@@ -2,25 +2,25 @@ import { authenticateAction } from "@/lib/auth/actions";
 import { validateTurnstileToken } from "@/lib/captcha";
 import { db } from "@/lib/db";
 import { ActionError, defineAction } from "astro:actions";
-import { z } from "astro:schema";
+import { z } from "astro/zod";
 
 export const contactFormAction = defineAction({
   accept: "json",
   input: z.object({
-    cfTurnstileResponse: z.string({ message: "Turnstile response is required" }),
+    cfTurnstileResponse: z.string({ error: "Turnstile response is required" }),
     profileId: z.string(),
-    name: z.string().min(2, { message: "Nombre es requerido" }).max(100).nonempty({ message: "Nombre es requerido" }),
-    email: z.string().email({ message: "Correo inválido" }),
+    name: z.string().min(2, { error: "Nombre es requerido" }).max(100).nonempty({ error: "Nombre es requerido" }),
+    email: z.email({ error: "Correo inválido" }),
     subject: z
       .string()
-      .min(2, { message: "El asunto es requerido" })
+      .min(2, { error: "El asunto es requerido" })
       .max(200)
-      .nonempty({ message: "El asunto es requerido" }),
+      .nonempty({ error: "El asunto es requerido" }),
     message: z
       .string()
-      .nonempty({ message: "El mensaje es requerido" })
-      .min(10, { message: "El mensaje es muy corto" })
-      .max(5000, { message: "Mensaje muy largo" }),
+      .nonempty({ error: "El mensaje es requerido" })
+      .min(10, { error: "El mensaje es muy corto" })
+      .max(5000, { error: "Mensaje muy largo" }),
   }),
   async handler(input, context) {
     const token = input.cfTurnstileResponse;
@@ -80,7 +80,7 @@ export const messagesActions = {
     },
   }),
   delete: defineAction({
-    input: z.object({ id: z.string().uuid({ message: "ID inválido" }) }),
+    input: z.object({ id: z.uuid({ error: "ID inválido" }) }),
     async handler(input, context) {
       await authenticateAction(context);
 

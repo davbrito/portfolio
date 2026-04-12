@@ -4,36 +4,32 @@ export const SKILL_LEVELS = ["Principiante", "Intermedio", "Avanzado", "Experto"
 
 const skillLevelSchema = z
   .string()
-  .nonempty({ message: "El nivel no puede estar vacío" })
-  .pipe(
-    z.enum(SKILL_LEVELS, {
-      invalid_type_error: "Nivel de habilidad inválido",
-    }),
-  );
+  .nonempty({ error: "El nivel no puede estar vacío" })
+  .pipe(z.enum(SKILL_LEVELS, { error: "Nivel de habilidad inválido" }));
 
 const experienceItemSchema = z.object({
   title: z
     .string()
     .trim()
-    .max(120, { message: "El cargo es muy largo" })
+    .max(120, { error: "El cargo es muy largo" })
     .nullish()
     .transform((val) => val || ""),
   company: z
     .string()
     .trim()
-    .max(120, { message: "La empresa es muy larga" })
+    .max(120, { error: "La empresa es muy larga" })
     .nullish()
     .transform((val) => val || ""),
   location: z
     .string()
     .trim()
-    .max(120, { message: "La ubicación es muy larga" })
+    .max(120, { error: "La ubicación es muy larga" })
     .nullish()
     .transform((val) => val || ""),
   period: z
     .string()
     .trim()
-    .max(120, { message: "El periodo es muy largo" })
+    .max(120, { error: "El periodo es muy largo" })
     .nullish()
     .transform((val) => val || ""),
   highlights: z.string().trim().default(""),
@@ -43,14 +39,14 @@ const skillItemSchema = z.object({
   name: z
     .string()
     .trim()
-    .nonempty({ message: "El nombre no puede estar vacío" })
-    .max(120, { message: "El nombre es muy largo" }),
+    .nonempty({ error: "El nombre no puede estar vacío" })
+    .max(120, { error: "El nombre es muy largo" }),
   level: skillLevelSchema,
   group: z
     .string()
     .trim()
-    .nonempty({ message: "El grupo no puede estar vacío" })
-    .max(120, { message: "El grupo es muy largo" }),
+    .nonempty({ error: "El grupo no puede estar vacío" })
+    .max(120, { error: "El grupo es muy largo" }),
 });
 
 const projectItemSchema = z.object({
@@ -69,26 +65,26 @@ const projectItemSchema = z.object({
     .trim()
     .nullable()
     .transform((val) => val || null)
-    .pipe(z.string().url({ message: "URL inválida" }).max(500).nullable()),
+    .pipe(z.url({ error: "URL inválida" }).max(500).nullable()),
   repoUrl: z
     .string()
     .trim()
     .nullable()
     .transform((val) => val || null)
-    .pipe(z.string().url({ message: "URL inválida" }).max(500).nullable()),
+    .pipe(z.url({ error: "URL inválida" }).max(500).nullable()),
   image: z
     .string()
     .trim()
     .nullable()
     .transform((val) => val || null)
-    .pipe(z.string().url({ message: "URL inválida" }).max(500).nullable()),
+    .pipe(z.url({ error: "URL inválida" }).max(500).nullable()),
   imageAlt: z
     .string()
     .trim()
-    .max(200, { message: "El texto alternativo es muy largo" })
+    .max(200, { error: "El texto alternativo es muy largo" })
     .nullish()
     .transform((val) => val || ""),
-  tags: z.array(z.string().trim().nonempty({ message: "La etiqueta no puede estar vacía" })).default([]),
+  tags: z.array(z.string().trim().nonempty({ error: "La etiqueta no puede estar vacía" })).default([]),
 });
 
 export const profilePayloadSchema = z.object({
@@ -137,16 +133,15 @@ export const profilePayloadSchema = z.object({
   aboutImage: z.preprocess(
     (value) => value || null,
     z
-      .string()
+      .url({ error: "URL inválida" })
       .trim()
-      .url({ message: "URL inválida" })
       .max(2 * 1024 * 1024)
       .nullable(),
   ),
   aboutImageAlt: z
     .string()
     .trim()
-    .max(200, { message: "El texto alternativo es muy largo" })
+    .max(200, { error: "El texto alternativo es muy largo" })
     .nullish()
     .transform((val) => val || ""),
   experiences: z.array(experienceItemSchema).default([]),
@@ -169,7 +164,7 @@ export const profilePayloadSchema = z.object({
     .trim()
     .nullable()
     .transform((val) => val || null)
-    .pipe(z.string().trim().email({ message: "Email inválido" }).max(500).nullable()),
+    .pipe(z.email({ error: "Email inválido" }).trim().max(500).nullable()),
 });
 
 export type ProfilePayload = z.infer<typeof profilePayloadSchema>;
