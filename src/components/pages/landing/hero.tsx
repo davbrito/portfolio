@@ -1,7 +1,7 @@
 import { icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import type { SocialLink } from "@/data/portfolio";
-import type { ProfileModel } from "@prisma-generated/models";
+import type { ProfileModel } from "#prisma-generated/models.ts";
 import { ArrowRightIcon } from "lucide-react";
 
 interface HeroProps {
@@ -12,34 +12,19 @@ interface HeroProps {
 export function Hero({ socialLinks, profile }: HeroProps) {
   return (
     <div className="min-h-[65vh] content-center space-y-6">
-      <p className="text-primary font-mono text-sm font-semibold">
-        Hola, mi nombre es
-      </p>
+      <p className="text-primary font-mono text-sm font-semibold">Hola, mi nombre es</p>
       <div className="space-y-3">
-        <h1 className="text-4xl font-extrabold sm:text-5xl md:text-6xl">
-          {profile.name}.
-        </h1>
-        <h2 className="text-muted-foreground text-3xl font-extrabold sm:text-4xl">
-          {profile.description}.
-        </h2>
+        <h1 className="text-4xl font-extrabold sm:text-5xl md:text-6xl">{profile.name}.</h1>
+        <h2 className="text-muted-foreground text-3xl font-extrabold sm:text-4xl">{profile.description}.</h2>
       </div>
       <p className="text-muted-foreground max-w-2xl">{profile.brief}</p>
 
       <div className="space-x-4">
-        <Button
-          nativeButton={false}
-          render={<a href="#proyectos" />}
-          className="min-w-40"
-        >
+        <Button nativeButton={false} render={<a href="#proyectos" />} className="min-w-40">
           Ver Proyectos
           <ArrowRightIcon className="h-4 w-4" />
         </Button>
-        <Button
-          nativeButton={false}
-          render={<a href="#contacto" />}
-          variant="outline"
-          className="min-w-40"
-        >
+        <Button nativeButton={false} render={<a href="#contacto" />} variant="outline" className="min-w-40">
           Contacto
         </Button>
       </div>

@@ -1,4 +1,4 @@
-import type { ExperienceModel } from "@prisma-generated/models";
+import type { ExperienceModel } from "#prisma-generated/models.ts";
 import { useState } from "react";
 
 export function Experience({ experience }: { experience: ExperienceModel[] }) {

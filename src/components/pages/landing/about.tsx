@@ -1,4 +1,4 @@
-import type { ProfileModel } from "@prisma-generated/models";
+import type { ProfileModel } from "#prisma-generated/models.ts";
 import { CalendarIcon, CodeXmlIcon, MapPin } from "lucide-react";
 
 interface Props {
