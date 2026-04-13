@@ -33,6 +33,9 @@ export default defineConfig({
         protocol: "wss",
       },
     },
+    ssr: {
+      noExternal: ["@hcaptcha/react-hcaptcha", "@daveyplate/better-auth-ui"],
+    },
   },
   integrations: [
     react({
