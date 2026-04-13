@@ -22,7 +22,7 @@ export default defineConfig({
     csp: {
       directives: ["default-src 'self'", "frame-src 'self' https://challenges.cloudflare.com", "font-src 'self' data:"],
       scriptDirective: {
-        resources: ["'self'", "https://challenges.cloudflare.com"],
+        resources: ["'self'", "https://challenges.cloudflare.com", "https://static.cloudflareinsights.com"],
       },
       styleDirective: {
         resources: ["'self'", "'unsafe-inline'"],
