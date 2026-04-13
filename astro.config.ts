@@ -19,7 +19,11 @@ export default defineConfig({
   security: {
     checkOrigin: true,
     allowedDomains: url ? [{ protocol: "https", hostname: url }] : undefined,
-    csp: true,
+    csp: {
+      scriptDirective: {
+        resources: ["'self'"],
+      },
+    },
   },
   adapter: vercel({
     isr: {
