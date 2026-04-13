@@ -19,24 +19,7 @@ export default defineConfig({
   security: {
     checkOrigin: true,
     allowedDomains: url ? [{ protocol: "https", hostname: url }] : undefined,
-    csp: {
-      directives: [
-        "default-src 'self'",
-        "base-uri 'self'",
-        "object-src 'none'",
-        "form-action 'self'",
-        "font-src 'self' data:",
-        "img-src 'self' data: https:",
-        "connect-src 'self' https://challenges.cloudflare.com",
-        "frame-src https://challenges.cloudflare.com",
-      ],
-      scriptDirective: {
-        resources: ["'self'", "https://challenges.cloudflare.com"],
-      },
-      styleDirective: {
-        resources: ["'self'", "'unsafe-inline'"],
-      },
-    },
+    csp: true,
   },
   adapter: vercel({
     isr: {
