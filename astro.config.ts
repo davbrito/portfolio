@@ -33,6 +33,9 @@ export default defineConfig({
       scriptDirective: {
         resources: ["'self'", "https://challenges.cloudflare.com"],
       },
+      styleDirective: {
+        resources: ["'self'", "'unsafe-inline'"],
+      },
     },
   },
   adapter: vercel({
