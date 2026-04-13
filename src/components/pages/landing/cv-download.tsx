@@ -5,23 +5,22 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Turnstile } from "@marsidev/react-turnstile";
 import { CF_TURNSTILE_SITE_KEY } from "astro:env/client";
 import { Download } from "lucide-react";
-import type { ComponentProps, FormEvent } from "react";
+import type { ComponentProps, SubmitEvent } from "react";
 import { useState } from "react";
 
 interface CvDownloadButtonProps {
   label: string;
   className?: string;
   variant?: ComponentProps<typeof Button>["variant"];
-  nonce: string;
 }
 
-export function CvDownloadButton({ label, className, variant = "outline", nonce }: CvDownloadButtonProps) {
+export function CvDownloadButton({ label, className, variant = "outline" }: CvDownloadButtonProps) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const disabled = !CF_TURNSTILE_SITE_KEY;
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     const formData = new FormData(event.currentTarget);
     const token = formData.get("cf-turnstile-response") as string | null;
     if (!token) {
@@ -62,8 +61,6 @@ export function CvDownloadButton({ label, className, variant = "outline", nonce 
                 onSuccess={() => setError(null)}
                 onError={(error) => setError(error)}
                 onExpire={() => setError("El captcha ha expirado. Por favor, inténtalo de nuevo.")}
-                nonce={nonce}
-                scriptOptions={{ nonce }}
               />
             ) : (
               <p className="text-muted-foreground text-xs">Turnstile no está configurado.</p>

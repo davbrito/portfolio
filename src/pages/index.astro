@@ -20,15 +20,12 @@ if (!data || !data.profile.active) {
   return Response.json({ message: "Profile is not active or not found." }, { status: 404 });
 }
 const { socialLinks, experience, technologies, profile, projects } = data;
-
-const nonce = Astro.locals.nonce;
 ---
 
 <SiteLayout title={`${profile.name} - ${profile.title}`}>
   <div class="bg-background text-foreground relative min-h-screen font-sans">
     <LandingHeader
       client:load
-      nonce={nonce}
       navItems={[
         { href: "#sobre-mi", label: "Sobre mi" },
         { href: "#experiencia", label: "Experiencia" },
@@ -73,7 +70,7 @@ const nonce = Astro.locals.nonce;
         </section>
 
         <section id="contacto" class="mx-auto max-w-prose space-y-8">
-          <ContactForm client:load profileId={profile.userId} nonce={nonce} />
+          <ContactForm client:load profileId={profile.userId} />
         </section>
       </main>
       <LandingFooter name={profile.name} socialLinks={socialLinks} />
