@@ -23,7 +23,7 @@ const { socialLinks, experience, technologies, profile, projects } = data;
 
 const nonce = crypto.randomUUID();
 
-Astro.csp?.insertScriptResource(`nonce-${nonce}`);
+Astro.csp?.insertScriptResource(`'nonce-${nonce}'`);
 ---
 
 <SiteLayout title={`${profile.name} - ${profile.title}`}>
