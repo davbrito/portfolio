@@ -1,22 +1,12 @@
+
+ignoredBuiltDependencies: [ "@prisma/engines", "core-js", "esbuild", "prisma", "sharp" ]
 minimumReleaseAge: 1440
 overrides:
-  "vite": "$vite"
-  "@hono/node-server@<1.19.10": ">=1.19.10"
-  "seroval@<=1.4.0": ">=1.4.1"
-  "seroval@<1.4.1": ">=1.4.1"
-  "tar@<=7.5.10": ">=7.5.11"
-  "devalue@<5.6.4": ">=5.6.4"
-  "devalue@<=5.6.3": ">=5.6.4"
-  "h3@<1.15.6": ">=1.15.6"
-  "h3@<1.15.9": ">=1.15.9"
-  "h3@>=2.0.0-beta.0 <=2.0.1-rc.16": ">=2.0.1-rc.17"
-  "h3@<=1.15.8": ">=1.15.9"
-  "h3@>=2.0.0-0 <2.0.1-rc.15": ">=2.0.1-rc.15"
-  "h3@>=2.0.0-beta.0 <=2.0.0-rc.8": ">=2.0.1-rc.9"
-  "h3@>=2.0.0-beta.4 <2.0.1-rc.18": ">=2.0.1-rc.18"
-  "smol-toml@<1.6.1": ">=1.6.1"
-  "srvx@<0.11.13": ">=0.11.13"
-  "picomatch@>=4.0.0 <4.0.4": ">=4.0.4"
-  "drizzle-orm@<0.45.2": ">=0.45.2"
-  "@hono/node-server@<1.19.13": ">=1.19.13"
-ignoredBuiltDependencies: ["@prisma/engines", "core-js", "esbuild", "prisma", "sharp"]
+  '@hono/node-server@<1.19.13': '>=1.19.13'
+  h3@>=2.0.0-0 <2.0.1-rc.15: '>=2.0.1-rc.15'
+  h3@>=2.0.0-beta.0 <=2.0.0-rc.8: '>=2.0.1-rc.9'
+  h3@>=2.0.0-beta.0 <=2.0.1-rc.16: '>=2.0.1-rc.17'
+  h3@>=2.0.0-beta.4 <2.0.1-rc.18: '>=2.0.1-rc.18'
+  seroval@<1.4.1: '>=1.4.1'
+  seroval@<=1.4.0: '>=1.4.1'
+  srvx@<0.11.13: '>=0.11.13'
