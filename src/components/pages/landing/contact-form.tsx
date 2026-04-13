@@ -100,7 +100,12 @@ export default function ContactForm({ profileId, nonce }: ContactFormProps) {
         {isSubmitSuccessful ? <p className="text-sm text-green-600">¡Mensaje enviado con éxito!</p> : null}
 
         {CF_TURNSTILE_SITE_KEY ? (
-          <Turnstile siteKey={CF_TURNSTILE_SITE_KEY} options={{ theme: "dark", size: "flexible" }} nonce={nonce} />
+          <Turnstile
+            siteKey={CF_TURNSTILE_SITE_KEY}
+            options={{ theme: "dark", size: "flexible" }}
+            nonce={nonce}
+            scriptOptions={{ nonce }}
+          />
         ) : null}
 
         <div className="flex justify-between gap-5">

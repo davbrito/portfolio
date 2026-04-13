@@ -63,6 +63,7 @@ export function CvDownloadButton({ label, className, variant = "outline", nonce 
                 onError={(error) => setError(error)}
                 onExpire={() => setError("El captcha ha expirado. Por favor, inténtalo de nuevo.")}
                 nonce={nonce}
+                scriptOptions={{ nonce }}
               />
             ) : (
               <p className="text-muted-foreground text-xs">Turnstile no está configurado.</p>
