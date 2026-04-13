@@ -9,9 +9,10 @@ import { useForm } from "react-hook-form";
 
 interface ContactFormProps {
   profileId: string;
+  nonce: string;
 }
 
-export default function ContactForm({ profileId }: ContactFormProps) {
+export default function ContactForm({ profileId, nonce }: ContactFormProps) {
   const form = useForm({
     defaultValues: {
       name: "",
@@ -99,7 +100,7 @@ export default function ContactForm({ profileId }: ContactFormProps) {
         {isSubmitSuccessful ? <p className="text-sm text-green-600">¡Mensaje enviado con éxito!</p> : null}
 
         {CF_TURNSTILE_SITE_KEY ? (
-          <Turnstile siteKey={CF_TURNSTILE_SITE_KEY} options={{ theme: "dark", size: "flexible" }} />
+          <Turnstile siteKey={CF_TURNSTILE_SITE_KEY} options={{ theme: "dark", size: "flexible" }} nonce={nonce} />
         ) : null}
 
         <div className="flex justify-between gap-5">

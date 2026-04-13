@@ -20,6 +20,10 @@ if (!data || !data.profile.active) {
   return Response.json({ message: "Profile is not active or not found." }, { status: 404 });
 }
 const { socialLinks, experience, technologies, profile, projects } = data;
+
+const nonce = crypto.randomUUID();
+
+Astro.csp?.insertScriptResource(`nonce-${nonce}`);
 ---
 
 <SiteLayout title={`${profile.name} - ${profile.title}`}>
@@ -70,7 +74,7 @@ const { socialLinks, experience, technologies, profile, projects } = data;
         </section>
 
         <section id="contacto" class="mx-auto max-w-prose space-y-8">
-          <ContactForm client:load profileId={profile.userId} />
+          <ContactForm client:load profileId={profile.userId} nonce={nonce} />
         </section>
       </main>
       <LandingFooter name={profile.name} socialLinks={socialLinks} />
