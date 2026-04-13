@@ -30,6 +30,7 @@ Astro.csp?.insertScriptResource(`'nonce-${nonce}'`);
   <div class="bg-background text-foreground relative min-h-screen font-sans">
     <LandingHeader
       client:load
+      nonce={nonce}
       navItems={[
         { href: "#sobre-mi", label: "Sobre mi" },
         { href: "#experiencia", label: "Experiencia" },

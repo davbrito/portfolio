@@ -12,9 +12,10 @@ interface CvDownloadButtonProps {
   label: string;
   className?: string;
   variant?: ComponentProps<typeof Button>["variant"];
+  nonce: string;
 }
 
-export function CvDownloadButton({ label, className, variant = "outline" }: CvDownloadButtonProps) {
+export function CvDownloadButton({ label, className, variant = "outline", nonce }: CvDownloadButtonProps) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -61,6 +62,7 @@ export function CvDownloadButton({ label, className, variant = "outline" }: CvDo
                 onSuccess={() => setError(null)}
                 onError={(error) => setError(error)}
                 onExpire={() => setError("El captcha ha expirado. Por favor, inténtalo de nuevo.")}
+                nonce={nonce}
               />
             ) : (
               <p className="text-muted-foreground text-xs">Turnstile no está configurado.</p>

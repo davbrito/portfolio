@@ -3,9 +3,10 @@ import { CvDownloadButton } from "@/components/pages/landing/cv-download";
 interface NavItem {
   href: string;
   label: string;
+  nonce: string;
 }
 
-export function LandingHeader({ navItems }: { navItems: NavItem[] }) {
+export function LandingHeader({ navItems, nonce }: { navItems: NavItem[]; nonce: string }) {
   return (
     <header className="bg-card/85 sticky top-0 z-20 -mx-5 px-5 py-4 font-mono backdrop-blur sm:px-8 md:px-10 xl:-mx-10">
       <div className="mx-auto flex max-w-6xl items-center justify-between">
@@ -24,11 +25,12 @@ export function LandingHeader({ navItems }: { navItems: NavItem[] }) {
               <span className="block whitespace-nowrap lg:inline">{item.label}</span>
             </a>
           ))}
-          <CvDownloadButton label="Curriculum" variant="outline" />
+          <CvDownloadButton label="Curriculum" variant="outline" nonce={nonce} />
         </nav>
         <CvDownloadButton
           label="CV"
           className="border-primary/50 bg-primary/10 text-primary hover:border-primary hover:bg-primary/20 inline-flex items-center gap-2 rounded-full border px-4 py-2 transition-colors md:hidden"
+          nonce={nonce}
         />
       </div>
     </header>
