@@ -21,10 +21,7 @@ if (!data || !data.profile.active) {
 }
 const { socialLinks, experience, technologies, profile, projects } = data;
 
-const nonce = crypto.randomUUID();
-
-Astro.csp?.insertScriptResource(`'nonce-${nonce}'`);
-Astro.csp?.insertStyleResource(`'nonce-${nonce}'`);
+const nonce = Astro.locals.nonce;
 ---
 
 <SiteLayout title={`${profile.name} - ${profile.title}`}>

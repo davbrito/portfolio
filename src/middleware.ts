@@ -9,6 +9,11 @@ const PUBLIC_PATTERNS = [
 ];
 
 export const onRequest = defineMiddleware(async (context, next) => {
+  const nonce = crypto.randomUUID();
+  context.locals.nonce = nonce;
+  context.csp?.insertScriptResource(`'nonce-${nonce}'`);
+  context.csp?.insertStyleResource(`'nonce-${nonce}'`);
+
   if (PUBLIC_PATTERNS.some((pattern) => pattern.test(context.url))) {
     return next();
   }

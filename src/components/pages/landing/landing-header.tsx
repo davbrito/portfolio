@@ -3,7 +3,6 @@ import { CvDownloadButton } from "@/components/pages/landing/cv-download";
 interface NavItem {
   href: string;
   label: string;
-  nonce: string;
 }
 
 export function LandingHeader({ navItems, nonce }: { navItems: NavItem[]; nonce: string }) {
