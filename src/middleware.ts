@@ -13,6 +13,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   context.locals.nonce = nonce;
   context.csp?.insertScriptResource(`'nonce-${nonce}'`);
   context.csp?.insertStyleResource(`'nonce-${nonce}'`);
+  console.log("Middleware executed. Nonce generated and added to context.locals:", nonce);
 
   if (PUBLIC_PATTERNS.some((pattern) => pattern.test(context.url))) {
     return next();
