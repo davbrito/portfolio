@@ -111,6 +111,38 @@ export default defineConfig({
         context: "server",
         optional: true,
       }),
+
+      // security.txt
+      SECURITY_CONTACT: envField.string({
+        access: "secret",
+        context: "server",
+        optional: false,
+      }),
+      SECURITY_EXPIRES: envField.string({
+        access: "secret",
+        context: "server",
+        optional: false,
+      }),
+      SECURITY_ENCRYPTION: envField.string({
+        access: "secret",
+        context: "server",
+        optional: true,
+      }),
+      SECURITY_ACKNOWLEDGMENTS: envField.string({
+        access: "secret",
+        context: "server",
+        optional: true,
+      }),
+      SECURITY_PREFERRED_LANGUAGES: envField.string({
+        access: "secret",
+        context: "server",
+        optional: true,
+      }),
+      SECURITY_CANONICAL: envField.string({
+        access: "secret",
+        context: "server",
+        optional: true,
+      }),
     },
   },
 });
