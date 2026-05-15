@@ -1,9 +1,9 @@
 "use client";
 
+import { CF_TURNSTILE_SITE_KEY } from "#/config.ts";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Turnstile } from "@marsidev/react-turnstile";
-import { CF_TURNSTILE_SITE_KEY } from "astro:env/client";
 import { Download } from "lucide-react";
 import type { ComponentProps, SubmitEvent } from "react";
 import { useState } from "react";

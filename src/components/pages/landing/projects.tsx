@@ -1,0 +1,64 @@
+import type { Project } from "@/data/portfolio";
+
+interface Props {
+  projects: Project[];
+}
+
+export default function Projects({ projects }: Props) {
+  if (projects.length === 0) {
+    return (
+      <div className="border-primary/30 bg-card/40 text-muted-foreground rounded-2xl border border-dashed p-10 text-center">
+        Próximamente: una selección de proyectos destacados en los que he trabajado.
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-6 md:grid-cols-2">
+      {projects.map((project) => (
+        <article key={project.id} className="border-border bg-card/60 flex h-full flex-col gap-4 rounded-2xl border p-6 shadow">
+          {project.image ? (
+            <div className="overflow-hidden rounded-xl border">
+              <img
+                src={project.image}
+                alt={project.imageAlt || project.title}
+                className="h-44 w-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          ) : null}
+          <div className="space-y-2">
+            <h3 className="text-foreground text-lg font-semibold">{project.title}</h3>
+            <p className="text-muted-foreground text-sm leading-relaxed">{project.description}</p>
+          </div>
+          {project.tags?.length ? (
+            <div className="flex flex-wrap gap-2">
+              {project.tags.map((tag) => (
+                <span key={tag} className="bg-primary/10 text-primary rounded-full border px-2 py-0.5 text-[11px] font-medium tracking-wide">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          ) : null}
+          <div className="mt-auto flex flex-wrap gap-3 text-xs">
+            {project.url ? (
+              <a className="text-primary hover:underline" href={project.url} target="_blank" rel="noreferrer">
+                Ver proyecto
+              </a>
+            ) : null}
+            {project.repoUrl ? (
+              <a
+                className="text-muted-foreground hover:text-primary"
+                href={project.repoUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Repositorio
+              </a>
+            ) : null}
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}

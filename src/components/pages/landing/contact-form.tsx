@@ -1,9 +1,8 @@
 import { FormInputField, FormTextareaField } from "@/components/form-fields";
 import { Button } from "@/components/ui/button";
 import { FieldError, FieldGroup } from "@/components/ui/field";
+import { CF_TURNSTILE_SITE_KEY } from "#/config.ts";
 import { Turnstile } from "@marsidev/react-turnstile";
-import { actions, isInputError } from "astro:actions";
-import { CF_TURNSTILE_SITE_KEY } from "astro:env/client";
 import { SendIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 

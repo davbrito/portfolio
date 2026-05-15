@@ -1,8 +1,9 @@
 import type { IconName } from "@/components/icons";
 import { db } from "@/lib/db";
 import { obfuscate } from "@/lib/obfuscation";
+import { createServerFn } from "@tanstack/react-start";
 
-export async function getPortfolioData() {
+export const getPortfolioData = createServerFn().handler(async () => {
   const profile = await db.profile.findFirst({
     include: { experiences: true, skills: true, projects: { orderBy: { order: "asc" } } },
   });
@@ -47,7 +48,7 @@ export async function getPortfolioData() {
       .toArray(),
     socialLinks: socialLinks.filter((link) => link.href),
   };
-}
+});
 
 export type PortfolioData = NonNullable<Awaited<ReturnType<typeof getPortfolioData>>>;
 

@@ -2,6 +2,7 @@ import { passkey } from "@better-auth/passkey";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { captcha } from "better-auth/plugins";
+import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { validateUserCreation } from "./auth/db-hooks";
 import { db } from "./db";
 import { BETTER_AUTH_SECRET, CF_TURNSTILE_SECRET_KEY, VERCEL_PROJECT_PRODUCTION_URL, VERCEL_URL } from "./server-env";
@@ -20,6 +21,7 @@ export const auth = betterAuth({
     usePlural: true,
   }),
   plugins: [
+    tanstackStartCookies(),
     passkey(),
     captcha({
       provider: "cloudflare-turnstile",
