@@ -6,6 +6,7 @@
 @import "@fontsource-variable/inter";
 
 @import "./base.css";
+@import "./animations.css";
 
 /* @custom-variant dark (&:is(.dark *)); */
 /* @custom-variant dark {

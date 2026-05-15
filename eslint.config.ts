@@ -1,6 +1,5 @@
 import js from "@eslint/js";
 import query from "@tanstack/eslint-plugin-query";
-import eslintPluginAstro from "eslint-plugin-astro";
 import pluginReact from "eslint-plugin-react";
 import pluginReactHooks from "eslint-plugin-react-hooks";
 import { defineConfig, globalIgnores } from "eslint/config";
@@ -12,7 +11,6 @@ export default defineConfig(
 
   js.configs.recommended,
   tseslint.configs.recommended,
-  eslintPluginAstro.configs.recommended,
   {
     files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
     languageOptions: { globals: { ...globals.browser, ...globals.node } },
@@ -41,20 +39,6 @@ export default defineConfig(
     rules: {
       "@typescript-eslint/consistent-type-imports": "off",
       "react/jsx-no-leaked-render": "off",
-    },
-  },
-  {
-    name: "astro files",
-    files: ["**/*.astro"],
-    rules: {
-      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "Props" }],
-    },
-    languageOptions: {
-      parserOptions: {
-        ecmaFeatures: {
-          globalReturn: true,
-        },
-      },
     },
   },
 );

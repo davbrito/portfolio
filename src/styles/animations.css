@@ -1,0 +1,16 @@
+@keyframes blink {
+  0%,
+  60% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  80%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(-3px);
+  }
+}
+
+.animate-blink {
+  animation: blink 1.6s infinite;
+}
