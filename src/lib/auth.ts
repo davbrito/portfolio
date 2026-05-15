@@ -1,3 +1,5 @@
+import "@tanstack/react-start/server-only";
+
 import { passkey } from "@better-auth/passkey";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
@@ -6,7 +8,6 @@ import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { validateUserCreation } from "./auth/db-hooks";
 import { db } from "./db";
 import { BETTER_AUTH_SECRET, CF_TURNSTILE_SECRET_KEY, vercelUrl } from "./server-env";
-
 
 export const auth = betterAuth({
   baseURL: vercelUrl ? `https://${vercelUrl}` : undefined,

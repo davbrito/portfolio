@@ -1,3 +1,5 @@
+import "@tanstack/react-start/server-only";
+
 import { db } from "@/lib/db";
 import { siteUrl } from "@/lib/server-env";
 import type { ProfilePayload } from "@/lib/validators/profile";

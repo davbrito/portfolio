@@ -1,8 +1,8 @@
 "use client";
 
-import { useActionQuery } from "@/lib/query";
-import { useMutation } from "@tanstack/react-query";
-import { actions } from "astro:actions";
+import { messageListOptions } from "#/queries/index.ts";
+import { actions } from "@/actions";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Eye, EyeOff, Layers } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "../ui/badge";
@@ -18,9 +18,10 @@ function formatDate(value: string | Date) {
   }).format(date);
 }
 
+
 export function MessagesSection() {
   const [filter, setFilter] = useState<"all" | "read" | "unread">("all");
-  const { data, isLoading } = useActionQuery(actions.messages.list, { filter });
+  const { data, isLoading } = useQuery(messageListOptions(filter));
   const markReadMutation = useMutation({
     mutationFn: actions.messages.markRead.orThrow,
     onSuccess(data, variables, onMutateResult, context) {

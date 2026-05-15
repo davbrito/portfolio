@@ -1,6 +1,7 @@
 import { adminMiddleware } from "@/lib/auth/middleware";
 import { validateTurnstileToken } from "@/lib/captcha";
 import { db } from "@/lib/db";
+import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestIP } from "@tanstack/react-start/server";
 import * as z from "zod";
