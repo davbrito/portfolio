@@ -1,6 +1,7 @@
 import { FormInputField, FormTextareaField } from "@/components/form-fields";
 import { Button } from "@/components/ui/button";
 import { FieldError, FieldGroup } from "@/components/ui/field";
+import { contactFormAction } from "#/actions/index.ts";
 import { CF_TURNSTILE_SITE_KEY } from "#/config.ts";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { SendIcon } from "lucide-react";
@@ -44,7 +45,7 @@ export default function ContactForm({ profileId }: ContactFormProps) {
             '#contact-form input[name="cf-turnstile-response"]',
           )?.value;
 
-          const result = await actions.contactForm({ ...data, profileId, cfTurnstileResponse: token || "" });
+          const result = await contactFormAction({ ...data, profileId, cfTurnstileResponse: token || "" });
 
           if (isInputError(result.error)) {
             result.error.issues.forEach((issue) => {

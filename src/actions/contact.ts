@@ -55,42 +55,42 @@ export const contactFormAction = createServerFn({ method: "POST" })
     return { success: true };
   });
 
-export const messagesActions = {
-  list: createServerFn({ method: "GET" })
-    .middleware([adminMiddleware])
-    .inputValidator(
-      z.object({
-        filter: z.enum(["all", "read", "unread"]).default("all"),
-      }),
-    )
-    .handler(async (ctx) => {
-      const input = ctx.data;
-
-      return await db.messages.findMany({
-        orderBy: [{ createdAt: "desc" }, { id: "desc" }],
-        take: 500,
-        where: input.filter === "read" ? { readAt: { not: null } } : input.filter === "unread" ? { readAt: null } : {},
-      });
+export const listMessagesAction = createServerFn({ method: "GET" })
+  .middleware([adminMiddleware])
+  .inputValidator(
+    z.object({
+      filter: z.enum(["all", "read", "unread"]).default("all"),
     }),
-  markRead: createServerFn({ method: "POST" })
-    .middleware([adminMiddleware])
-    .inputValidator(z.object({ id: z.string().uuid({ message: "ID inválido" }) }))
-    .handler(async (ctx) => {
-      const input = ctx.data;
+  )
+  .handler(async (ctx) => {
+    const input = ctx.data;
 
-      await db.messages.update({
-        where: { id: input.id },
-        data: { readAt: new Date() },
-      });
-    }),
-  delete: createServerFn({ method: "POST" })
-    .middleware([adminMiddleware])
-    .inputValidator(z.object({ id: z.uuid({ error: "ID inválido" }) }))
-    .handler(async (ctx) => {
-      const input = ctx.data;
+    return await db.messages.findMany({
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      take: 500,
+      where: input.filter === "read" ? { readAt: { not: null } } : input.filter === "unread" ? { readAt: null } : {},
+    });
+  });
 
-      await db.messages.delete({
-        where: { id: input.id },
-      });
-    }),
-};
+export const markReadMessageAction = createServerFn({ method: "POST" })
+  .middleware([adminMiddleware])
+  .inputValidator(z.object({ id: z.string().uuid({ message: "ID inválido" }) }))
+  .handler(async (ctx) => {
+    const input = ctx.data;
+
+    await db.messages.update({
+      where: { id: input.id },
+      data: { readAt: new Date() },
+    });
+  });
+
+export const deleteMessageAction = createServerFn({ method: "POST" })
+  .middleware([adminMiddleware])
+  .inputValidator(z.object({ id: z.uuid({ error: "ID inválido" }) }))
+  .handler(async (ctx) => {
+    const input = ctx.data;
+
+    await db.messages.delete({
+      where: { id: input.id },
+    });
+  });

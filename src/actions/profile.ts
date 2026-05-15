@@ -3,7 +3,7 @@ import { profilePayloadSchema } from "@/lib/validators/profile";
 import { findProfile, revalidatePortfolioPage, upsertProfile } from "@/service/profile";
 import { createServerFn } from "@tanstack/react-start";
 
-const getProfileAction = createServerFn({ method: "GET" })
+export const getProfileAction = createServerFn({ method: "GET" })
   .middleware([adminMiddleware])
   .handler(async ({ context: { user } }) => {
     const data = await findProfile(user.id);
@@ -24,7 +24,7 @@ const getProfileAction = createServerFn({ method: "GET" })
     return payload;
   });
 
-const upsertProfileAction = createServerFn({ method: "POST" })
+export const upsertProfileAction = createServerFn({ method: "POST" })
   .middleware([adminMiddleware])
   .inputValidator(profilePayloadSchema)
   .handler(async ({ data: input, context: { user } }) => {
@@ -32,14 +32,8 @@ const upsertProfileAction = createServerFn({ method: "POST" })
     await revalidatePortfolioPage();
   });
 
-const revalidateProfileAction = createServerFn({ method: "POST" })
+export const revalidateProfileAction = createServerFn({ method: "POST" })
   .middleware([adminMiddleware])
   .handler(async () => {
     await revalidatePortfolioPage();
   });
-
-export const profileActions = {
-  get: getProfileAction,
-  upsert: upsertProfileAction,
-  revalidate: revalidateProfileAction,
-};

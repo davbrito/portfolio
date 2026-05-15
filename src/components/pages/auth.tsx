@@ -1,4 +1,4 @@
-import { actions } from "#/actions/index.ts";
+import { generateAdminSetupTokenAction } from "#/actions/index.ts";
 import { ENABLE_ADMIN_SETUP } from "#/config.ts";
 import { AuthView, authViewPaths, SignedIn } from "@daveyplate/better-auth-ui";
 import { useEffect } from "react";
@@ -22,7 +22,7 @@ export default function AuthPage({ path }: { path: string }) {
               variant="link"
               className="self-center"
               onClick={() => {
-                actions.admin.generateAdminSetupToken();
+                generateAdminSetupTokenAction();
                 alert("Revisa la consola del servidor para el token de configuración");
               }}
             >

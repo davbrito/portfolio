@@ -15,6 +15,7 @@ export const auth = betterAuth({
   trustedOrigins: [vercelUrl ? `https://${vercelUrl}` : "", import.meta.env.DEV ? "http://localhost:4321" : ""].filter(
     Boolean,
   ),
+
   database: prismaAdapter(db, {
     provider: "postgresql",
     transaction: true,

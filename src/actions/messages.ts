@@ -1,1 +1,1 @@
-export { messagesActions } from "./contact";
+export { deleteMessageAction, listMessagesAction, markReadMessageAction } from "./contact";

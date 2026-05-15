@@ -1,23 +1,17 @@
 import { getAdminSecretHash } from "@/lib/auth/admin-secret";
-import { contactFormAction, messagesActions } from "./contact";
-import { profileActions } from "./profile";
 import { createServerFn } from "@tanstack/react-start";
 
-export const actions = {
-  profile: profileActions,
-  messages: messagesActions,
-  admin: {
-    generateAdminSetupToken: createServerFn({ method: "POST" }).handler(() => {
-      if (!import.meta.env.ENABLE_ADMIN_SETUP) {
-        throw new Error("Admin setup is not enabled");
-      }
+export { contactFormAction, deleteMessageAction, listMessagesAction, markReadMessageAction } from "./contact";
+export { getProfileAction, revalidateProfileAction, upsertProfileAction } from "./profile";
 
-      const token = getAdminSecretHash();
+export const generateAdminSetupTokenAction = createServerFn({ method: "POST" }).handler(() => {
+  if (!import.meta.env.ENABLE_ADMIN_SETUP) {
+    throw new Error("Admin setup is not enabled");
+  }
 
-      console.log("Token para creción de usuario admin:", token);
+  const token = getAdminSecretHash();
 
-      return { success: true };
-    }),
-  },
-  contactForm: contactFormAction,
-};
+  console.log("Token para creción de usuario admin:", token);
+
+  return { success: true };
+});

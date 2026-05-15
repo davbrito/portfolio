@@ -1,4 +1,5 @@
 import AdminPage from "@/components/admin/admin-page";
+import { Providers } from "@/components/providers";
 import AdminLayout from "@/layout/admin-layout.astro";
 import { getAuthSession } from "@/lib/auth/middleware";
 import { createFileRoute, redirect } from "@tanstack/react-router";
@@ -31,8 +32,10 @@ function AdminIndex() {
   const { tab } = Route.useLoaderDeps();
 
   return (
-    <AdminLayout title="Admin Page">
-      <AdminPage defaultTab={tab} />
-    </AdminLayout>
+    <Providers>
+      <AdminLayout title="Admin Page">
+        <AdminPage defaultTab={tab} />
+      </AdminLayout>
+    </Providers>
   );
 }

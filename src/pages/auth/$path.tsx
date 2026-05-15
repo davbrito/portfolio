@@ -1,4 +1,5 @@
 import AuthPage from "@/components/pages/auth";
+import { Providers } from "@/components/providers";
 import { authViewPaths } from "@daveyplate/better-auth-ui";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
@@ -14,5 +15,9 @@ export const Route = createFileRoute("/auth/$path")({
 
 function AuthRoute() {
   const { path } = Route.useParams();
-  return <AuthPage path={path} />;
+  return (
+    <Providers>
+      <AuthPage path={path} />
+    </Providers>
+  );
 }

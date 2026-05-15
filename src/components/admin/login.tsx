@@ -1,12 +1,12 @@
 "use client";
 
+import { generateAdminSetupTokenAction } from "#/actions/index.ts";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signIn } from "@/lib/auth-client";
 import { useIsPasskeysSupported } from "@/lib/auth/passkeys";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { actions } from "astro:actions";
 import { ENABLE_ADMIN_SETUP } from "astro:env/client";
 import { Fingerprint, Lock, Terminal } from "lucide-react";
 import { useActionState } from "react";
@@ -160,7 +160,7 @@ export default function AdminLoginPage() {
                 variant="link"
                 className="self-center"
                 onClick={() => {
-                  actions.admin.generateAdminSetupToken();
+                  generateAdminSetupTokenAction();
                   alert("Revisa la consola del servidor para el enlace de configuración");
                 }}
               >

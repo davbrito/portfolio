@@ -1,16 +1,5 @@
-import { QueryClient, QueryClientProvider, useQuery, type QueryClientProviderProps } from "@tanstack/react-query";
-import type { ActionClient } from "astro:actions";
+import { QueryClient, QueryClientProvider, type QueryClientProviderProps } from "@tanstack/react-query";
 import { cache, createElement, useState } from "react";
-
-export function useActionQuery<TAction extends ActionClient<any, any, any>>(
-  action: TAction,
-  data?: Parameters<NoInfer<TAction>>[0],
-) {
-  return useQuery({
-    queryKey: [action.toString(), data],
-    queryFn: (): Promise<Awaited<ReturnType<TAction["orThrow"]>>> => action.orThrow(data!),
-  });
-}
 
 const getQueryClient = cache(() => new QueryClient());
 

@@ -1,13 +1,13 @@
 "use client";
 
+import { revalidateProfileAction } from "#/actions/index.ts";
+import { profileOptions, profileQueryKey, profileUpsertMutationOptions } from "#/queries/index.ts";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useActionQuery } from "@/lib/query";
 import { cn } from "@/lib/utils";
 import { profilePayloadSchema, SKILL_LEVELS, type ProfilePayloadInput } from "@/lib/validators/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { actions, isInputError } from "astro:actions";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { AlertCircle, ArrowDownIcon, ArrowUpIcon, CheckCircle2, Loader2Icon, SaveIcon, Trash2Icon } from "lucide-react";
 import { useId } from "react";
 import { ErrorCode, useDropzone, type FileRejection } from "react-dropzone";
@@ -40,15 +40,20 @@ import { Switch } from "../ui/switch";
 
 const DEFAULT_SKILL_GROUPS = ["Frontend", "Backend", "Herramientas & Cloud"];
 
+function isActionInputError(error: unknown): error is { issues: Array<{ path: string[]; message: string }> } {
+  if (typeof error !== "object" || error === null || !("issues" in error)) return false;
+  return Array.isArray((error as { issues?: unknown }).issues);
+}
+
 export function ProfileSettings() {
-  const { data } = useActionQuery(actions.profile.get);
+  const { data } = useQuery(profileOptions());
   const mutation = useMutation({
-    mutationFn: actions.profile.upsert.orThrow,
+    ...profileUpsertMutationOptions(),
     onSuccess(data, variables, onMutateResult, context) {
-      context.client.invalidateQueries({ queryKey: [actions.profile.get.toString()] });
+      context.client.invalidateQueries({ queryKey: profileQueryKey });
     },
     onError(error) {
-      if (isInputError(error)) {
+      if (isActionInputError(error)) {
         for (const issue of error.issues) {
           const key = issue.path.join(".") || "root";
           setError(key as any, {
@@ -121,7 +126,7 @@ export function ProfileSettings() {
             variant="outline"
             size="sm"
             onClick={() => {
-              actions.profile.revalidate();
+              revalidateProfileAction();
             }}
           >
             Regenerar portafolio

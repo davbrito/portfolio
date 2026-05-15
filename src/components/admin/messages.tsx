@@ -1,7 +1,11 @@
 "use client";
 
-import { messageListOptions } from "#/queries/index.ts";
-import { actions } from "@/actions";
+import {
+  messageListOptions,
+  messagesDeleteMutationOptions,
+  messagesListQueryKey,
+  messagesMarkReadMutationOptions,
+} from "#/queries/index.ts";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Eye, EyeOff, Layers } from "lucide-react";
 import { useState } from "react";
@@ -18,20 +22,19 @@ function formatDate(value: string | Date) {
   }).format(date);
 }
 
-
 export function MessagesSection() {
   const [filter, setFilter] = useState<"all" | "read" | "unread">("all");
   const { data, isLoading } = useQuery(messageListOptions(filter));
   const markReadMutation = useMutation({
-    mutationFn: actions.messages.markRead.orThrow,
+    ...messagesMarkReadMutationOptions(),
     onSuccess(data, variables, onMutateResult, context) {
-      context.client.invalidateQueries({ queryKey: [actions.messages.list.toString()] });
+      context.client.invalidateQueries({ queryKey: messagesListQueryKey });
     },
   });
   const deleteMutation = useMutation({
-    mutationFn: actions.messages.delete.orThrow,
+    ...messagesDeleteMutationOptions(),
     onSuccess(data, variables, onMutateResult, context) {
-      context.client.invalidateQueries({ queryKey: [actions.messages.list.toString()] });
+      context.client.invalidateQueries({ queryKey: messagesListQueryKey });
     },
   });
 
