@@ -1,4 +1,4 @@
-import * as z from "astro/zod";
+import * as z from "zod";
 
 export const SKILL_LEVELS = ["Principiante", "Intermedio", "Avanzado", "Experto"] as const;
 

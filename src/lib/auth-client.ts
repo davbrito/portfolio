@@ -1,8 +1,8 @@
 import { passkeyClient as passkeyClientPlugin } from "@better-auth/passkey/client";
 import type { AuthUIProviderProps } from "@daveyplate/better-auth-ui";
-import { CF_TURNSTILE_SITE_KEY } from "astro:env/client";
 import { createAuthClient } from "better-auth/react";
 import { authLocalization } from "./auth/localization";
+import { CF_TURNSTILE_SITE_KEY } from "@/config";
 
 export const authClient = createAuthClient({
   plugins: [passkeyClientPlugin()],

@@ -1,16 +1,15 @@
-import { authenticateAction } from "@/lib/auth/actions";
-import { profilePayloadSchema, type ProfilePayloadInput } from "@/lib/validators/profile";
+import { adminMiddleware } from "@/lib/auth/middleware";
+import { profilePayloadSchema } from "@/lib/validators/profile";
 import { findProfile, revalidatePortfolioPage, upsertProfile } from "@/service/profile";
-import { defineAction } from "astro:actions";
+import { createServerFn } from "@tanstack/react-start";
 
-const getProfileAction = defineAction({
-  async handler(_, context) {
-    const session = await authenticateAction(context);
-
-    const data = await findProfile(session.user.id);
+const getProfileAction = createServerFn({ method: "GET" })
+  .middleware([adminMiddleware])
+  .handler(async ({ context: { user } }) => {
+    const data = await findProfile(user.id);
     if (!data) return null;
 
-    const payload: ProfilePayloadInput = {
+    const payload = {
       ...data,
       experiences:
         data.experiences.map((exp) => ({
@@ -23,31 +22,21 @@ const getProfileAction = defineAction({
     };
 
     return payload;
-  },
-});
+  });
 
-const upsertProfileAction = defineAction({
-  input: profilePayloadSchema,
-  async handler(input, context) {
-    const session = await authenticateAction(context);
+const upsertProfileAction = createServerFn({ method: "POST" })
+  .middleware([adminMiddleware])
+  .inputValidator(profilePayloadSchema)
+  .handler(async ({ data: input, context: { user } }) => {
+    await upsertProfile(user.id, input);
+    await revalidatePortfolioPage();
+  });
 
-    await upsertProfile(session.user.id, input);
-
-    if (context.site) {
-      await revalidatePortfolioPage(context.site);
-    }
-  },
-});
-
-const revalidateProfileAction = defineAction({
-  async handler(_, context) {
-    await authenticateAction(context);
-
-    if (context.site) {
-      await revalidatePortfolioPage(context.site);
-    }
-  },
-});
+const revalidateProfileAction = createServerFn({ method: "POST" })
+  .middleware([adminMiddleware])
+  .handler(async () => {
+    await revalidatePortfolioPage();
+  });
 
 export const profileActions = {
   get: getProfileAction,

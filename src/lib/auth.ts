@@ -5,9 +5,8 @@ import { captcha } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { validateUserCreation } from "./auth/db-hooks";
 import { db } from "./db";
-import { BETTER_AUTH_SECRET, CF_TURNSTILE_SECRET_KEY, VERCEL_PROJECT_PRODUCTION_URL, VERCEL_URL } from "./server-env";
+import { BETTER_AUTH_SECRET, CF_TURNSTILE_SECRET_KEY, vercelUrl } from "./server-env";
 
-const vercelUrl = VERCEL_PROJECT_PRODUCTION_URL || VERCEL_URL;
 
 export const auth = betterAuth({
   baseURL: vercelUrl ? `https://${vercelUrl}` : undefined,

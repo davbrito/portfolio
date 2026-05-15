@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
+import { siteUrl } from "@/lib/server-env";
 import type { ProfilePayload } from "@/lib/validators/profile";
-import { ISR_BYPASS_TOKEN } from "astro:env/server";
+import { createServerOnlyFn } from "@tanstack/react-start";
 
 export async function findProfile(userId: string) {
   const profile = await db.profile.findUnique({
@@ -80,11 +81,11 @@ export async function upsertProfile(userId: string, data: ProfilePayload) {
   });
 }
 
-export async function revalidatePortfolioPage(site: URL) {
-  const urlToRevalidate = new URL("/", site);
+export const revalidatePortfolioPage = createServerOnlyFn(async () => {
+  const urlToRevalidate = new URL("/", siteUrl);
   console.log("Revalidating ISR for", urlToRevalidate.toString());
   await fetch(urlToRevalidate, {
     method: "HEAD",
-    headers: { "x-prerender-revalidate": ISR_BYPASS_TOKEN },
+    headers: { "x-prerender-revalidate": process.env.ISR_BYPASS_TOKEN! },
   });
-}
+});
