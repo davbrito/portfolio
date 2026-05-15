@@ -1,4 +1,5 @@
 # build output
+build/
 dist/
 dist-ssr
 .vercel/
@@ -35,3 +36,8 @@ pnpm-debug.log*
 *.tsbuildinfo
 .vercel
 .env*.local
+
+
+routeTree.gen.ts
+.tanstack
+.nitro
