@@ -7,7 +7,7 @@ interface Props {
 
 export default function LandingFooter({ socialLinks, name }: Props) {
   return (
-    <footer className="text-muted-foreground mt-16 flex flex-col items-center gap-2 pb-6 text-center text-xs">
+    <footer role="contentinfo" className="text-muted-foreground mt-16 flex flex-col items-center gap-2 pb-6 text-center text-xs">
       <div className="text-foreground flex items-center gap-4">
         {socialLinks.map((link) => (
           <a

@@ -17,6 +17,7 @@ import { useEffect } from "react";
 export const prerender = false;
 
 export const Route = createFileRoute("/")({
+  ssr: true,
   head: ({ loaderData }) => ({
     meta: getMeta({
       title: `${loaderData!.data.profile.name} - ${loaderData!.data.profile.title}`,
@@ -56,7 +57,7 @@ function Index() {
           ]}
         />
         <div className="px-5 pb-16 sm:px-8 md:px-10">
-          <main className="space-y-48 pt-10 md:pt-16">
+          <main role="main" className="space-y-48 pt-10 md:pt-16">
             <pre></pre>
             <section className="mx-auto max-w-4xl">
               <Hero socialLinks={socialLinks} profile={profile} />
