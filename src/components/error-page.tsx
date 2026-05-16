@@ -1,6 +1,4 @@
-interface Props {
-  error: unknown;
-}
+import type { ErrorComponentProps } from "@tanstack/react-router";
 
 const formatError = (err: unknown) => {
   if (!err) return "";
@@ -13,7 +11,7 @@ const formatError = (err: unknown) => {
   }
 };
 
-export function ErrorPage(props: Props) {
+export function ErrorPage(props: ErrorComponentProps) {
   const { error } = props;
 
   return (
@@ -42,7 +40,7 @@ export function ErrorPage(props: Props) {
           <div className="flex flex-wrap gap-3" role="group" aria-label="Actions">
             <button
               className="inline-flex transform items-center rounded-[10px] bg-linear-to-r from-[#7c3aed] to-[#4f46e5] px-4 py-2 font-semibold text-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-              onclick="location.reload()"
+              onClick={() => location.reload()}
               aria-label="Retry"
             >
               Retry
@@ -78,15 +76,15 @@ export function ErrorPage(props: Props) {
               <div className="animate-blink h-3 w-3 rounded-full bg-[#f97316] shadow-[0_0_10px_rgba(249,115,22,0.6)]"></div>
               <div
                 className="animate-blink h-3 w-3 rounded-full bg-[#f97316] shadow-[0_0_10px_rgba(249,115,22,0.6)]"
-                style="animation-delay:0.2s"
+                style={{ animationDelay: "0.2s" }}
               ></div>
               <div
                 className="animate-blink h-3 w-3 rounded-full bg-[#f97316] shadow-[0_0_10px_rgba(249,115,22,0.6)]"
-                style="animation-delay:0.4s"
+                style={{ animationDelay: "0.4s" }}
               ></div>
             </div>
           </div>
-          <p className="m-0 text-[13px] text-[#9aa4b2]">We're looking into it — thanks for your patience.</p>
+          <p className="m-0 text-[13px] text-[#9aa4b2]">{"We're"} looking into it — thanks for your patience.</p>
         </div>
 
         {error ? (

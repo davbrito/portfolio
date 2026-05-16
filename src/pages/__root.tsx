@@ -1,3 +1,4 @@
+import { ErrorPage } from "@/components/error-page";
 import globalCss from "@/styles/global.css?url";
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { Analytics } from "@vercel/analytics/react";
@@ -20,6 +21,7 @@ export const Route = createRootRoute({
     ],
   }),
   shellComponent: SiteLayout,
+  errorComponent: ErrorPage,
 });
 
 function SiteLayout() {

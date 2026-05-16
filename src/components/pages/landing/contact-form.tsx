@@ -44,20 +44,27 @@ export default function ContactForm({ profileId }: ContactFormProps) {
           const token = document.querySelector<HTMLInputElement>(
             '#contact-form input[name="cf-turnstile-response"]',
           )?.value;
-
-          const result = await contactFormAction({ ...data, profileId, cfTurnstileResponse: token || "" });
-
-          if (isInputError(result.error)) {
-            result.error.issues.forEach((issue) => {
-              setError(issue.path.join(".") as any, { type: "server", message: issue.message });
-            });
-          } else if (result.error) {
-            setError("root", { type: "server", message: result.error.message });
-          } else {
+          console.log("Turnstile token:", token);
+          try {
+            await contactFormAction({ data: { ...data, profileId, cfTurnstileResponse: token || "" } });
             form.setValue("name", "");
             form.setValue("email", "");
             form.setValue("subject", "");
             form.setValue("message", "");
+          } catch (error: any) {
+            if (error.message[0] === "[") {
+              try {
+                const issues = JSON.parse(error.message) as any[];
+                issues.forEach((issue) => {
+                  setError(issue.path.join(".") as any, { type: "server", message: issue.message });
+                });
+                return;
+              } catch {
+                //
+              }
+            }
+
+            setError("root", { type: "server", message: error.message });
           }
         })}
       >
