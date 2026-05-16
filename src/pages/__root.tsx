@@ -19,9 +19,8 @@ export const Route = createRootRoute({
       },
     ],
   }),
-  component: SiteLayout,
+  shellComponent: SiteLayout,
 });
-
 
 function SiteLayout() {
   return (

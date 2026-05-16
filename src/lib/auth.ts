@@ -12,7 +12,7 @@ import { BETTER_AUTH_SECRET, CF_TURNSTILE_SECRET_KEY, vercelUrl } from "./server
 export const auth = betterAuth({
   baseURL: vercelUrl ? `https://${vercelUrl}` : undefined,
   secret: BETTER_AUTH_SECRET,
-  trustedOrigins: [vercelUrl ? `https://${vercelUrl}` : "", import.meta.env.DEV ? "http://localhost:4321" : ""].filter(
+  trustedOrigins: [vercelUrl ? `https://${vercelUrl}` : "", import.meta.env.DEV ? "http://localhost:3000" : ""].filter(
     Boolean,
   ),
 

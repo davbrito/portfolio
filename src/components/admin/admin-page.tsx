@@ -1,17 +1,9 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import * as tabs from "@/components/ui/tabs";
-import { authUiProps } from "@/lib/auth-client";
-import { QueryProvider } from "@/lib/query";
-import {
-  AccountSettingsCards,
-  AuthUIProvider,
-  SecuritySettingsCards,
-  type SettingsCardClassNames,
-} from "@daveyplate/better-auth-ui";
+import { AccountSettingsCards, SecuritySettingsCards, type SettingsCardClassNames } from "@daveyplate/better-auth-ui";
 import { BarChart3, IdCard, LockIcon, MailIcon, Settings, UserIcon, Users } from "lucide-react";
 import { Suspense } from "react";
 import { Skeleton } from "../ui/skeleton";
-import { Toaster } from "../ui/sonner";
 import { MessagesSection } from "./messages";
 import { ProfileSettings } from "./profile-settings";
 
@@ -41,75 +33,69 @@ export default function AdminPage({ defaultTab }: { defaultTab?: string | null }
   };
 
   return (
-    <QueryProvider>
-      <AuthUIProvider {...authUiProps}>
-        <div className="flex grow flex-col space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Panel de Control</h1>
-            <p className="text-muted-foreground">Gestiona tu aplicación, usuarios y configuraciones de seguridad.</p>
-          </div>
+    <div className="flex grow flex-col space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Panel de Control</h1>
+        <p className="text-muted-foreground">Gestiona tu aplicación, usuarios y configuraciones de seguridad.</p>
+      </div>
 
-          <tabs.Tabs defaultValue={defaultTab || "profile"} onValueChange={onChangeTab} className="dark grow flex-col">
-            <tabs.TabsList className="mb-4 w-full flex-wrap *:flex-1 *:p-2">
-              <tabs.TabsTrigger value="profile">
-                <IdCard />
-                Perfil
-              </tabs.TabsTrigger>
-              <tabs.TabsTrigger value="dashboard">
-                <BarChart3 />
-                Resumen
-              </tabs.TabsTrigger>
-              <tabs.TabsTrigger value="users">
-                <Users />
-                Usuarios
-              </tabs.TabsTrigger>
-              <tabs.TabsTrigger value="settings">
-                <Settings />
-                Configuración
-              </tabs.TabsTrigger>
-              <tabs.TabsTrigger value="messages">
-                <MailIcon />
-                Mensajes
-              </tabs.TabsTrigger>
-              <tabs.TabsTrigger value="account">
-                <UserIcon />
-                Cuenta
-              </tabs.TabsTrigger>
-              <tabs.TabsTrigger value="security">
-                <LockIcon />
-                Seguridad
-              </tabs.TabsTrigger>
-            </tabs.TabsList>
+      <tabs.Tabs defaultValue={defaultTab || "profile"} onValueChange={onChangeTab} className="dark grow flex-col">
+        <tabs.TabsList className="mb-4 w-full flex-wrap *:flex-1 *:p-2">
+          <tabs.TabsTrigger value="profile">
+            <IdCard />
+            Perfil
+          </tabs.TabsTrigger>
+          <tabs.TabsTrigger value="dashboard">
+            <BarChart3 />
+            Resumen
+          </tabs.TabsTrigger>
+          <tabs.TabsTrigger value="users">
+            <Users />
+            Usuarios
+          </tabs.TabsTrigger>
+          <tabs.TabsTrigger value="settings">
+            <Settings />
+            Configuración
+          </tabs.TabsTrigger>
+          <tabs.TabsTrigger value="messages">
+            <MailIcon />
+            Mensajes
+          </tabs.TabsTrigger>
+          <tabs.TabsTrigger value="account">
+            <UserIcon />
+            Cuenta
+          </tabs.TabsTrigger>
+          <tabs.TabsTrigger value="security">
+            <LockIcon />
+            Seguridad
+          </tabs.TabsTrigger>
+        </tabs.TabsList>
 
-            <tabs.TabsContent value="profile" className="flex grow flex-col">
-              <Suspense fallback={<Skeleton />}>
-                <ProfileSettings />
-              </Suspense>
-            </tabs.TabsContent>
-            <tabs.TabsContent value="dashboard">
-              <DashboardSection />
-            </tabs.TabsContent>
-            <tabs.TabsContent value="users">
-              <UsersSection />
-            </tabs.TabsContent>
-            <tabs.TabsContent value="settings">
-              <SettingsSection />
-            </tabs.TabsContent>
-            <tabs.TabsContent value="messages" className="flex grow flex-col">
-              <MessagesSection />
-            </tabs.TabsContent>
-            <tabs.TabsContent value="account">
-              <AccountSettingsCards classNames={settingsCardsClassnames} />
-            </tabs.TabsContent>
-            <tabs.TabsContent value="security">
-              <SecuritySettingsCards classNames={settingsCardsClassnames} />
-            </tabs.TabsContent>
-          </tabs.Tabs>
-        </div>
-
-        <Toaster />
-      </AuthUIProvider>
-    </QueryProvider>
+        <tabs.TabsContent value="profile" className="flex grow flex-col">
+          <Suspense fallback={<Skeleton />}>
+            <ProfileSettings />
+          </Suspense>
+        </tabs.TabsContent>
+        <tabs.TabsContent value="dashboard">
+          <DashboardSection />
+        </tabs.TabsContent>
+        <tabs.TabsContent value="users">
+          <UsersSection />
+        </tabs.TabsContent>
+        <tabs.TabsContent value="settings">
+          <SettingsSection />
+        </tabs.TabsContent>
+        <tabs.TabsContent value="messages" className="flex grow flex-col">
+          <MessagesSection />
+        </tabs.TabsContent>
+        <tabs.TabsContent value="account">
+          <AccountSettingsCards classNames={settingsCardsClassnames} />
+        </tabs.TabsContent>
+        <tabs.TabsContent value="security">
+          <SecuritySettingsCards classNames={settingsCardsClassnames} />
+        </tabs.TabsContent>
+      </tabs.Tabs>
+    </div>
   );
 }
 

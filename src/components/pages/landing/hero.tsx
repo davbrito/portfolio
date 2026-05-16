@@ -40,7 +40,6 @@ export function Hero({ socialLinks, profile }: HeroProps) {
             {...(link.obfuscated
               ? {
                   "data-ob": link.obfuscationTarget,
-                  "data-ob-key": link.obfuscationKey,
                 }
               : {})}
           >

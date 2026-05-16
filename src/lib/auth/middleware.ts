@@ -1,9 +1,9 @@
 import { auth } from "#/lib/auth.ts";
-import { createMiddleware, createServerOnlyFn } from "@tanstack/react-start";
-import { isAdminEmail } from "./helpers";
+import { createMiddleware, createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
+import { isAdminEmail } from "./helpers";
 
-export const getAuthSession = createServerOnlyFn(async () => {
+export const getAuthSession = createServerFn().handler(async () => {
   return await auth.api.getSession({
     headers: getRequestHeaders(),
   });

@@ -1,6 +1,6 @@
 import type { IconName } from "@/components/icons";
 import { db } from "@/lib/db";
-import { obfuscate } from "@/lib/obfuscation";
+import { createObfuscationKey, obfuscate, serializeObfuscationKey } from "@/lib/obfuscation";
 import { createServerFn } from "@tanstack/react-start";
 
 export const getPortfolioData = createServerFn().handler(async () => {
@@ -9,6 +9,8 @@ export const getPortfolioData = createServerFn().handler(async () => {
   });
 
   if (!profile) return null;
+
+  const obKey = await createObfuscationKey();
 
   const socialLinks: SocialLink[] = [
     {
@@ -24,18 +26,18 @@ export const getPortfolioData = createServerFn().handler(async () => {
   ];
 
   if (profile?.email) {
-    const { value, key } = await obfuscate(`mailto:${profile.email}`);
+    const value = await obfuscate(`mailto:${profile.email}`, obKey);
     socialLinks.push({
       icon: "mail",
       href: value,
       label: "Email",
       obfuscated: true,
-      obfuscationKey: key,
       obfuscationTarget: "href",
     });
   }
 
   return {
+    obKey: await serializeObfuscationKey(obKey),
     profile: profile,
     experience: profile?.experiences || [],
     projects: profile?.projects || [],
@@ -59,7 +61,6 @@ export interface SocialLink {
   href: string;
   icon: IconName;
   obfuscated?: boolean;
-  obfuscationKey?: string;
   obfuscationTarget?: string;
 }
 

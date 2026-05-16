@@ -16,20 +16,14 @@ export default function LandingFooter({ socialLinks, name }: Props) {
             target="_blank"
             rel="noreferrer"
             className="hover:text-primary transition"
-            {...(link.obfuscated
-              ? {
-                  "data-ob": link.obfuscationTarget,
-                  "data-ob-key": link.obfuscationKey,
-                }
-              : {})}
+            {...(link.obfuscated ? { "data-ob": link.obfuscationTarget } : {})}
           >
             {link.label}
           </a>
         ))}
       </div>
       <p>
-        Diseñado y desarrollado por <span className="text-primary">{name}</span>. Hecho con Astro, React y Tailwind
-        CSS.
+        Diseñado y desarrollado por <span className="text-primary">{name}</span>. Hecho con Astro, React y Tailwind CSS.
       </p>
       <p className="text-[11px]">
         © {new Date().getFullYear()}

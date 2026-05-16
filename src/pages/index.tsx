@@ -9,8 +9,10 @@ import Projects from "@/components/pages/landing/projects";
 import { SectionHeader } from "@/components/pages/landing/section-header";
 import Technologies from "@/components/pages/landing/technologies";
 import { getPortfolioData } from "@/data/portfolio";
+import { setupObfuscatedLinks } from "@/lib/obfuscation";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { ArrowDown } from "lucide-react";
+import { useEffect } from "react";
 
 export const prerender = false;
 
@@ -23,6 +25,7 @@ export const Route = createFileRoute("/")({
   loader: async () => {
     const data = await getPortfolioData();
     if (!data || !data.profile.active) {
+      console.error({ message: "Profile is not active or not found." });
       throw notFound();
     }
     return { data };
@@ -33,9 +36,12 @@ export const Route = createFileRoute("/")({
 function Index() {
   const { data } = Route.useLoaderData();
 
-  if (!data || !data.profile.active) {
-    return Response.json({ message: "Profile is not active or not found." }, { status: 404 });
-  }
+  useEffect(() => {
+    requestIdleCallback(() => {
+      setupObfuscatedLinks(data.obKey);
+    });
+  }, [data.obKey]);
+
   const { socialLinks, experience, technologies, profile, projects } = data;
   return (
     <>
@@ -91,12 +97,6 @@ function Index() {
           <LandingFooter name={profile.name} socialLinks={socialLinks} />
         </div>
       </div>
-
-      <script>
-        {`import { setupObfuscatedLinks } from "@/lib/obfuscation";
-    document.addEventListener("DOMContentLoaded", setupObfuscatedLinks);
-    document.addEventListener("astro:page-load", setupObfuscatedLinks);`}
-      </script>
     </>
   );
 }

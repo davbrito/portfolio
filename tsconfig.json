@@ -11,7 +11,7 @@
     "jsxImportSource": "react",
     "module": "ESNext",
     "lib": ["ESNext", "DOM", "DOM.Iterable", "ESNext.Iterator"],
-    "types": [],
+    "types": ["vite/client"],
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,

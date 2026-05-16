@@ -1,8 +1,5 @@
 import AdminPage from "@/components/admin/admin-page";
-import { Providers } from "@/components/providers";
-import AdminLayout from "@/layout/admin-layout";
-import { getAuthSession } from "@/lib/auth/middleware";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import * as z from "zod";
 
 export const Route = createFileRoute("/admin/")({
@@ -16,11 +13,5 @@ export const Route = createFileRoute("/admin/")({
 function AdminIndex() {
   const { tab } = Route.useLoaderDeps();
 
-  return (
-    <Providers>
-      <AdminLayout>
-        <AdminPage defaultTab={tab} />
-      </AdminLayout>
-    </Providers>
-  );
+  return <AdminPage defaultTab={tab} />;
 }
