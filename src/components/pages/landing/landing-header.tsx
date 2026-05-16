@@ -7,7 +7,7 @@ interface NavItem {
 
 export function LandingHeader({ navItems }: { navItems: NavItem[] }) {
   return (
-    <header className="bg-card/85 sticky top-0 z-20 -mx-5 px-5 py-4 font-mono backdrop-blur sm:px-8 md:px-10 xl:-mx-10">
+    <header className="bg-card/85 sticky top-0 z-20 px-5 py-4 font-mono backdrop-blur sm:px-8 md:px-10">
       <div className="mx-auto flex max-w-6xl items-center justify-between">
         <div className="flex flex-wrap items-center gap-3">
           <div className="text-primary rounded-full text-lg font-bold tracking-wider uppercase">{"<DB/>"}</div>
