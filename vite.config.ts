@@ -19,6 +19,7 @@ export default defineConfig({
       router: {
         routesDirectory: "pages",
       },
+      rsc: { enabled: false },
     }),
     viteReact(),
     nitro(),
