@@ -42,6 +42,7 @@ export function Hero({ socialLinks, profile }: HeroProps) {
                   "data-ob": link.obfuscationTarget,
                 }
               : {})}
+            aria-label={link.label}
           >
             {icons[link.icon]("h-5 w-5")}
           </a>
