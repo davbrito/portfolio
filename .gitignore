@@ -41,3 +41,4 @@ pnpm-debug.log*
 routeTree.gen.ts
 .tanstack
 .nitro
+.output
