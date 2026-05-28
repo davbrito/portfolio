@@ -42,3 +42,101 @@
 .animate-fade-in {
   animation: fade-in 0.9s ease both;
 }
+
+/* ============================================================
+   CSS Scroll-driven Animations (Scroll Timeline)
+   ============================================================ */
+
+/* --- Reading progress bar --- */
+@keyframes scroll-progress-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.scroll-progress-bar {
+  transform-origin: left center;
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-progress-bar {
+    animation: scroll-progress-grow linear both;
+    animation-timeline: scroll(root);
+  }
+}
+
+/* --- Section reveal on scroll (view() timeline) --- */
+@keyframes section-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(44px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section-reveal {
+  animation-name: section-reveal;
+  animation-duration: 0.8s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: both;
+  animation-timeline: view();
+  animation-range-start: entry 0%;
+  animation-range-end: entry 35%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-reveal {
+    animation: none;
+  }
+}
+
+/* --- Background orb parallax (scroll(root) timeline) --- */
+@keyframes orb-rise {
+  from {
+    transform: translateY(0px) translateX(0px);
+  }
+  to {
+    transform: translateY(-220px) translateX(40px);
+  }
+}
+
+@keyframes orb-sink {
+  from {
+    transform: translateY(0px) translateX(0px);
+  }
+  to {
+    transform: translateY(-140px) translateX(-30px);
+  }
+}
+
+@keyframes orb-drift {
+  from {
+    transform: translateY(0px) translateX(-50%) scale(1);
+  }
+  to {
+    transform: translateY(-80px) translateX(-50%) scale(1.15);
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .orb-parallax-1 {
+    animation: orb-rise linear both;
+    animation-timeline: scroll(root);
+  }
+
+  .orb-parallax-2 {
+    animation: orb-sink linear both;
+    animation-timeline: scroll(root);
+  }
+
+  .orb-parallax-3 {
+    animation: orb-drift linear both;
+    animation-timeline: scroll(root);
+  }
+}

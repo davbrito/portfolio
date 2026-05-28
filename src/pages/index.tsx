@@ -46,12 +46,14 @@ function Index() {
   const { socialLinks, experience, technologies, profile, projects } = data;
   return (
     <>
-      <div className="isolate bg-background text-foreground relative min-h-screen font-sans">
+      <div className="bg-background text-foreground relative isolate min-h-screen font-sans">
+        {/* Reading progress bar */}
+        <div className="scroll-progress-bar bg-primary fixed top-0 left-0 z-50 h-0.5 w-full" aria-hidden />
         {/* Background decorative elements */}
         <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden select-none" aria-hidden>
-          <div className="bg-primary/4 absolute -left-72 -top-72 h-175 w-175 rounded-full blur-3xl" />
-          <div className="bg-primary/3 absolute -bottom-72 -right-72 h-150 w-150 rounded-full blur-3xl" />
-          <div className="bg-accent/2 absolute left-1/2 top-1/2 h-125 w-125 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" />
+          <div className="orb-parallax-1 bg-primary/8 absolute -top-72 -left-72 h-175 w-175 rounded-full blur-3xl" />
+          <div className="orb-parallax-2 bg-primary/6 absolute -right-72 -bottom-72 h-150 w-150 rounded-full blur-3xl" />
+          <div className="orb-parallax-3 bg-accent/4 absolute top-1/2 left-1/2 h-125 w-125 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" />
           <div className="hero-gradient absolute inset-0" />
           <div className="dot-grid absolute inset-0" />
         </div>
@@ -74,31 +76,31 @@ function Index() {
               <ArrowDown className="text-muted-foreground h-5 w-5 animate-bounce" />
             </div>
 
-            <section id="sobre-mi" className="mx-auto max-w-4xl">
+            <section id="sobre-mi" className="section-reveal mx-auto max-w-4xl">
               <SectionHeader number={1} title="Sobre mí" />
 
               <About profile={profile} />
             </section>
 
-            <section id="experiencia" className="mx-auto max-w-4xl">
+            <section id="experiencia" className="section-reveal mx-auto max-w-4xl">
               <SectionHeader number={2} title="Experiencia" />
 
               <Experience experience={experience} />
             </section>
 
-            <section id="tecnologias" className="mx-auto max-w-4xl">
+            <section id="tecnologias" className="section-reveal mx-auto max-w-4xl">
               <SectionHeader number={3} title="Tecnologías" />
 
               <Technologies technologies={technologies} />
             </section>
 
-            <section id="proyectos" className="mx-auto max-w-4xl">
+            <section id="proyectos" className="section-reveal mx-auto max-w-4xl">
               <SectionHeader number={4} title="Proyectos" />
 
               <Projects projects={projects} />
             </section>
 
-            <section id="contacto" className="mx-auto max-w-prose space-y-8">
+            <section id="contacto" className="section-reveal mx-auto max-w-prose space-y-8">
               <Hydrate when={visible({ rootMargin: "200px" })}>
                 <ContactForm profileId={profile.userId} />
               </Hydrate>

@@ -21,9 +21,7 @@ export function Hero({ socialLinks, profile }: HeroProps) {
         </h1>
         <h2 className="text-muted-foreground text-3xl font-extrabold sm:text-4xl">{profile.description}.</h2>
       </div>
-      <p className="text-muted-foreground animate-fade-in-up max-w-2xl [animation-delay:250ms]">
-        {profile.brief}
-      </p>
+      <p className="text-muted-foreground animate-fade-in-up max-w-2xl [animation-delay:250ms]">{profile.brief}</p>
 
       <div className="animate-fade-in-up space-x-4 [animation-delay:350ms]">
         <Button nativeButton={false} render={<a href="#proyectos" />} className="min-w-40">
