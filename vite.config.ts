@@ -27,6 +27,9 @@ export default defineConfig({
           version: 3,
           bypassToken: process.env.ISR_BYPASS_TOKEN,
         },
+        functions: {
+          runtime: "nodejs24.x",
+        },
       },
       routeRules: {
         "/": {
