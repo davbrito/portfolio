@@ -1,25 +1,17 @@
 import { CurriculumDocument } from "@/components/cv/curriculum-document";
 import { getPortfolioData } from "@/data/portfolio";
-import { validateTurnstileToken } from "@/lib/captcha";
+import { validateBotId } from "@/lib/botid/validation";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { createFileRoute } from "@tanstack/react-router";
-import { getRequestIP } from "@tanstack/react-start/server";
 import deburr from "lodash-es/deburr.js";
 import snakeCase from "lodash-es/snakeCase.js";
 import { createElement } from "react";
 
-export const Route = createFileRoute("/curriculum/pdf")({
+export const Route = createFileRoute("/curriculum.pdf")({
   server: {
     handlers: {
-      async GET({ request }) {
-        const url = new URL(request.url);
-        const token = url.searchParams.get("cf-turnstile-response") || "";
-        const clientAddress = getRequestIP({ xForwardedFor: true })!;
-
-        const validation = await validateTurnstileToken(token, clientAddress);
-        if (!validation.success) {
-          return new Response("Turnstile verification failed.", { status: 403 });
-        }
+      async GET() {
+        await validateBotId();
 
         const data = await getPortfolioData();
 
