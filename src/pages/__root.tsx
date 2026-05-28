@@ -13,7 +13,11 @@ export const Route = createRootRoute({
         name: "viewport",
         content: "width=device-width, initial-scale=1",
       },
-      { title: "Portfolio" },
+      {
+        name: "description",
+        content: "Portfalio profesional - Desarrollador fullstack con experiencia en TypeScript, React, Node.js y más. Explora mis proyectos, habilidades y experiencia profesional.",
+      },
+      { title: "Portfalio" },
     ],
     links: [
       {
