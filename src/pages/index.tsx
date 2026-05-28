@@ -46,7 +46,15 @@ function Index() {
   const { socialLinks, experience, technologies, profile, projects } = data;
   return (
     <>
-      <div className="bg-background text-foreground relative min-h-screen font-sans">
+      <div className="isolate bg-background text-foreground relative min-h-screen font-sans">
+        {/* Background decorative elements */}
+        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden select-none" aria-hidden>
+          <div className="bg-primary/4 absolute -left-72 -top-72 h-175 w-175 rounded-full blur-3xl" />
+          <div className="bg-primary/3 absolute -bottom-72 -right-72 h-150 w-150 rounded-full blur-3xl" />
+          <div className="bg-accent/2 absolute left-1/2 top-1/2 h-125 w-125 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" />
+          <div className="hero-gradient absolute inset-0" />
+          <div className="dot-grid absolute inset-0" />
+        </div>
         <LandingHeader
           navItems={[
             { href: "#sobre-mi", label: "Sobre mi" },
