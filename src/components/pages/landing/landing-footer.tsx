@@ -26,7 +26,7 @@ export default function LandingFooter({ socialLinks, name }: Props) {
         ))}
       </div>
       <p>
-        Diseñado y desarrollado por <span className="text-primary">{name}</span>. Hecho con Astro, React y Tailwind CSS.
+        Diseñado y desarrollado por <span className="text-primary">{name}</span>. Hecho con Tanstack Start, React y Tailwind CSS.
       </p>
       <p className="text-[11px]">
         © {new Date().getFullYear()}
