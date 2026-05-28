@@ -81,11 +81,10 @@
 }
 
 @utility section-reveal {
-  /* Named trigger scoped to each element individually */
-  timeline-trigger:
-    --reveal
-    view()
-    entry 0% exit 100%;
+  /* Named trigger scoped to each element individually.
+     view(block 80px) adds inset so the trigger deactivates while
+     the element is still 80px visible — making play-backwards visible. */
+  timeline-trigger: --reveal view(block 80px) entry 0% exit 0%;
   trigger-scope: --reveal;
 
   animation-name: section-reveal;
