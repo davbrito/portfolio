@@ -28,6 +28,7 @@ export const Route = createFileRoute("/curriculum.pdf")({
         return new Response(new Uint8Array(pdfBuffer), {
           headers: {
             "Content-Type": "application/pdf",
+            "Content-Length": String(pdfBuffer.byteLength),
             "Content-Disposition": `inline; filename*=UTF-8''${encodeURIComponent(filename)}`,
           },
         });
