@@ -1,6 +1,8 @@
 import { ErrorPage } from "@/components/error-page";
 import globalCss from "@/styles/global.css?url";
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { Hydrate } from "@tanstack/react-start";
+import { idle } from "@tanstack/react-start/hydration";
 import { Analytics } from "@vercel/analytics/react";
 
 export const Route = createRootRoute({
@@ -40,7 +42,9 @@ function SiteLayout() {
       </head>
       <body>
         <Outlet />
-        <Analytics mode={import.meta.env.DEV ? "development" : "production"} />
+        <Hydrate when={idle()}>
+          <Analytics mode={import.meta.env.DEV ? "development" : "production"} />
+        </Hydrate>
         <Scripts />
       </body>
     </html>
