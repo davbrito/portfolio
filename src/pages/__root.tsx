@@ -15,7 +15,8 @@ export const Route = createRootRoute({
       },
       {
         name: "description",
-        content: "Portfalio profesional - Desarrollador fullstack con experiencia en TypeScript, React, Node.js y más. Explora mis proyectos, habilidades y experiencia profesional.",
+        content:
+          "Portfalio profesional - Desarrollador fullstack con experiencia en TypeScript, React, Node.js y más. Explora mis proyectos, habilidades y experiencia profesional.",
       },
       { title: "Portfalio" },
     ],
@@ -53,9 +54,11 @@ function SiteLayout() {
       </head>
       <body>
         <Outlet />
-        <Hydrate when={idle()}>
-          <Analytics mode={import.meta.env.DEV ? "development" : "production"} />
-        </Hydrate>
+        {import.meta.env.PROD && (
+          <Hydrate when={idle()}>
+            <Analytics />
+          </Hydrate>
+        )}
         <Scripts />
       </body>
     </html>
