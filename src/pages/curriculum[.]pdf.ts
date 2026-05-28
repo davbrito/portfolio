@@ -23,6 +23,7 @@ export const Route = createFileRoute("/curriculum.pdf")({
 
         const cache = getCache();
         const cachedPdf = (await cache.get(CACHE_KEY)) as Uint8Array<ArrayBuffer> | null;
+        console.log("Cached PDF found:", cachedPdf, Object.getPrototypeOf(cachedPdf).constructor.name);
         const filename = `curriculum-${deburr(snakeCase(data.profile.name)) || "profile"}.pdf`;
 
         if (cachedPdf) {
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/curriculum.pdf")({
               "Content-Type": "application/pdf",
               "Content-Length": String(cachedPdf.byteLength),
               "Content-Disposition": `inline; filename*=UTF-8''${encodeURIComponent(filename)}`,
+              "Cache-Control": "private, no-store, max-age=0",
             },
           });
         }
@@ -52,6 +54,7 @@ export const Route = createFileRoute("/curriculum.pdf")({
             "Content-Type": "application/pdf",
             "Content-Length": String(pdfBytes.byteLength),
             "Content-Disposition": `inline; filename*=UTF-8''${encodeURIComponent(filename)}`,
+            "Cache-Control": "private, no-store, max-age=0",
           },
         });
       },
