@@ -1,4 +1,3 @@
-// vite.config.ts
 import tailwindcss from "@tailwindcss/vite";
 import { devtools } from "@tanstack/devtools-vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
@@ -20,8 +19,30 @@ export default defineConfig({
         routesDirectory: "pages",
       },
       rsc: { enabled: false },
+      pages: [
+        {
+          path: "/",
+          prerender: {
+            enabled: true,
+          },
+        },
+      ],
     }),
     viteReact(),
-    nitro(),
+    nitro({
+      vercel: {
+        config: {
+          version: 3,
+          bypassToken: process.env.ISR_BYPASS_TOKEN,
+        },
+      },
+      routeRules: {
+        "/": {
+          isr: {
+            expiration: false,
+          },
+        },
+      },
+    }),
   ],
 });
