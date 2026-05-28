@@ -19,14 +19,6 @@ export default defineConfig({
         routesDirectory: "pages",
       },
       rsc: { enabled: false },
-      pages: [
-        {
-          path: "/",
-          prerender: {
-            enabled: true,
-          },
-        },
-      ],
     }),
     viteReact(),
     nitro({
