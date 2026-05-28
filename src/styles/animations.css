@@ -82,7 +82,10 @@
 
 @utility section-reveal {
   /* Named trigger scoped to each element individually */
-  timeline-trigger: --reveal view() entry 0% exit 100%;
+  timeline-trigger:
+    --reveal
+    view()
+    entry 0% exit 100%;
   trigger-scope: --reveal;
 
   animation-name: section-reveal;
