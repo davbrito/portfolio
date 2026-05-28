@@ -16,7 +16,10 @@ export default function Projects({ projects }: Props) {
   return (
     <div className="grid gap-6 md:grid-cols-2">
       {projects.map((project) => (
-        <article key={project.id} className="border-border bg-card/60 flex h-full flex-col gap-4 rounded-2xl border p-6 shadow">
+        <article
+          key={project.id}
+          className="border-border bg-card/60 flex h-full flex-col gap-4 rounded-2xl border p-6 shadow"
+        >
           {project.image ? (
             <div className="overflow-hidden rounded-xl border">
               <img
@@ -34,7 +37,10 @@ export default function Projects({ projects }: Props) {
           {project.tags?.length ? (
             <div className="flex flex-wrap gap-2">
               {project.tags.map((tag) => (
-                <span key={tag} className="bg-primary/10 text-primary rounded-full border px-2 py-0.5 text-[11px] font-medium tracking-wide">
+                <span
+                  key={tag}
+                  className="bg-primary/10 text-primary rounded-full border px-2 py-0.5 text-[11px] font-medium tracking-wide"
+                >
                   {tag}
                 </span>
               ))}
