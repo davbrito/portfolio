@@ -1,14 +1,13 @@
 import { adminMiddleware } from "@/lib/auth/middleware";
-import { validateTurnstileToken } from "@/lib/captcha";
+import { botIdMiddleware } from "@/lib/botid/middleware";
 import { db } from "@/lib/db";
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestIP } from "@tanstack/react-start/server";
 import * as z from "zod";
 
 export const contactFormAction = createServerFn({ method: "POST" })
+  .middleware([botIdMiddleware])
   .inputValidator(
     z.object({
-      cfTurnstileResponse: z.string({ error: "Turnstile response is required" }),
       profileId: z.string(),
       name: z.string().min(2, { error: "Nombre es requerido" }).max(100).nonempty({ error: "Nombre es requerido" }),
       email: z.email({ error: "Correo inválido" }),
@@ -26,19 +25,6 @@ export const contactFormAction = createServerFn({ method: "POST" })
   )
   .handler(async (ctx) => {
     const input = ctx.data;
-    const token = input.cfTurnstileResponse;
-
-    if (!token) {
-      throw new Error("Turnstile token is required");
-    }
-
-    const ipAddress = getRequestIP({ xForwardedFor: true })!;
-    const validation = await validateTurnstileToken(token, ipAddress);
-
-    if (!validation.success) {
-      console.error("Turnstile validation failed: %O", validation);
-      throw new Error("Verificación fallida");
-    }
 
     await db.messages.create({
       data: {

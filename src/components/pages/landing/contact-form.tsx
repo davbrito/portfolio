@@ -2,8 +2,6 @@ import { FormInputField, FormTextareaField } from "@/components/form-fields";
 import { Button } from "@/components/ui/button";
 import { FieldError, FieldGroup } from "@/components/ui/field";
 import { contactFormAction } from "#/actions/index.ts";
-import { CF_TURNSTILE_SITE_KEY } from "#/config.ts";
-import { Turnstile } from "@marsidev/react-turnstile";
 import { SendIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 
@@ -41,12 +39,8 @@ export default function ContactForm({ profileId }: ContactFormProps) {
         className="space-y-4"
         id="contact-form"
         onSubmit={handleSubmit(async (data) => {
-          const token = document.querySelector<HTMLInputElement>(
-            '#contact-form input[name="cf-turnstile-response"]',
-          )?.value;
-          console.log("Turnstile token:", token);
           try {
-            await contactFormAction({ data: { ...data, profileId, cfTurnstileResponse: token || "" } });
+            await contactFormAction({ data: { ...data, profileId } });
             form.setValue("name", "");
             form.setValue("email", "");
             form.setValue("subject", "");
@@ -104,10 +98,6 @@ export default function ContactForm({ profileId }: ContactFormProps) {
         {error ? <FieldError>{error}</FieldError> : null}
 
         {isSubmitSuccessful ? <p className="text-sm text-green-600">¡Mensaje enviado con éxito!</p> : null}
-
-        {CF_TURNSTILE_SITE_KEY ? (
-          <Turnstile siteKey={CF_TURNSTILE_SITE_KEY} options={{ theme: "dark", size: "flexible" }} />
-        ) : null}
 
         <div className="flex justify-between gap-5">
           <div></div>

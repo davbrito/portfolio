@@ -3,7 +3,10 @@ import globalCss from "@/styles/global.css?url";
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { Hydrate } from "@tanstack/react-start";
 import { idle } from "@tanstack/react-start/hydration";
+import { BotIdClient } from "botid/client";
 import { Analytics } from "@vercel/analytics/react";
+
+const protectedRoutes = [{ path: "/_serverFn/*", method: "POST" }];
 
 export const Route = createRootRoute({
   head: () => ({
@@ -54,12 +57,13 @@ function SiteLayout() {
       </head>
       <body>
         <Outlet />
+        <Scripts />
         {import.meta.env.PROD && (
           <Hydrate when={idle()}>
             <Analytics />
           </Hydrate>
         )}
-        <Scripts />
+        <BotIdClient protect={protectedRoutes} />
       </body>
     </html>
   );
