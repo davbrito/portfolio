@@ -1,15 +1,9 @@
 import { ErrorPage } from "@/components/error-page";
 import globalCss from "@/styles/global.css?url";
-import { ClientOnly, createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { Hydrate } from "@tanstack/react-start";
 import { idle } from "@tanstack/react-start/hydration";
 import { Analytics } from "@vercel/analytics/react";
-import { BotIdClient } from "botid/client";
-
-const protectedRoutes = [
-  { path: "/_serverFn/*", method: "POST" },
-  { path: "/curriculum.pdf", method: "GET" },
-];
 
 export const Route = createRootRoute({
   head: () => ({
@@ -66,9 +60,6 @@ function SiteLayout() {
             <Analytics />
           </Hydrate>
         )}
-        <ClientOnly>
-          <BotIdClient protect={protectedRoutes} />
-        </ClientOnly>
       </body>
     </html>
   );
