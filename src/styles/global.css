@@ -23,7 +23,7 @@
   }
 
   html {
-    @apply h-full scroll-pt-24 scroll-smooth;
+    @apply h-full scroll-pt-24 scroll-smooth snap-y snap-proximity;
   }
 
   body {

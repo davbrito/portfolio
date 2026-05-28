@@ -67,8 +67,8 @@ function Index() {
           ]}
         />
         <div className="px-5 pb-16 sm:px-8 md:px-10">
-          <main role="main" className="space-y-48 pt-10 md:pt-16">
-            <section className="mx-auto max-w-4xl">
+          <main role="main" className="space-y-16 pt-10 md:pt-16">
+            <section className="snap-start mx-auto max-w-4xl">
               <Hero socialLinks={socialLinks} profile={profile} />
             </section>
 
@@ -76,31 +76,31 @@ function Index() {
               <ArrowDown className="text-muted-foreground h-5 w-5 animate-bounce" />
             </div>
 
-            <section id="sobre-mi" className="section-reveal mx-auto max-w-4xl">
+            <section id="sobre-mi" className="section-reveal snap-start mx-auto max-w-4xl">
               <SectionHeader number={1} title="Sobre mí" />
 
               <About profile={profile} />
             </section>
 
-            <section id="experiencia" className="section-reveal mx-auto max-w-4xl">
+            <section id="experiencia" className="section-reveal snap-start mx-auto max-w-4xl">
               <SectionHeader number={2} title="Experiencia" />
 
               <Experience experience={experience} />
             </section>
 
-            <section id="tecnologias" className="section-reveal mx-auto max-w-4xl">
+            <section id="tecnologias" className="section-reveal snap-start mx-auto max-w-4xl">
               <SectionHeader number={3} title="Tecnologías" />
 
               <Technologies technologies={technologies} />
             </section>
 
-            <section id="proyectos" className="section-reveal mx-auto max-w-4xl">
+            <section id="proyectos" className="section-reveal snap-start mx-auto max-w-4xl">
               <SectionHeader number={4} title="Proyectos" />
 
               <Projects projects={projects} />
             </section>
 
-            <section id="contacto" className="section-reveal mx-auto max-w-prose space-y-8">
+            <section id="contacto" className="section-reveal snap-start mx-auto max-w-prose space-y-8">
               <Hydrate when={visible({ rootMargin: "200px" })}>
                 <ContactForm profileId={profile.userId} />
               </Hydrate>

@@ -72,22 +72,23 @@
 @keyframes section-reveal {
   from {
     opacity: 0;
-    transform: translateY(44px);
+    transform: translateY(44px) scale(0.9);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-.section-reveal {
+@utility section-reveal {
   animation-name: section-reveal;
   animation-duration: 0.8s;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-timing-function: cubic-bezier(0.32,0.83,0.72,1.01);
   animation-fill-mode: both;
   animation-timeline: view();
-  animation-range-start: entry 0%;
-  animation-range-end: entry 35%;
+  animation-range: entry 30% cover 40%;
+  padding-block: --spacing(16);
+  min-height: 60dvh;
 }
 
 @media (prefers-reduced-motion: reduce) {
