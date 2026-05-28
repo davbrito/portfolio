@@ -11,10 +11,10 @@ import Technologies from "@/components/pages/landing/technologies";
 import { getPortfolioData } from "@/data/portfolio";
 import { setupObfuscatedLinks } from "@/lib/obfuscation";
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import { Hydrate } from "@tanstack/react-start";
+import { visible } from "@tanstack/react-start/hydration";
 import { ArrowDown } from "lucide-react";
 import { useEffect } from "react";
-
-export const prerender = false;
 
 export const Route = createFileRoute("/")({
   ssr: true,
@@ -91,7 +91,9 @@ function Index() {
             </section>
 
             <section id="contacto" className="mx-auto max-w-prose space-y-8">
-              <ContactForm profileId={profile.userId} />
+              <Hydrate when={visible({ rootMargin: "200px" })}>
+                <ContactForm profileId={profile.userId} />
+              </Hydrate>
             </section>
           </main>
           <LandingFooter name={profile.name} socialLinks={socialLinks} />
