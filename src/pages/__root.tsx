@@ -1,10 +1,10 @@
 import { ErrorPage } from "@/components/error-page";
 import globalCss from "@/styles/global.css?url";
-import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { ClientOnly, createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { Hydrate } from "@tanstack/react-start";
 import { idle } from "@tanstack/react-start/hydration";
-import { BotIdClient } from "botid/client";
 import { Analytics } from "@vercel/analytics/react";
+import { BotIdClient } from "botid/client";
 
 const protectedRoutes = [{ path: "/_serverFn/*", method: "POST" }];
 
@@ -63,7 +63,9 @@ function SiteLayout() {
             <Analytics />
           </Hydrate>
         )}
-        <BotIdClient protect={protectedRoutes} />
+        <ClientOnly>
+          <BotIdClient protect={protectedRoutes} />
+        </ClientOnly>
       </body>
     </html>
   );
