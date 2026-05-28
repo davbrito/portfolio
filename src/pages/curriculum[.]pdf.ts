@@ -1,6 +1,6 @@
 import { CurriculumDocument } from "@/components/cv/curriculum-document";
 import { getPortfolioData } from "@/data/portfolio";
-import { validateBotId } from "@/lib/botid/validation";
+import { isBot } from "@/lib/botid/validation";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { createFileRoute } from "@tanstack/react-router";
 import deburr from "lodash-es/deburr.js";
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/curriculum.pdf")({
   server: {
     handlers: {
       async GET() {
-        await validateBotId();
+        if (await isBot()) return new Response("Access denied.", { status: 403 });
 
         const data = await getPortfolioData();
 

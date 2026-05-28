@@ -1,8 +1,10 @@
 import { createMiddleware } from "@tanstack/react-start";
-import { validateBotId } from "./validation";
+import { isBot } from "./validation";
 
 export const botIdMiddleware = createMiddleware().server(async ({ next }) => {
-  await validateBotId();
+  if (await isBot()) {
+    throw new Error("Access denied: BotID validation failed");
+  }
 
   return next();
 });
