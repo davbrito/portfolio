@@ -31,6 +31,13 @@ export const Route = createRootRoute({
       },
     ],
   }),
+  headers: () => ({
+    "X-Frame-Options": "SAMEORIGIN",
+    "Content-Security-Policy": "frame-ancestors 'self'",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Cross-Origin-Opener-Policy": "same-origin",
+  }),
   shellComponent: SiteLayout,
   errorComponent: ErrorPage,
 });
