@@ -51,9 +51,10 @@ function Index() {
         <div className="scroll-progress-bar bg-primary fixed top-0 left-0 z-50 h-0.5 w-full" aria-hidden />
         {/* Background decorative elements */}
         <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden select-none" aria-hidden>
-          <div className="orb-parallax-1 bg-primary/8 absolute -top-72 -left-72 h-175 w-175 rounded-full blur-3xl" />
-          <div className="orb-parallax-2 bg-primary/6 absolute -right-72 -bottom-72 h-150 w-150 rounded-full blur-3xl" />
-          <div className="orb-parallax-3 bg-accent/4 absolute top-1/2 left-1/2 h-125 w-125 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" />
+          <div className="orb-parallax-1 bg-primary/16 absolute -top-72 -left-72 h-175 w-175 rounded-full blur-3xl" />
+          <div className="orb-parallax-2 bg-chart-4/14 absolute -right-72 -bottom-72 h-150 w-150 rounded-full blur-3xl" />
+          <div className="orb-parallax-3 bg-chart-1/7 absolute top-1/2 left-1/2 h-125 w-125 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" />
+          <div className="orb-parallax-4 bg-chart-5/8 absolute -top-40 -right-40 h-120 w-120 rounded-full blur-3xl" />
           <div className="hero-gradient absolute inset-0" />
           <div className="dot-grid absolute inset-0" />
         </div>
@@ -101,7 +102,7 @@ function Index() {
             </section>
 
             <section id="contacto" className="section-reveal mx-auto max-w-prose space-y-8">
-              <Hydrate when={visible({ rootMargin: "200px" })}>
+              <Hydrate when={visible({ rootMargin: "400px" })}>
                 <ContactForm profileId={profile.userId} />
               </Hydrate>
             </section>

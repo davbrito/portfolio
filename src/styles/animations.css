@@ -104,22 +104,56 @@
   }
 }
 
-/* --- Background orb parallax (scroll(root) timeline) --- */
+/* --- Background orb parallax + breathe animations --- */
+@keyframes orb-breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes orb-breathe-offset {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes orb-breathe-subtle {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
 @keyframes orb-rise {
   from {
-    transform: translateY(0px) translateX(0px);
+    transform: translateY(0px) translateX(0px) scale(1);
   }
   to {
-    transform: translateY(-220px) translateX(40px);
+    transform: translateY(-220px) translateX(40px) scale(1.08);
   }
 }
 
 @keyframes orb-sink {
   from {
-    transform: translateY(0px) translateX(0px);
+    transform: translateY(0px) translateX(0px) scale(0.95);
   }
   to {
-    transform: translateY(-140px) translateX(-30px);
+    transform: translateY(-140px) translateX(-30px) scale(1.05);
   }
 }
 
@@ -132,19 +166,57 @@
   }
 }
 
+/* Breathe animations always active (transform-free fallback) */
+.orb-parallax-1 {
+  animation: orb-breathe 9s ease-in-out infinite;
+}
+.orb-parallax-2 {
+  animation: orb-breathe-offset 12s ease-in-out infinite 2s;
+}
+.orb-parallax-3 {
+  animation: orb-breathe-subtle 10s ease-in-out infinite 5s;
+}
+.orb-parallax-4 {
+  animation: orb-breathe-offset 14s ease-in-out infinite 1s;
+}
+
 @supports (animation-timeline: scroll()) {
   .orb-parallax-1 {
-    animation: orb-rise linear both;
-    animation-timeline: scroll(root);
+    animation-name: orb-rise, orb-breathe;
+    animation-duration: auto, 9s;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: 1, infinite;
+    animation-fill-mode: both, none;
+    animation-delay: 0s, 0s;
+    animation-timeline: scroll(root), auto;
   }
 
   .orb-parallax-2 {
-    animation: orb-sink linear both;
-    animation-timeline: scroll(root);
+    animation-name: orb-sink, orb-breathe-offset;
+    animation-duration: auto, 12s;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: 1, infinite;
+    animation-fill-mode: both, none;
+    animation-delay: 0s, 2s;
+    animation-timeline: scroll(root), auto;
   }
 
   .orb-parallax-3 {
-    animation: orb-drift linear both;
-    animation-timeline: scroll(root);
+    animation-name: orb-drift, orb-breathe-subtle;
+    animation-duration: auto, 10s;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: 1, infinite;
+    animation-fill-mode: both, none;
+    animation-delay: 0s, 5s;
+    animation-timeline: scroll(root), auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb-parallax-1,
+  .orb-parallax-2,
+  .orb-parallax-3,
+  .orb-parallax-4 {
+    animation: none;
   }
 }
