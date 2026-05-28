@@ -18,6 +18,11 @@ export const Route = createRootRoute({
         rel: "stylesheet",
         href: globalCss,
       },
+      {
+        rel: "icon",
+        href: "/favicon.png",
+        type: "image/png",
+      },
     ],
   }),
   shellComponent: SiteLayout,
@@ -30,6 +35,7 @@ function SiteLayout() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.png" type="image/png" />
         <HeadContent />
       </head>
       <body>
