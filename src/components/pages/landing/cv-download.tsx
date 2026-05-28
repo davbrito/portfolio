@@ -53,7 +53,7 @@ export function CvDownloadButton({ label, className, variant = "outline" }: CvDo
           }
         }
       }
-      setProgress(100)
+      setProgress(100);
       const blob = new Blob(chunks, { type: "application/pdf" });
       downloadBlob(blob, res);
     } finally {

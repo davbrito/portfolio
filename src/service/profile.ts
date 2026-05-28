@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { siteUrl } from "@/lib/server-env";
 import type { ProfilePayload } from "@/lib/validators/profile";
 import { createServerOnlyFn } from "@tanstack/react-start";
+import { getCache } from "@vercel/functions";
 
 export async function findProfile(userId: string) {
   const profile = await db.profile.findUnique({
@@ -84,6 +85,8 @@ export async function upsertProfile(userId: string, data: ProfilePayload) {
 }
 
 export const revalidatePortfolioPage = createServerOnlyFn(async () => {
+  await getCache().expireTag("curriculum-pdf");
+
   const urlToRevalidate = new URL(siteUrl);
   console.log("Revalidating ISR for", urlToRevalidate.href);
   await fetch(urlToRevalidate, {
