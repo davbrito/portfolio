@@ -6,7 +6,10 @@ import { idle } from "@tanstack/react-start/hydration";
 import { Analytics } from "@vercel/analytics/react";
 import { BotIdClient } from "botid/client";
 
-const protectedRoutes = [{ path: "/_serverFn/*", method: "POST" }];
+const protectedRoutes = [
+  { path: "/_serverFn/*", method: "POST" },
+  { path: "/curriculum.pdf", method: "GET" },
+];
 
 export const Route = createRootRoute({
   head: () => ({
