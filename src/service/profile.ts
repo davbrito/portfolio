@@ -84,8 +84,8 @@ export async function upsertProfile(userId: string, data: ProfilePayload) {
 }
 
 export const revalidatePortfolioPage = createServerOnlyFn(async () => {
-  const urlToRevalidate = new URL("/", siteUrl);
-  console.log("Revalidating ISR for", urlToRevalidate.toString());
+  const urlToRevalidate = new URL(siteUrl);
+  console.log("Revalidating ISR for", urlToRevalidate.href);
   await fetch(urlToRevalidate, {
     method: "HEAD",
     headers: { "x-prerender-revalidate": process.env.ISR_BYPASS_TOKEN! },
