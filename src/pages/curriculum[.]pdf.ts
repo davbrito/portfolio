@@ -23,7 +23,7 @@ export const Route = createFileRoute("/curriculum.pdf")({
 
         const cache = getCache();
         const cachedPdf = (await cache.get(CACHE_KEY)) as Uint8Array<ArrayBuffer> | null;
-        console.log("Cached PDF found:", cachedPdf, Object.getPrototypeOf(cachedPdf).constructor.name);
+        console.log("Cached PDF found:", cachedPdf, cachedPdf&& Object.getPrototypeOf(cachedPdf).constructor.name);
         const filename = `curriculum-${deburr(snakeCase(data.profile.name)) || "profile"}.pdf`;
 
         if (cachedPdf) {
