@@ -1,25 +1,19 @@
-import { getProviderName } from "@better-auth-ui/core"
-import {
-  providerIcons,
-  useAccountInfo,
-  useAuth,
-  useLinkSocial,
-  useUnlinkAccount
-} from "@better-auth-ui/react"
-import type { Account, SocialProvider } from "better-auth"
-import { Link2, Link2Off, Plug } from "lucide-react"
-import { toast } from "sonner"
+import { getProviderName } from "@better-auth-ui/core";
+import { providerIcons, useAccountInfo, useAuth, useLinkSocial, useUnlinkAccount } from "@better-auth-ui/react";
+import type { Account, SocialProvider } from "better-auth";
+import { Link2, Link2Off, Plug } from "lucide-react";
+import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Spinner } from "@/components/ui/spinner"
-import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/utils";
 
 export type LinkedAccountProps = {
-  account?: Account
-  provider: SocialProvider
-}
+  account?: Account;
+  provider: SocialProvider;
+};
 
 /**
  * Render a single linked social account row with provider info and link/unlink control.
@@ -32,60 +26,47 @@ export type LinkedAccountProps = {
  * @returns A JSX element containing the linked account row
  */
 export function LinkedAccount({ account, provider }: LinkedAccountProps) {
-  const { authClient, baseURL, localization } = useAuth()
+  const { authClient, baseURL, localization } = useAuth();
 
-  const { data: accountInfo, isPending: isLoadingInfo } = useAccountInfo(
-    authClient,
-    { query: { accountId: account?.accountId } }
-  )
+  const { data: accountInfo, isPending: isLoadingInfo } = useAccountInfo(authClient, {
+    query: { accountId: account?.accountId },
+  });
 
-  const { mutate: linkSocial, isPending: isLinking } = useLinkSocial(authClient)
+  const { mutate: linkSocial, isPending: isLinking } = useLinkSocial(authClient);
 
-  const { mutate: unlinkAccount, isPending: isUnlinking } = useUnlinkAccount(
-    authClient,
-    {
-      onSuccess: () => toast.success(localization.settings.accountUnlinked)
-    }
-  )
+  const { mutate: unlinkAccount, isPending: isUnlinking } = useUnlinkAccount(authClient, {
+    onSuccess: () => toast.success(localization.settings.accountUnlinked),
+  });
 
-  const ProviderIcon = providerIcons[provider]
-  const providerName = getProviderName(provider)
+  const ProviderIcon = providerIcons[provider];
+  const providerName = getProviderName(provider);
 
   const displayName =
     accountInfo?.data?.login ||
     accountInfo?.data?.username ||
     accountInfo?.user?.email ||
     accountInfo?.user?.name ||
-    account?.accountId
+    account?.accountId;
 
   return (
-    <Card className="bg-transparent border-0 ring-0 shadow-none">
+    <Card className="border-0 bg-transparent shadow-none ring-0">
       <CardContent className="flex items-center justify-between gap-3">
-        <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-muted">
+        <div className="bg-muted flex size-10 shrink-0 items-center justify-center rounded-md">
           {ProviderIcon ? (
-            <ProviderIcon
-              className={cn("size-4.5", !account && "opacity-50")}
-            />
+            <ProviderIcon className={cn("size-4.5", !account && "opacity-50")} />
           ) : (
             <Plug className={cn("size-4.5", !account && "opacity-50")} />
           )}
         </div>
 
-        <div className="flex flex-col min-w-0">
-          <span className="text-sm font-medium leading-tight">
-            {providerName}
-          </span>
+        <div className="flex min-w-0 flex-col">
+          <span className="text-sm leading-tight font-medium">{providerName}</span>
 
           {account && isLoadingInfo ? (
             <Skeleton className="my-0.5 h-3 w-24" />
           ) : (
-            <span className="text-xs text-muted-foreground truncate">
-              {account
-                ? displayName
-                : localization.settings.linkProvider.replace(
-                    "{{provider}}",
-                    providerName
-                  )}
+            <span className="text-muted-foreground truncate text-xs">
+              {account ? displayName : localization.settings.linkProvider.replace("{{provider}}", providerName)}
             </span>
           )}
         </div>
@@ -97,15 +78,10 @@ export function LinkedAccount({ account, provider }: LinkedAccountProps) {
             size="sm"
             onClick={() => unlinkAccount({ providerId: account.providerId })}
             disabled={isUnlinking}
-            aria-label={localization.settings.unlinkProvider.replace(
-              "{{provider}}",
-              providerName
-            )}
+            aria-label={localization.settings.unlinkProvider.replace("{{provider}}", providerName)}
           >
             {isUnlinking ? <Spinner /> : <Link2Off />}
-            {localization.settings.unlinkProvider
-              .replace("{{provider}}", "")
-              .trim()}
+            {localization.settings.unlinkProvider.replace("{{provider}}", "").trim()}
           </Button>
         ) : (
           <Button
@@ -115,14 +91,11 @@ export function LinkedAccount({ account, provider }: LinkedAccountProps) {
             onClick={() =>
               linkSocial({
                 provider,
-                callbackURL: `${baseURL}${window.location.pathname}`
+                callbackURL: `${baseURL}${window.location.pathname}`,
               })
             }
             disabled={isLinking}
-            aria-label={localization.settings.linkProvider.replace(
-              "{{provider}}",
-              providerName
-            )}
+            aria-label={localization.settings.linkProvider.replace("{{provider}}", providerName)}
           >
             {isLinking ? <Spinner /> : <Link2 />}
             {localization.settings.link}
@@ -130,5 +103,5 @@ export function LinkedAccount({ account, provider }: LinkedAccountProps) {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

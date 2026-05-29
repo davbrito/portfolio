@@ -1,88 +1,67 @@
-import {
-  type MultiSessionAuthClient,
-  useAuth,
-  useSession,
-  useSetActiveSession
-} from "@better-auth-ui/react"
-import {
-  ChevronsUpDown,
-  LogIn,
-  LogOut,
-  Settings,
-  UserPlus2
-} from "lucide-react"
-import {
-  type ComponentType,
-  isValidElement,
-  type ReactElement,
-  type ReactNode
-} from "react"
+import { type MultiSessionAuthClient, useAuth, useSession, useSetActiveSession } from "@better-auth-ui/react";
+import { ChevronsUpDown, LogIn, LogOut, Settings, UserPlus2 } from "lucide-react";
+import { type ComponentType, isValidElement, type ReactElement, type ReactNode } from "react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import { cn } from "@/lib/utils"
-import { UserAvatar } from "./user-avatar"
-import { UserView } from "./user-view"
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
+import { UserAvatar } from "./user-avatar";
+import { UserView } from "./user-view";
 
 /** Auth states a `UserButton` link can be visible in. */
-export type UserButtonLinkVisibility =
-  | "authenticated"
-  | "unauthenticated"
-  | "always"
+export type UserButtonLinkVisibility = "authenticated" | "unauthenticated" | "always";
 
 /** A simple link entry rendered as a `DropdownMenuItem` in the `UserButton` menu. */
 export type UserButtonLink = {
   /** Visible label. */
-  label: ReactNode
+  label: ReactNode;
   /** Destination URL. */
-  href: string
+  href: string;
   /** Optional leading icon. Sized/coloured to match built-in items. */
-  icon?: ReactNode
+  icon?: ReactNode;
   /** Forwarded to the underlying `DropdownMenuItem`. */
-  variant?: "default" | "destructive"
+  variant?: "default" | "destructive";
   /**
    * When this link is visible based on auth state.
    * @default "always"
    */
-  visibility?: UserButtonLinkVisibility
-}
+  visibility?: UserButtonLinkVisibility;
+};
 
 export type UserButtonProps = {
-  className?: string
-  align?: "center" | "end" | "start" | undefined
-  sideOffset?: number
-  size?: "default" | "icon"
-  variant?:
-    | "default"
-    | "destructive"
-    | "ghost"
-    | "link"
-    | "outline"
-    | "secondary"
+  className?: string;
+  align?: "center" | "end" | "start" | undefined;
+  sideOffset?: number;
+  size?: "default" | "icon";
+  variant?: "default" | "destructive" | "ghost" | "link" | "outline" | "secondary";
   /** Additional menu entries rendered above the built-in items. */
-  links?: (UserButtonLink | ReactElement)[]
+  links?: (UserButtonLink | ReactElement)[];
   /** Hide the built-in "Settings" link. Useful when replacing it via `links`. */
-  hideSettings?: boolean
-}
+  hideSettings?: boolean;
+};
 
 function renderUserLink(
   link: UserButtonLink | ReactElement,
   Link: ComponentType<{ href: string; children?: ReactNode }>,
-  fallbackKey: string
+  fallbackKey: string,
 ): ReactNode {
-  if (isValidElement(link)) return link
+  if (isValidElement(link)) return link;
 
-  const { label, href, icon, variant } = link
+  const { label, href, icon, variant } = link;
   return (
-    <DropdownMenuItem key={fallbackKey} variant={variant} render={<Link href={href} />}>{icon}{label}</DropdownMenuItem>
-  )
+    <DropdownMenuItem key={fallbackKey} variant={variant} render={<Link href={href} />}>
+      {icon}
+      {label}
+    </DropdownMenuItem>
+  );
 }
 
 /**
@@ -107,50 +86,36 @@ export function UserButton({
   size = "default",
   variant = "ghost",
   links,
-  hideSettings = false
+  hideSettings = false,
 }: UserButtonProps) {
-  const { authClient, basePaths, viewPaths, localization, plugins, Link } =
-    useAuth()
+  const { authClient, basePaths, viewPaths, localization, plugins, Link } = useAuth();
 
-  const { isPending: settingActiveSession } = useSetActiveSession(
-    authClient as MultiSessionAuthClient
-  )
-  const { data: session, isPending: sessionPending } = useSession(authClient)
+  const { isPending: settingActiveSession } = useSetActiveSession(authClient as MultiSessionAuthClient);
+  const { data: session, isPending: sessionPending } = useSession(authClient);
 
   const userLinks = links?.flatMap((link, index) => {
     if (!isValidElement(link)) {
-      const visibility = link.visibility ?? "always"
-      if (visibility === "authenticated" && !session) return []
-      if (visibility === "unauthenticated" && session) return []
+      const visibility = link.visibility ?? "always";
+      if (visibility === "authenticated" && !session) return [];
+      if (visibility === "unauthenticated" && session) return [];
     }
-    return [renderUserLink(link, Link, `user-button-link-${index.toString()}`)]
-  })
+    return [renderUserLink(link, Link, `user-button-link-${index.toString()}`)];
+  });
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger
-        className={cn(
-          size === "icon" && "rounded-full",
-          size === "icon" && className
-        )}
-      >
+      <DropdownMenuTrigger className={cn(size === "icon" && "rounded-full", size === "icon" && className)}>
         {size === "icon" ? (
           <UserAvatar />
         ) : (
-          <Button
-            variant={variant}
-            className={cn("py-2.5 h-auto font-normal", className)}
-            size="lg"
-          >
+          <Button variant={variant} className={cn("h-auto py-2.5 font-normal", className)} size="lg">
             {session || sessionPending || settingActiveSession ? (
               <UserView isPending={!!settingActiveSession} />
             ) : (
               <>
                 <UserAvatar />
 
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  {localization.auth.account}
-                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">{localization.auth.account}</div>
               </>
             )}
 
@@ -160,16 +125,18 @@ export function UserButton({
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className="w-[--radix-dropdown-menu-trigger-width] min-w-40 md:min-w-56 max-w-[48svw]"
+        className="w-[--radix-dropdown-menu-trigger-width] max-w-[48svw] min-w-40 md:min-w-56"
         sideOffset={sideOffset}
         align={align}
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
         {session && (
           <>
-            <DropdownMenuLabel className="text-sm font-normal">
-              <UserView />
-            </DropdownMenuLabel>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="text-sm font-normal">
+                <UserView />
+              </DropdownMenuLabel>
+            </DropdownMenuGroup>
 
             <DropdownMenuSeparator />
           </>
@@ -180,35 +147,43 @@ export function UserButton({
             {userLinks}
 
             {!hideSettings && (
-              <DropdownMenuItem render={<Link href={`${basePaths.settings}/${viewPaths.settings.account}`} />}><Settings className="text-muted-foreground" />{localization.settings.settings}</DropdownMenuItem>
+              <DropdownMenuItem render={<Link href={`${basePaths.settings}/${viewPaths.settings.account}`} />}>
+                <Settings className="text-muted-foreground" />
+                {localization.settings.settings}
+              </DropdownMenuItem>
             )}
 
             {plugins.flatMap((plugin) =>
-              plugin.userMenuItems?.map((Item, index) => (
-                <Item key={`${plugin.id}-${index.toString()}`} />
-              ))
+              plugin.userMenuItems?.map((Item, index) => <Item key={`${plugin.id}-${index.toString()}`} />),
             )}
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem render={<Link href={`${basePaths.auth}/${viewPaths.auth.signOut}`} />}><LogOut className="text-muted-foreground" />{localization.auth.signOut}</DropdownMenuItem>
+            <DropdownMenuItem render={<Link href={`${basePaths.auth}/${viewPaths.auth.signOut}`} />}>
+              <LogOut className="text-muted-foreground" />
+              {localization.auth.signOut}
+            </DropdownMenuItem>
           </>
         ) : (
           <>
             {userLinks}
 
-            <DropdownMenuItem render={<Link href={`${basePaths.auth}/${viewPaths.auth.signIn}`} />}><LogIn className="text-muted-foreground" />{localization.auth.signIn}</DropdownMenuItem>
+            <DropdownMenuItem render={<Link href={`${basePaths.auth}/${viewPaths.auth.signIn}`} />}>
+              <LogIn className="text-muted-foreground" />
+              {localization.auth.signIn}
+            </DropdownMenuItem>
 
-            <DropdownMenuItem render={<Link href={`${basePaths.auth}/${viewPaths.auth.signUp}`} />}><UserPlus2 className="text-muted-foreground" />{localization.auth.signUp}</DropdownMenuItem>
+            <DropdownMenuItem render={<Link href={`${basePaths.auth}/${viewPaths.auth.signUp}`} />}>
+              <UserPlus2 className="text-muted-foreground" />
+              {localization.auth.signUp}
+            </DropdownMenuItem>
 
             {plugins.flatMap((plugin) =>
-              plugin.userMenuItems?.map((Item, index) => (
-                <Item key={`${plugin.id}-${index.toString()}`} />
-              ))
+              plugin.userMenuItems?.map((Item, index) => <Item key={`${plugin.id}-${index.toString()}`} />),
             )}
           </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

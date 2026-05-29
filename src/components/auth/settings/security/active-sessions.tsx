@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { useAuth, useListSessions, useSession } from "@better-auth-ui/react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import { Skeleton } from "@/components/ui/skeleton"
-import { cn } from "@/lib/utils"
-import { ActiveSession } from "./active-session"
+import { useAuth, useListSessions, useSession } from "@better-auth-ui/react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
+import { ActiveSession } from "./active-session";
 
 export type ActiveSessionsProps = {
-  className?: string
-}
+  className?: string;
+};
 
 /**
  * Render a card listing all active sessions for the current user with revoke controls.
@@ -20,20 +20,18 @@ export type ActiveSessionsProps = {
  * @returns A JSX element containing the sessions card
  */
 export function ActiveSessions({ className }: ActiveSessionsProps) {
-  const { authClient, localization } = useAuth()
-  const { data: session } = useSession(authClient)
+  const { authClient, localization } = useAuth();
+  const { data: session } = useSession(authClient);
 
-  const { data: sessions, isPending } = useListSessions(authClient)
+  const { data: sessions, isPending } = useListSessions(authClient);
 
   const activeSessions = [...(sessions ?? [])].sort((activeSession) =>
-    activeSession.id === session?.session.id ? -1 : 1
-  )
+    activeSession.id === session?.session.id ? -1 : 1,
+  );
 
   return (
     <div>
-      <h2 className="text-sm font-semibold mb-3">
-        {localization.settings.activeSessions}
-      </h2>
+      <h2 className="mb-3 text-sm font-semibold">{localization.settings.activeSessions}</h2>
 
       <Card className={cn("p-0", className)}>
         <CardContent className="p-0">
@@ -51,12 +49,12 @@ export function ActiveSessions({ className }: ActiveSessionsProps) {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
 
 function SessionRowSkeleton() {
   return (
-    <Card className="bg-transparent border-0 ring-0 shadow-none">
+    <Card className="border-0 bg-transparent shadow-none ring-0">
       <CardContent className="flex items-center gap-3">
         <Skeleton className="size-10 rounded-md" />
 
@@ -66,5 +64,5 @@ function SessionRowSkeleton() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

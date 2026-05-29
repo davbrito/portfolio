@@ -9,12 +9,13 @@ import { validateUserCreation } from "./auth/db-hooks";
 import { db } from "./db";
 import { BETTER_AUTH_SECRET, CF_TURNSTILE_SECRET_KEY, vercelUrl } from "./server-env";
 
+const url = vercelUrl ? `https://${vercelUrl}` : import.meta.env.DEV ? "http://localhost:3000" : undefined;
+
 export const auth = betterAuth({
-  baseURL: vercelUrl ? `https://${vercelUrl}` : undefined,
+  baseURL: url,
+  basePath: "/api/auth",
   secret: BETTER_AUTH_SECRET,
-  trustedOrigins: [vercelUrl ? `https://${vercelUrl}` : "", import.meta.env.DEV ? "http://localhost:3000" : ""].filter(
-    Boolean,
-  ),
+  trustedOrigins: [url || ""].filter(Boolean),
 
   database: prismaAdapter(db, {
     provider: "postgresql",
@@ -33,6 +34,10 @@ export const auth = betterAuth({
     enabled: true,
     requireEmailVerification: false,
     autoSignIn: true,
+    async sendResetPassword(data, request) {
+      console.log("Password reset requested for:", data.user.email);
+      console.log("Reset link:", data.url);
+    },
   },
   cookieCache: {
     enabled: true,

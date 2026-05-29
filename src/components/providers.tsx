@@ -1,62 +1,53 @@
-import { CF_TURNSTILE_SITE_KEY } from "#/config.ts";
-import { authClient } from "@/lib/auth-client";
-import { authLocalization } from "@/lib/auth/localization";
-import { QueryProvider } from "@/lib/query";
-import { AuthUIProvider, type AuthUIProviderProps } from "@daveyplate/better-auth-ui";
+import { TurnstileWidget } from "#/components/turnstile-widget.tsx";
+import { authClient } from "#/lib/auth-client.ts";
+import { authLocalization, passkeyLocalization, settingsLocalization } from "#/lib/auth/localization.ts";
+import { QueryProvider } from "#/lib/query.ts";
+import { passkeyPlugin } from "#/lib/auth/passkey-plugin.ts";
+import type { AuthProviderProps } from "@better-auth-ui/react";
+import { captchaPlugin } from "@better-auth-ui/react/plugins";
 import { Link, useNavigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { AuthProvider } from "./auth/auth-provider";
 import { Toaster } from "./ui/sonner";
 
-const authUiProps: Omit<AuthUIProviderProps, "children"> = {
+const authUiProps: Omit<AuthProviderProps<typeof authClient>, "children" | "navigate"> = {
   authClient,
-  passkey: true,
-  account: {
-    basePath: "/admin",
-  },
-  avatar: true,
-  captcha: {
-    provider: "cloudflare-turnstile",
-    siteKey: CF_TURNSTILE_SITE_KEY,
-  },
-  localization: authLocalization,
-  additionalFields: {
-    adminToken: {
+  // account: {
+  //   basePath: "/admin",
+  // },
+  redirectTo: "/admin",
+  avatar: { enabled: true },
+  localization: { auth: authLocalization, settings: settingsLocalization },
+  additionalFields: [
+    {
+      name: "adminToken",
       type: "string",
       label: "Token de Creación de Admin",
-      description: "Proporcione el token secreto para crear una cuenta de administrador",
+      placeholder: "Proporcione el token secreto para crear una cuenta de administrador",
       required: true,
+      signUp: true,
+      profile: false,
     },
-  },
-  signUp: {
-    fields: ["name", "adminToken"],
-  },
+  ],
+
+  plugins: [
+    passkeyPlugin({ localization: passkeyLocalization }),
+    captchaPlugin({ render: TurnstileWidget }),
+    // themePlugin({ useTheme }),
+  ],
+  Link,
 };
 
 export function Providers({ children }: { children: ReactNode }) {
-  const navigate = useNavigate() as (to: any) => void;
+  const navigate = useNavigate();
 
   return (
     <QueryProvider>
-      <AuthUIProvider
-        {...authUiProps}
-        authClient={authClient}
-        redirectTo="/admin"
-        navigate={navigate}
-        // plugins={
-        //   [
-        //     // apiKeyPlugin(),
-        //     // passkeyPlugin(),
-        //     // usernamePlugin(),
-        //     // deleteUserPlugin(),
-        //     // themePlugin({ useTheme }),
-        //   ]
-        // }
-        Link={Link as any}
-      >
+      <AuthProvider {...authUiProps} navigate={navigate}>
         {children}
 
         <Toaster />
-      </AuthUIProvider>
+      </AuthProvider>
     </QueryProvider>
   );
 }

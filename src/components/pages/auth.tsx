@@ -1,19 +1,21 @@
 import { generateAdminSetupTokenAction } from "#/actions/index.ts";
 import { ENABLE_ADMIN_SETUP } from "#/config.ts";
-import { AuthView, authViewPaths, SignedIn } from "@daveyplate/better-auth-ui";
 import { useEffect } from "react";
 import { Button } from "../ui/button";
+import { Auth } from "../auth/auth";
+import { viewPaths } from "@better-auth-ui/core";
+import { Navigate } from "@tanstack/react-router";
 
 export default function AuthPage({ path }: { path: string }) {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-2 px-6 py-12">
-      <AuthView path={path} redirectTo="/admin" />
-      {[authViewPaths.SIGN_UP, authViewPaths.SIGN_IN].includes(path) ? (
+      <Auth path={path} />
+      {/* {[viewPaths.auth.signUp, viewPaths.auth.signIn].includes(path) ? (
         <SignedIn>
-          <RedirectToAdmin />
+          <Navigate to="/admin" />
         </SignedIn>
-      ) : null}
-      {path === authViewPaths.SIGN_UP ? (
+      ) : null} */}
+      {path === viewPaths.auth.signUp ? (
         <>
           {ENABLE_ADMIN_SETUP ? (
             <Button

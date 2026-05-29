@@ -6,12 +6,16 @@ export const Route = createFileRoute("/admin/")({
   validateSearch: z.object({
     tab: z.string().optional(),
   }),
-  loaderDeps: ({ search }) => ({ tab: search.tab }),
   component: AdminIndex,
 });
 
 function AdminIndex() {
-  const { tab } = Route.useLoaderDeps();
+  const navigate = Route.useNavigate();
+  const tab = Route.useSearch({ select: (s) => s.tab || "profile" });
 
-  return <AdminPage defaultTab={tab} />;
+  const onChangeTab = (value: string) => {
+    navigate({ search: { tab: value } });
+  };
+
+  return <AdminPage tab={tab} onChangeTab={onChangeTab} />;
 }

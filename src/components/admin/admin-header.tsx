@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
-import { UserButton } from "@daveyplate/better-auth-ui";
 import { HomeIcon, LogOutIcon, RotateCcwIcon, SettingsIcon, TerminalIcon } from "lucide-react";
 import { useEffect } from "react";
+import { UserButton } from "../auth/user/user-button";
 
 export function AdminHeader() {
   const { data: session, isPending: isPendingSession } = useSession();
@@ -43,18 +43,7 @@ export function AdminHeader() {
             <LogOutIcon />
             Logout
           </Button>
-          <UserButton
-            size="icon"
-            disableDefaultLinks
-            additionalLinks={[
-              {
-                href: "/admin",
-                label: "Ajustes",
-                icon: <SettingsIcon />,
-                signedIn: true,
-              },
-            ]}
-          />
+          <UserButton size="icon" hideSettings />
         </div>
       </div>
     </header>

@@ -2,6 +2,7 @@ import { passkeyClient as passkeyClientPlugin } from "@better-auth/passkey/clien
 import { createAuthClient } from "better-auth/react";
 
 export const authClient = createAuthClient({
+  basePath: "/api/auth",
   plugins: [passkeyClientPlugin()],
 });
 

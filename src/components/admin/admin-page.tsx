@@ -1,37 +1,16 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import * as tabs from "@/components/ui/tabs";
-import { AccountSettingsCards, SecuritySettingsCards, type SettingsCardClassNames } from "@daveyplate/better-auth-ui";
 import { BarChart3, IdCard, LockIcon, MailIcon, Settings, UserIcon, Users } from "lucide-react";
 import { Suspense } from "react";
+import { AccountSettings } from "../auth/settings/account/account-settings";
+import { SecuritySettings } from "../auth/settings/security/security-settings";
 import { Skeleton } from "../ui/skeleton";
 import { MessagesSection } from "./messages";
 import { ProfileSettings } from "./profile-settings";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 
-const settingCardClassnames: SettingsCardClassNames = {
-  // base: "rounded-none",
-  // button: "rounded-none",
-  // // button: buttonVariants(),
-  outlineButton: "hover:text-accent-foreground",
-  // skeleton: "rounded-none",
-  // cell: "rounded-none",
-  // input: "rounded-none",
-  // dialog: {
-  //   content: "rounded-none",
-  // },
-  // footer: "rounded-none",
-};
-
-export const settingsCardsClassnames = {
-  card: settingCardClassnames,
-};
-
-export default function AdminPage({ defaultTab }: { defaultTab?: string | null }) {
-  const onChangeTab = (value: string) => {
-    const url = new URL(window.location.href);
-    url.searchParams.set("tab", value);
-    window.history.replaceState({}, "", url.href);
-  };
-
+export default function AdminPage({ tab, onChangeTab }: { tab: string; onChangeTab: (tab: string) => void }) {
+ 
   return (
     <div className="flex grow flex-col space-y-6">
       <div>
@@ -39,7 +18,7 @@ export default function AdminPage({ defaultTab }: { defaultTab?: string | null }
         <p className="text-muted-foreground">Gestiona tu aplicación, usuarios y configuraciones de seguridad.</p>
       </div>
 
-      <tabs.Tabs defaultValue={defaultTab || "profile"} onValueChange={onChangeTab} className="dark grow flex-col">
+      <tabs.Tabs value={tab} onValueChange={onChangeTab} className="dark grow flex-col">
         <tabs.TabsList className="mb-4 w-full flex-wrap *:flex-1 *:p-2">
           <tabs.TabsTrigger value="profile">
             <IdCard />
@@ -89,10 +68,10 @@ export default function AdminPage({ defaultTab }: { defaultTab?: string | null }
           <MessagesSection />
         </tabs.TabsContent>
         <tabs.TabsContent value="account">
-          <AccountSettingsCards classNames={settingsCardsClassnames} />
+          <AccountSettings />
         </tabs.TabsContent>
         <tabs.TabsContent value="security">
-          <SecuritySettingsCards classNames={settingsCardsClassnames} />
+          <SecuritySettings />
         </tabs.TabsContent>
       </tabs.Tabs>
     </div>
