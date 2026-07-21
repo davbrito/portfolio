@@ -8,7 +8,16 @@ import { cn } from "@/lib/utils";
 import { profilePayloadSchema, SKILL_LEVELS, type ProfilePayloadInput } from "@/lib/validators/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { AlertCircle, ArrowDownIcon, ArrowUpIcon, CheckCircle2, Loader2Icon, SaveIcon, Trash2Icon } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowDownIcon,
+  ArrowUpIcon,
+  CheckCircle2,
+  DownloadIcon,
+  Loader2Icon,
+  SaveIcon,
+  Trash2Icon,
+} from "lucide-react";
 import { useId } from "react";
 import { ErrorCode, useDropzone, type FileRejection } from "react-dropzone";
 import {
@@ -122,15 +131,26 @@ export function ProfileSettings() {
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              revalidateProfileAction();
-            }}
-          >
-            Regenerar portafolio
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                revalidateProfileAction();
+              }}
+            >
+              Regenerar portafolio
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              nativeButton={false}
+              render={<a href="/api/admin/export-profile.yaml" download />}
+            >
+              <DownloadIcon />
+              Exportar datos (YAML)
+            </Button>
+          </div>
           <FieldGroup>
             <FieldSet>
               <FieldGroup className="grid md:grid-cols-2">

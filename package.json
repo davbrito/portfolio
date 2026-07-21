@@ -50,6 +50,7 @@
     "tailwindcss": "^4.3.0",
     "ua-parser-js": "^2.0.10",
     "vite-tsconfig-paths": "^6.1.1",
+    "yaml": "^2.9.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -81,7 +82,7 @@
     "vitest": "^4.1.7",
     "web-vitals": "^5.2.0"
   },
-  "packageManager": "pnpm@11.4.0",
+  "packageManager": "pnpm@11.15.1+sha512.81350b07e53c9538a02f1f2303b4290fa2d7be04e56e2a970c4cc4b417dc761de196edabd49d55c7dc9580db81007c44143e4e3d7e462b3000d23c255122d065",
   "imports": {
     "#/*": "./src/*",
     "#prisma-generated/*": "./prisma/generated/*"

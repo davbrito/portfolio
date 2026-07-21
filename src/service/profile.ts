@@ -14,6 +14,26 @@ export async function findProfile(userId: string) {
   return profile;
 }
 
+export async function exportProfileYaml(userId: string) {
+  const { stringify } = await import("yaml");
+
+  const profile = await db.profile.findUnique({
+    where: { userId },
+    include: { experiences: true, skills: true, projects: { orderBy: { order: "asc" } } },
+  });
+
+  if (!profile) return null;
+
+  const { id: _id, userId: _userId, createdAt: _createdAt, updatedAt: _updatedAt, ...profileData } = profile;
+
+  return stringify({
+    ...profileData,
+    experiences: profile.experiences.map(({ id: _id, profileId: _profileId, ...exp }) => exp),
+    skills: profile.skills.map(({ id: _id, profileId: _profileId, ...skill }) => skill),
+    projects: profile.projects.map(({ id: _id, profileId: _profileId, ...project }) => project),
+  });
+}
+
 export async function upsertProfile(userId: string, data: ProfilePayload) {
   const { experiences, skills, projects, ...profileData } = data;
 
