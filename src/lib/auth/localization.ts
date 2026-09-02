@@ -1,6 +1,6 @@
 import type { SettingsLocalization } from "@better-auth-ui/core";
 import type { AuthLocalization } from "@better-auth-ui/core";
-import type { PasskeyLocalization } from "@better-auth-ui/core/plugins";
+import type { PasskeyLocalization } from "@better-auth-ui/core/plugins/passkey";
 
 export const authLocalization: Partial<AuthLocalization> = {
   signIn: "Iniciar Sesión",

@@ -7,7 +7,16 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default defineConfig(
-  globalIgnores(["node_modules/", "dist/", "build/", ".astro/", "prisma/", ".vercel/", "src/routeTree.gen.ts"]),
+  globalIgnores([
+    "node_modules/",
+    "dist/",
+    "build/",
+    ".astro/",
+    "prisma/generated/",
+    ".vercel/",
+    ".output/",
+    "src/routeTree.gen.ts",
+  ]),
 
   js.configs.recommended,
   tseslint.configs.recommended,
@@ -39,6 +48,7 @@ export default defineConfig(
     rules: {
       "@typescript-eslint/consistent-type-imports": "off",
       "react/jsx-no-leaked-render": "off",
+      "react/prop-types": "off",
     },
   },
 );

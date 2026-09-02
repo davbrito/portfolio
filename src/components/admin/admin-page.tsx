@@ -10,7 +10,6 @@ import { ProfileSettings } from "./profile-settings";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 
 export default function AdminPage({ tab, onChangeTab }: { tab: string; onChangeTab: (tab: string) => void }) {
- 
   return (
     <div className="flex grow flex-col space-y-6">
       <div>

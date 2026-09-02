@@ -1,11 +1,14 @@
+"use client";
+
 import { useAuth, useRevokeSession, useSession } from "@better-auth-ui/react";
 import type { Session } from "better-auth";
 import Bowser from "bowser";
 import { LogOut, Monitor, Smartphone, X } from "lucide-react";
 import { toast } from "sonner";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { Spinner } from "@/components/ui/spinner";
 
 function timeAgo(date: Date) {
@@ -57,31 +60,23 @@ export function ActiveSession({ activeSession }: ActiveSessionProps) {
   const isMobile = ua.platform.type === "mobile" || ua.platform.type === "tablet";
 
   return (
-    <Card className="border-0 bg-transparent shadow-none ring-0">
-      <CardContent className="flex items-center justify-between gap-3">
-        <div className="bg-muted flex size-10 shrink-0 items-center justify-center rounded-md">
-          {isMobile ? <Smartphone className="size-4.5" /> : <Monitor className="size-4.5" />}
-        </div>
-
-        <div className="flex min-w-0 flex-col">
-          <span className="truncate text-sm font-medium">
-            {ua.browser.name || "Unknown Browser"}
-            {ua.os.name ? `, ${ua.os.name}` : ""}
-          </span>
-
-          {isCurrentSession ? (
-            <span className="bg-primary/10 text-primary w-fit rounded-full px-2 py-0.5 text-xs font-medium">
-              {localization.settings.currentSession}
-            </span>
-          ) : (
-            activeSession.createdAt && (
-              <span className="text-muted-foreground text-xs capitalize">{timeAgo(activeSession.createdAt)}</span>
-            )
-          )}
-        </div>
-
+    <Item>
+      <ItemMedia variant="icon">{isMobile ? <Smartphone /> : <Monitor />}</ItemMedia>
+      <ItemContent>
+        <ItemTitle>
+          {ua.browser.name || "Unknown Browser"}
+          {ua.os.name ? `, ${ua.os.name}` : ""}
+        </ItemTitle>
+        {isCurrentSession ? (
+          <Badge variant="secondary">{localization.settings.currentSession}</Badge>
+        ) : (
+          activeSession.createdAt && (
+            <ItemDescription className="capitalize">{timeAgo(activeSession.createdAt)}</ItemDescription>
+          )
+        )}
+      </ItemContent>
+      <ItemActions>
         <Button
-          className="ml-auto shrink-0"
           variant="outline"
           size="sm"
           onClick={() =>
@@ -98,7 +93,7 @@ export function ActiveSession({ activeSession }: ActiveSessionProps) {
 
           {isCurrentSession ? localization.auth.signOut : localization.settings.revoke}
         </Button>
-      </CardContent>
-    </Card>
+      </ItemActions>
+    </Item>
   );
 }

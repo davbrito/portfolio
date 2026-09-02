@@ -1,12 +1,13 @@
 import { useAuth, useAuthPlugin } from "@better-auth-ui/react";
-import { Fingerprint, X } from "lucide-react";
+import { Fingerprint, Pencil, X } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { passkeyPlugin } from "@/lib/auth/passkey-plugin";
 
 import { DeletePasskeyDialog, type ListedPasskey } from "./delete-passkey-dialog";
+import { RenamePasskeyDialog } from "./rename-passkey-dialog";
 
 export type PasskeyProps = {
   passkey: ListedPasskey;
@@ -16,29 +17,30 @@ export function Passkey({ passkey }: PasskeyProps) {
   const { localization } = useAuth();
   const { localization: passkeyLocalization } = useAuthPlugin(passkeyPlugin);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [renameOpen, setRenameOpen] = useState(false);
 
   const passkeyName = passkey.name || passkeyLocalization.passkey;
 
   return (
-    <Card className="border-0 bg-transparent shadow-none ring-0">
-      <CardContent className="flex items-center gap-3">
-        <div className="bg-muted flex size-10 shrink-0 items-center justify-center rounded-md">
-          <Fingerprint className="size-4.5" />
-        </div>
-
-        <div className="flex min-w-0 flex-col">
-          <span className="truncate text-sm leading-tight font-medium">{passkeyName}</span>
-
-          <span className="text-muted-foreground text-xs">
-            {new Date(passkey.createdAt).toLocaleString(undefined, {
-              dateStyle: "medium",
-              timeStyle: "short",
-            })}
-          </span>
-        </div>
-
+    <Item>
+      <ItemMedia variant="icon">
+        <Fingerprint />
+      </ItemMedia>
+      <ItemContent>
+        <ItemTitle>{passkeyName}</ItemTitle>
+        <ItemDescription>
+          {new Date(passkey.createdAt).toLocaleString(undefined, {
+            dateStyle: "medium",
+            timeStyle: "short",
+          })}
+        </ItemDescription>
+      </ItemContent>
+      <ItemActions>
+        <Button variant="outline" size="sm" onClick={() => setRenameOpen(true)}>
+          <Pencil />
+          {passkeyLocalization.renamePasskey}
+        </Button>
         <Button
-          className="ml-auto shrink-0"
           variant="outline"
           size="sm"
           onClick={() => setDeleteOpen(true)}
@@ -50,7 +52,8 @@ export function Passkey({ passkey }: PasskeyProps) {
         </Button>
 
         <DeletePasskeyDialog open={deleteOpen} onOpenChange={setDeleteOpen} passkey={passkey} />
-      </CardContent>
-    </Card>
+        <RenamePasskeyDialog open={renameOpen} onOpenChange={setRenameOpen} passkey={passkey} />
+      </ItemActions>
+    </Item>
   );
 }

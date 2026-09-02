@@ -1,11 +1,11 @@
-"use client";
-
-import { type PasskeyAuthClient, useAuth, useAuthPlugin, useListPasskeys } from "@better-auth-ui/react";
-import { useState } from "react";
+import type { PasskeyAuthClient } from "@better-auth-ui/core/plugins/passkey";
+import { useAuth, useAuthPlugin } from "@better-auth-ui/react";
+import { useListPasskeys } from "@better-auth-ui/react/plugins/passkey";
+import { Fragment, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { ItemGroup, ItemSeparator } from "@/components/ui/item";
 import { passkeyPlugin } from "@/lib/auth/passkey-plugin";
 import { cn } from "@/lib/utils";
 
@@ -19,10 +19,10 @@ export type PasskeysProps = {
 };
 
 export function Passkeys({ className }: PasskeysProps) {
-  const { authClient } = useAuth();
+  const { authClient } = useAuth<PasskeyAuthClient>();
   const { localization: passkeyLocalization } = useAuthPlugin(passkeyPlugin);
 
-  const { data: passkeys, isPending } = useListPasskeys(authClient as PasskeyAuthClient);
+  const { data: passkeys, isPending } = useListPasskeys(authClient);
 
   const [addOpen, setAddOpen] = useState(false);
 
@@ -43,13 +43,14 @@ export function Passkeys({ className }: PasskeysProps) {
           ) : !passkeys?.length ? (
             <PasskeysEmpty onAddPress={() => setAddOpen(true)} />
           ) : (
-            passkeys.map((passkey, index) => (
-              <div key={passkey.id}>
-                {index > 0 && <Separator />}
-
-                <Passkey passkey={passkey} />
-              </div>
-            ))
+            <ItemGroup className="gap-0">
+              {passkeys.map((passkey, index) => (
+                <Fragment key={passkey.id}>
+                  {index > 0 && <ItemSeparator />}
+                  <Passkey passkey={passkey} />
+                </Fragment>
+              ))}
+            </ItemGroup>
           )}
         </CardContent>
       </Card>
