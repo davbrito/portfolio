@@ -1,6 +1,6 @@
 import { adminMiddleware } from "@/lib/auth/middleware";
 import { botIdMiddleware } from "@/lib/botid/middleware";
-import { db } from "@/lib/db";
+import { db8 } from "@/lib/db8";
 import { createServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 
@@ -26,14 +26,12 @@ export const contactFormAction = createServerFn({ method: "POST" })
   .handler(async (ctx) => {
     const input = ctx.data;
 
-    await db.messages.create({
-      data: {
-        profileId: input.profileId,
-        email: input.email,
-        name: input.name,
-        subject: input.subject,
-        message: input.message,
-      },
+    await db8.orm.public.Messages.create({
+      profileId: input.profileId,
+      email: input.email,
+      name: input.name,
+      subject: input.subject,
+      message: input.message,
     });
 
     return { success: true };
@@ -49,23 +47,27 @@ export const listMessagesAction = createServerFn({ method: "GET" })
   .handler(async (ctx) => {
     const input = ctx.data;
 
-    return await db.messages.findMany({
-      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
-      take: 500,
-      where: input.filter === "read" ? { readAt: { not: null } } : input.filter === "unread" ? { readAt: null } : {},
-    });
+    let query = db8.orm.public.Messages.orderBy([(m) => m.createdAt.desc(), (m) => m.id.desc()]).limit(500);
+
+    if (input.filter === "read") query = query.where((m) => m.readAt.isNotNull());
+    else if (input.filter === "unread") query = query.where((m) => m.readAt.isNull());
+
+    const messages = await query.all();
+
+    return messages.map((message) => ({
+      ...message,
+      createdAt: message.createdAt.toString(),
+      readAt: message.readAt ? message.readAt.toString() : null,
+    }));
   });
 
 export const markReadMessageAction = createServerFn({ method: "POST" })
   .middleware([adminMiddleware])
-  .validator(z.object({ id: z.string().uuid({ message: "ID inválido" }) }))
+  .validator(z.object({ id: z.uuid({ message: "ID inválido" }) }))
   .handler(async (ctx) => {
     const input = ctx.data;
 
-    await db.messages.update({
-      where: { id: input.id },
-      data: { readAt: new Date() },
-    });
+    await db8.orm.public.Messages.where({ id: input.id }).update({ readAt: Temporal.Now.plainDateTimeISO() });
   });
 
 export const deleteMessageAction = createServerFn({ method: "POST" })
@@ -74,7 +76,5 @@ export const deleteMessageAction = createServerFn({ method: "POST" })
   .handler(async (ctx) => {
     const input = ctx.data;
 
-    await db.messages.delete({
-      where: { id: input.id },
-    });
+    await db8.orm.public.Messages.where({ id: input.id }).delete();
   });

@@ -243,7 +243,7 @@
               },
               "highlights": {
                 "many": true,
-                "nullable": false,
+                "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -863,7 +863,7 @@
               },
               "tags": {
                 "many": true,
-                "nullable": false,
+                "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -1433,7 +1433,7 @@
                   "noCheck": [
                     "elementNotNull"
                   ],
-                  "nullable": false
+                  "nullable": true
                 },
                 "id": {
                   "codecId": "pg/uuid@1",
@@ -1761,7 +1761,7 @@
                   "noCheck": [
                     "elementNotNull"
                   ],
-                  "nullable": false
+                  "nullable": true
                 },
                 "title": {
                   "codecId": "pg/text@1",
@@ -2385,7 +2385,58 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "08506f02dd258cf9d96328bf6e3aaafd0567000631745a0ab933bcd93a86843b"
+    "storageHash": "ff7145e9d6f826f9f689b384af74c220e2254d3caa16c05ef88f1ecd46da08b6"
+  },
+  "execution": {
+    "executionHash": "c2de2c325b58e4c5d003cb484283b46e7397956180a78424ef884182af20bf06",
+    "mutations": {
+      "defaults": [
+        {
+          "onCreate": {
+            "id": "uuidv7",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "Experience"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv7",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "Messages"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv7",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "Proyects"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv7",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "Skills"
+          }
+        }
+      ]
+    }
   },
   "capabilities": {
     "postgres": {

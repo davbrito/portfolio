@@ -10,9 +10,11 @@ hydrateRoot(
   </StrictMode>,
 );
 
-initBotId({
-  protect: [
-    { path: "/_serverFn/*", method: "POST" },
-    { path: "/curriculum.pdf", method: "GET" },
-  ],
-});
+if (!import.meta.env.DEV) {
+  initBotId({
+    protect: [
+      { path: "/_serverFn/*", method: "POST" },
+      { path: "/curriculum.pdf", method: "GET" },
+    ],
+  });
+}

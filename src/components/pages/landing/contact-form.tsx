@@ -39,6 +39,7 @@ export default function ContactForm({ profileId }: ContactFormProps) {
         className="space-y-4"
         id="contact-form"
         onSubmit={handleSubmit(async (data) => {
+          console.log("Submitting contact form with data:", data);
           try {
             await contactFormAction({ data: { ...data, profileId } });
             form.setValue("name", "");

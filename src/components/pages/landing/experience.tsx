@@ -47,7 +47,7 @@ export function Experience({ experience }: { experience: ExperienceItem[] }) {
           </div>
 
           <ul className="text-foreground/80 mt-6 space-y-4 text-sm leading-relaxed">
-            {item.highlights.map((item) => (
+            {(item.highlights ?? []).map((item) => (
               <li key={item} className="flex gap-3">
                 <span className="text-primary mt-1 text-lg leading-none">▹</span>
                 <span className="leading-relaxed">{item}</span>

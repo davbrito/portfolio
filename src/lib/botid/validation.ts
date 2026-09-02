@@ -1,6 +1,8 @@
 import { checkBotId } from "botid/server";
 
 export async function isBot(): Promise<boolean> {
+  if (import.meta.env.DEV) return false;
+
   const validation = await checkBotId();
 
   if (validation.isBot) {
