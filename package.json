@@ -6,13 +6,17 @@
     "dev": "vite dev",
     "build": "prisma generate && vite build",
     "start": "node .output/server/index.mjs",
-    "test": "vitest run"
+    "test": "vitest run",
+    "migrate:deploy": "prisma migrate deploy",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
     "@better-auth-ui/core": "^1.6.12",
     "@better-auth-ui/react": "^1.6.12",
-    "@better-auth/passkey": "^1.6.11",
+    "@better-auth/passkey": "^1.7.2",
     "@fontsource-variable/inter": "^5.2.8",
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@fontsource/outfit": "^5.2.8",
@@ -28,7 +32,7 @@
     "@tanstack/react-router": "^1.170.32",
     "@tanstack/react-start": "^1.168.49",
     "@vercel/analytics": "^2.0.1",
-    "better-auth": "^1.6.22",
+    "better-auth": "^1.7.2",
     "botid": "^1.5.11",
     "bowser": "^2.14.1",
     "class-variance-authority": "^0.7.1",
