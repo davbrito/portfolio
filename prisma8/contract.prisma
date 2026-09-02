@@ -60,6 +60,8 @@ model Profile {
   proyects      Proyects[]
   skills        Skills[]
   user          Users        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "Profile_userId_fkey")
+
+  @@map("Profile")
 }
 
 model Experience {
@@ -71,6 +73,8 @@ model Experience {
   period     String
   highlights String[] @noCheck(elementNotNull)
   profile    Profile  @relation(fields: [profileId], references: [userId], onDelete: Cascade, onUpdate: Cascade, map: "Experience_profileId_fkey", index: false)
+
+  @@map("Experience")
 }
 
 model Messages {
@@ -83,6 +87,8 @@ model Messages {
   readAt    Timestamp(3)?
   profileId String
   profile   Profile       @relation(fields: [profileId], references: [userId], onDelete: Cascade, onUpdate: Cascade, map: "Messages_profileId_fkey", index: false)
+
+  @@map("Messages")
 }
 
 model Passkeys {
@@ -116,6 +122,8 @@ model Proyects {
   tags        String[] @noCheck(elementNotNull)
   order       Int      @default(0)
   profile     Profile  @relation(fields: [profileId], references: [userId], onDelete: Cascade, onUpdate: Cascade, map: "Proyects_profileId_fkey", index: false)
+
+  @@map("Proyects")
 }
 
 model RateLimits {
@@ -151,6 +159,8 @@ model Skills {
   level     String
   group     String
   profile   Profile @relation(fields: [profileId], references: [userId], onDelete: Cascade, onUpdate: Cascade, map: "Skills_profileId_fkey", index: false)
+
+  @@map("Skills")
 }
 
 model Verifications {

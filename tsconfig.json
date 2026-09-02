@@ -9,12 +9,9 @@
     "target": "ES2024",
     "jsx": "react-jsx",
     "jsxImportSource": "react",
-    "module": "preserve",
+    "module": "ESNext",
     "lib": ["ESNext", "DOM", "DOM.Iterable", "ESNext.Iterator"],
-    "types": [
-      "vite/client",
-      "node"
-    ],
+    "types": ["vite/client", "node"],
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
@@ -24,7 +21,8 @@
     "noUncheckedSideEffectImports": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@prisma-generated/*": ["./prisma/generated/*"]
+      "@prisma-generated/*": ["./prisma/generated/*"],
+      "@prisma8-generated/*": ["./prisma8/generated/*"]
     }
   }
 }

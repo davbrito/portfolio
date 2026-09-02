@@ -1,14 +1,20 @@
 import type { IconName } from "@/components/icons";
-import { db } from "@/lib/db";
+import { db8 } from "@/lib/db8";
 import { createObfuscationKey, obfuscate, serializeObfuscationKey } from "@/lib/obfuscation";
 import { createServerFn } from "@tanstack/react-start";
 
 export const getPortfolioData = createServerFn().handler(async () => {
-  const profile = await db.profile.findFirst({
-    include: { experiences: true, skills: true, projects: { orderBy: { order: "asc" } } },
-  });
+  const profile = await db8.orm.public.Profile.first();
 
   if (!profile) return null;
+
+  const [experiences, skills, proyects] = await Promise.all([
+    db8.orm.public.Experience.where({ profileId: profile.userId }).all(),
+    db8.orm.public.Skills.where({ profileId: profile.userId }).all(),
+    db8.orm.public.Proyects.where({ profileId: profile.userId })
+      .orderBy((p) => p.order.asc())
+      .all(),
+  ]);
 
   const obKey = await createObfuscationKey();
 
@@ -39,9 +45,9 @@ export const getPortfolioData = createServerFn().handler(async () => {
   return {
     obKey: await serializeObfuscationKey(obKey),
     profile: profile,
-    experience: profile?.experiences || [],
-    projects: profile?.projects || [],
-    technologies: Map.groupBy(profile?.skills || [], (skill) => skill.group || "Otros")
+    experience: experiences,
+    projects: proyects,
+    technologies: Map.groupBy(skills, (skill) => skill.group || "Otros")
       .entries()
       .map(([group, skills]) => ({
         title: group,
@@ -67,3 +73,5 @@ export interface SocialLink {
 export type TechnologyGroup = PortfolioData["technologies"][number];
 
 export type Project = PortfolioData["projects"][number];
+
+export type ExperienceItem = PortfolioData["experience"][number];

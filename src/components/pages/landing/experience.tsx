@@ -1,7 +1,7 @@
-import type { ExperienceModel } from "#prisma-generated/models.ts";
+import type { ExperienceItem } from "@/data/portfolio";
 import { useState } from "react";
 
-export function Experience({ experience }: { experience: ExperienceModel[] }) {
+export function Experience({ experience }: { experience: ExperienceItem[] }) {
   const [selected, setSelected] = useState(0);
 
   const item = experience[selected];

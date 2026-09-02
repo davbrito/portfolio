@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'b19a8ee57bf5cf819dc45cee14b58732faec0a3eb49e147a971ef1dfe1559be9'>;
+  StorageHashBase<'08506f02dd258cf9d96328bf6e3aaafd0567000631745a0ab933bcd93a86843b'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -496,7 +496,7 @@ export type StorageColumnTypes = {
       readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
       readonly userId: CodecTypes['pg/text@1']['output'];
     };
-    readonly experience: {
+    readonly Experience: {
       readonly company: CodecTypes['pg/text@1']['output'];
       readonly highlights: ReadonlyArray<CodecTypes['pg/text@1']['output']>;
       readonly id: CodecTypes['pg/uuid@1']['output'];
@@ -505,7 +505,7 @@ export type StorageColumnTypes = {
       readonly profileId: CodecTypes['pg/text@1']['output'];
       readonly title: CodecTypes['pg/text@1']['output'];
     };
-    readonly messages: {
+    readonly Messages: {
       readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['output'];
       readonly email: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/uuid@1']['output'];
@@ -528,7 +528,7 @@ export type StorageColumnTypes = {
       readonly transports: CodecTypes['pg/text@1']['output'] | null;
       readonly userId: CodecTypes['pg/text@1']['output'];
     };
-    readonly profile: {
+    readonly Profile: {
       readonly aboutImage: CodecTypes['pg/text@1']['output'] | null;
       readonly aboutImageAlt: CodecTypes['pg/text@1']['output'];
       readonly aboutText: CodecTypes['pg/text@1']['output'];
@@ -544,7 +544,7 @@ export type StorageColumnTypes = {
       readonly title: CodecTypes['pg/text@1']['output'];
       readonly userId: CodecTypes['pg/text@1']['output'];
     };
-    readonly proyects: {
+    readonly Proyects: {
       readonly description: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly image: CodecTypes['pg/text@1']['output'] | null;
@@ -572,7 +572,7 @@ export type StorageColumnTypes = {
       readonly userAgent: CodecTypes['pg/text@1']['output'] | null;
       readonly userId: CodecTypes['pg/text@1']['output'];
     };
-    readonly skills: {
+    readonly Skills: {
       readonly group: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly level: CodecTypes['pg/text@1']['output'];
@@ -616,7 +616,7 @@ export type StorageColumnInputTypes = {
       readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['input'];
       readonly userId: CodecTypes['pg/text@1']['input'];
     };
-    readonly experience: {
+    readonly Experience: {
       readonly company: CodecTypes['pg/text@1']['input'];
       readonly highlights: ReadonlyArray<CodecTypes['pg/text@1']['input']>;
       readonly id: CodecTypes['pg/uuid@1']['input'];
@@ -625,7 +625,7 @@ export type StorageColumnInputTypes = {
       readonly profileId: CodecTypes['pg/text@1']['input'];
       readonly title: CodecTypes['pg/text@1']['input'];
     };
-    readonly messages: {
+    readonly Messages: {
       readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['input'];
       readonly email: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/uuid@1']['input'];
@@ -648,7 +648,7 @@ export type StorageColumnInputTypes = {
       readonly transports: CodecTypes['pg/text@1']['input'] | null;
       readonly userId: CodecTypes['pg/text@1']['input'];
     };
-    readonly profile: {
+    readonly Profile: {
       readonly aboutImage: CodecTypes['pg/text@1']['input'] | null;
       readonly aboutImageAlt: CodecTypes['pg/text@1']['input'];
       readonly aboutText: CodecTypes['pg/text@1']['input'];
@@ -664,7 +664,7 @@ export type StorageColumnInputTypes = {
       readonly title: CodecTypes['pg/text@1']['input'];
       readonly userId: CodecTypes['pg/text@1']['input'];
     };
-    readonly proyects: {
+    readonly Proyects: {
       readonly description: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly image: CodecTypes['pg/text@1']['input'] | null;
@@ -692,7 +692,7 @@ export type StorageColumnInputTypes = {
       readonly userAgent: CodecTypes['pg/text@1']['input'] | null;
       readonly userId: CodecTypes['pg/text@1']['input'];
     };
-    readonly skills: {
+    readonly Skills: {
       readonly group: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly level: CodecTypes['pg/text@1']['input'];
@@ -844,7 +844,7 @@ type ContractBase = Omit<
                 },
               ];
             };
-            readonly experience: {
+            readonly Experience: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'uuid';
@@ -889,19 +889,19 @@ type ContractBase = Omit<
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'experience';
+                    readonly tableName: 'Experience';
                     readonly columns: readonly ['profileId'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'profile';
+                    readonly tableName: 'Profile';
                     readonly columns: readonly ['userId'];
                   };
                   readonly name: 'Experience_profileId_fkey';
                 },
               ];
             };
-            readonly messages: {
+            readonly Messages: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'uuid';
@@ -954,12 +954,12 @@ type ContractBase = Omit<
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'messages';
+                    readonly tableName: 'Messages';
                     readonly columns: readonly ['profileId'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'profile';
+                    readonly tableName: 'Profile';
                     readonly columns: readonly ['userId'];
                   };
                   readonly name: 'Messages_profileId_fkey';
@@ -1055,7 +1055,7 @@ type ContractBase = Omit<
                 },
               ];
             };
-            readonly profile: {
+            readonly Profile: {
               columns: {
                 readonly userId: {
                   readonly nativeType: 'text';
@@ -1171,7 +1171,7 @@ type ContractBase = Omit<
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'profile';
+                    readonly tableName: 'Profile';
                     readonly columns: readonly ['userId'];
                   };
                   readonly target: {
@@ -1183,7 +1183,7 @@ type ContractBase = Omit<
                 },
               ];
             };
-            readonly proyects: {
+            readonly Proyects: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'uuid';
@@ -1247,12 +1247,12 @@ type ContractBase = Omit<
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'proyects';
+                    readonly tableName: 'Proyects';
                     readonly columns: readonly ['profileId'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'profile';
+                    readonly tableName: 'Profile';
                     readonly columns: readonly ['userId'];
                   };
                   readonly name: 'Proyects_profileId_fkey';
@@ -1370,7 +1370,7 @@ type ContractBase = Omit<
                 },
               ];
             };
-            readonly skills: {
+            readonly Skills: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'uuid';
@@ -1405,12 +1405,12 @@ type ContractBase = Omit<
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'skills';
+                    readonly tableName: 'Skills';
                     readonly columns: readonly ['profileId'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'profile';
+                    readonly tableName: 'Profile';
                     readonly columns: readonly ['userId'];
                   };
                   readonly name: 'Skills_profileId_fkey';
@@ -1537,20 +1537,20 @@ type ContractBase = Omit<
   readonly roots: {
     readonly users: { readonly namespace: 'public' & NamespaceId; readonly model: 'Users' };
     readonly accounts: { readonly namespace: 'public' & NamespaceId; readonly model: 'Accounts' };
-    readonly profile: { readonly namespace: 'public' & NamespaceId; readonly model: 'Profile' };
-    readonly experience: {
+    readonly Profile: { readonly namespace: 'public' & NamespaceId; readonly model: 'Profile' };
+    readonly Experience: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Experience';
     };
-    readonly messages: { readonly namespace: 'public' & NamespaceId; readonly model: 'Messages' };
+    readonly Messages: { readonly namespace: 'public' & NamespaceId; readonly model: 'Messages' };
     readonly passkeys: { readonly namespace: 'public' & NamespaceId; readonly model: 'Passkeys' };
-    readonly proyects: { readonly namespace: 'public' & NamespaceId; readonly model: 'Proyects' };
+    readonly Proyects: { readonly namespace: 'public' & NamespaceId; readonly model: 'Proyects' };
     readonly rateLimits: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'RateLimits';
     };
     readonly sessions: { readonly namespace: 'public' & NamespaceId; readonly model: 'Sessions' };
-    readonly skills: { readonly namespace: 'public' & NamespaceId; readonly model: 'Skills' };
+    readonly Skills: { readonly namespace: 'public' & NamespaceId; readonly model: 'Skills' };
     readonly verifications: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Verifications';
@@ -1715,7 +1715,7 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'experience';
+              readonly table: 'Experience';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -1785,7 +1785,7 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'messages';
+              readonly table: 'Messages';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -1998,7 +1998,7 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'profile';
+              readonly table: 'Profile';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly userId: { readonly column: 'userId' };
@@ -2076,7 +2076,7 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'proyects';
+              readonly table: 'Proyects';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -2235,7 +2235,7 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'skills';
+              readonly table: 'Skills';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
