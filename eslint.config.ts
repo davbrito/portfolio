@@ -7,7 +7,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default defineConfig(
-  globalIgnores(["node_modules/", "dist/", "build/", ".astro/", "prisma/", ".vercel/"]),
+  globalIgnores(["node_modules/", "dist/", "build/", ".astro/", "prisma/", ".vercel/", "src/routeTree.gen.ts"]),
 
   js.configs.recommended,
   tseslint.configs.recommended,
