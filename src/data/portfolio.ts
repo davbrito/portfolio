@@ -1,20 +1,20 @@
 import type { IconName } from "@/components/icons";
 import { db8 } from "@/lib/db8";
+import type { ProfileWithRelations } from "@/lib/db8-rows";
 import { createObfuscationKey, obfuscate, serializeObfuscationKey } from "@/lib/obfuscation";
 import { createServerFn } from "@tanstack/react-start";
 
 export const getPortfolioData = createServerFn().handler(async () => {
-  const profile = await db8.orm.public.Profile.first();
+  const result = await db8.orm.public.Profile.include("experiences")
+    .include("skills")
+    .include("proyects", (q) => q.orderBy((p) => p.order.asc()))
+    .first();
+
+  const profile = result as unknown as ProfileWithRelations | null;
 
   if (!profile) return null;
 
-  const [experiences, skills, proyects] = await Promise.all([
-    db8.orm.public.Experience.where({ profileId: profile.userId }).all(),
-    db8.orm.public.Skills.where({ profileId: profile.userId }).all(),
-    db8.orm.public.Proyects.where({ profileId: profile.userId })
-      .orderBy((p) => p.order.asc())
-      .all(),
-  ]);
+  const { experiences, proyects, skills } = profile;
 
   const obKey = await createObfuscationKey();
 

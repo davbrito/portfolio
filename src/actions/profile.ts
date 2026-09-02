@@ -6,19 +6,21 @@ import { createServerFn } from "@tanstack/react-start";
 export const getProfileAction = createServerFn({ method: "GET" })
   .middleware([adminMiddleware])
   .handler(async ({ context: { user } }) => {
-    const data = await findProfile(user.id);
-    if (!data) return null;
+    const profile = await findProfile(user.id);
+    if (!profile) return null;
+
+    const { proyects, ...data } = profile;
 
     const payload = {
       ...data,
-      experiences:
-        data.experiences.map((exp) => ({
-          title: exp.title,
-          company: exp.company,
-          location: exp.location,
-          period: exp.period,
-          highlights: exp.highlights.join("\n\n"),
-        })) || [],
+      experiences: data.experiences.map((exp) => ({
+        title: exp.title,
+        company: exp.company,
+        location: exp.location,
+        period: exp.period,
+        highlights: (exp.highlights ?? []).join("\n\n"),
+      })),
+      projects: proyects.map((project) => ({ ...project, tags: [...(project.tags ?? [])] })),
     };
 
     return payload;
