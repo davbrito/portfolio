@@ -17,6 +17,7 @@ const authUiProps: Omit<AuthProviderProps<typeof authClient>, "children" | "navi
   // },
   redirectTo: "/admin",
   avatar: { enabled: true },
+  socialProviders: ["github"],
   localization: { auth: authLocalization, settings: settingsLocalization },
   additionalFields: [
     {

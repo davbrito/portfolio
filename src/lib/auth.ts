@@ -7,7 +7,13 @@ import { captcha } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { validateUserCreation } from "./auth/db-hooks";
 import { db } from "./db";
-import { BETTER_AUTH_SECRET, CF_TURNSTILE_SECRET_KEY, vercelUrl } from "./server-env";
+import {
+  BETTER_AUTH_SECRET,
+  CF_TURNSTILE_SECRET_KEY,
+  GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET,
+  vercelUrl,
+} from "./server-env";
 
 const url = vercelUrl ? `https://${vercelUrl}` : import.meta.env.DEV ? "http://localhost:3000" : undefined;
 
@@ -22,6 +28,12 @@ export const auth = betterAuth({
     transaction: true,
     usePlural: true,
   }),
+  socialProviders: {
+    github: {
+      clientId: GITHUB_CLIENT_ID,
+      clientSecret: GITHUB_CLIENT_SECRET,
+    },
+  },
   plugins: [
     tanstackStartCookies(),
     passkey(),
@@ -34,7 +46,7 @@ export const auth = betterAuth({
     enabled: true,
     requireEmailVerification: false,
     autoSignIn: true,
-    async sendResetPassword(data, request) {
+    async sendResetPassword(data, _request) {
       console.log("Password reset requested for:", data.user.email);
       console.log("Reset link:", data.url);
     },

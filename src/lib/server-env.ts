@@ -11,6 +11,8 @@ const schema = z.object({
     .nonempty({ message: "ADMIN_EMAIL is required" }),
   ADMIN_SECRET: z.string().optional(),
   DATABASE_URL: z.string().nonempty({ message: "DATABASE_URL is required" }),
+  GITHUB_CLIENT_ID: z.string().nonempty({ message: "GITHUB_CLIENT_ID is required" }),
+  GITHUB_CLIENT_SECRET: z.string().nonempty({ message: "GITHUB_CLIENT_SECRET is required" }),
 });
 
 const env = schema.safeParse(process.env);
@@ -28,6 +30,8 @@ export const {
   ADMIN_EMAIL,
   ADMIN_SECRET,
   DATABASE_URL,
+  GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET,
 } = env.data;
 
 export const vercelUrl = VERCEL_PROJECT_PRODUCTION_URL || VERCEL_URL;
