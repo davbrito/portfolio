@@ -1,6 +1,9 @@
 allowBuilds:
   '@prisma/engines': true
+  esbuild: true
+  msgpackr-extract: true
   prisma: true
+  workerd: true
 minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
   - globals@17.12.0

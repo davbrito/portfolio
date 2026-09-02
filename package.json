@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format:check": "prettier --check .",
-    "migrate:deploy": "prisma7 migrate deploy"
+    "migrate:deploy": "prisma7 migrate deploy",
+    "contract:emit": "prisma contract emit"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -25,6 +26,7 @@
     "@neondatabase/serverless": "^1.1.0",
     "@prisma/adapter-neon": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@prisma/orm-postgres": "8.0.0-rc.8",
     "@react-pdf/renderer": "^4.9.0",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/react-pacer": "^0.23.0",
@@ -77,6 +79,7 @@
     "jsdom": "^30.0.1",
     "prettier": "^3.9.6",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "prisma": "8.0.0-rc.12",
     "tw-animate-css": "^1.4.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.69.0",

@@ -9,9 +9,12 @@
     "target": "ES2024",
     "jsx": "react-jsx",
     "jsxImportSource": "react",
-    "module": "ESNext",
+    "module": "preserve",
     "lib": ["ESNext", "DOM", "DOM.Iterable", "ESNext.Iterator"],
-    "types": ["vite/client"],
+    "types": [
+      "vite/client",
+      "node"
+    ],
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
