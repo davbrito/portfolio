@@ -38,6 +38,7 @@ pnpm-debug.log*
 .env*.local
 
 
+routeTree.gen.ts
 .tanstack
 .nitro
 .output
