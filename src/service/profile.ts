@@ -24,7 +24,7 @@ export async function exportProfileYaml(userId: string) {
 
   if (!profile) return null;
 
-  const { id: _id, userId: _userId, createdAt: _createdAt, updatedAt: _updatedAt, ...profileData } = profile;
+  const { userId: _userId, ...profileData } = profile;
 
   return stringify({
     ...profileData,

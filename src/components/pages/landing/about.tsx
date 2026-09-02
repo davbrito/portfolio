@@ -11,6 +11,7 @@ export default function About({ profile }: Props) {
     <div className="flex flex-col gap-10 md:flex-row md:items-center">
       <div className="space-y-4">
         {aboutParagraphs.map((paragraph, index) => (
+          // eslint-disable-next-line @eslint-react/no-array-index-key
           <p key={index} className="text-muted-foreground leading-relaxed text-balance">
             {paragraph}
           </p>

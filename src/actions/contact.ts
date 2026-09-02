@@ -6,7 +6,7 @@ import * as z from "zod";
 
 export const contactFormAction = createServerFn({ method: "POST" })
   .middleware([botIdMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       profileId: z.string(),
       name: z.string().min(2, { error: "Nombre es requerido" }).max(100).nonempty({ error: "Nombre es requerido" }),
@@ -41,7 +41,7 @@ export const contactFormAction = createServerFn({ method: "POST" })
 
 export const listMessagesAction = createServerFn({ method: "GET" })
   .middleware([adminMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       filter: z.enum(["all", "read", "unread"]).default("all"),
     }),
@@ -58,7 +58,7 @@ export const listMessagesAction = createServerFn({ method: "GET" })
 
 export const markReadMessageAction = createServerFn({ method: "POST" })
   .middleware([adminMiddleware])
-  .inputValidator(z.object({ id: z.string().uuid({ message: "ID inválido" }) }))
+  .validator(z.object({ id: z.string().uuid({ message: "ID inválido" }) }))
   .handler(async (ctx) => {
     const input = ctx.data;
 
@@ -70,7 +70,7 @@ export const markReadMessageAction = createServerFn({ method: "POST" })
 
 export const deleteMessageAction = createServerFn({ method: "POST" })
   .middleware([adminMiddleware])
-  .inputValidator(z.object({ id: z.uuid({ error: "ID inválido" }) }))
+  .validator(z.object({ id: z.uuid({ error: "ID inválido" }) }))
   .handler(async (ctx) => {
     const input = ctx.data;
 

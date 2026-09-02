@@ -59,7 +59,6 @@ export default function AdminLoginPage() {
       });
       return;
     }
-    // eslint-disable-next-line react-hooks/immutability
     window.location.href = "/admin";
   };
 

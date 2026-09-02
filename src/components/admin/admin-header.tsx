@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
-import { HomeIcon, LogOutIcon, RotateCcwIcon, SettingsIcon, TerminalIcon } from "lucide-react";
+import { HomeIcon, LogOutIcon, RotateCcwIcon, TerminalIcon } from "lucide-react";
 import { useEffect } from "react";
 import { UserButton } from "../auth/user/user-button";
 

@@ -1,6 +1,6 @@
+import pluginReact from "@eslint-react/eslint-plugin";
 import js from "@eslint/js";
 import query from "@tanstack/eslint-plugin-query";
-import pluginReact from "eslint-plugin-react";
 import pluginReactHooks from "eslint-plugin-react-hooks";
 import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
@@ -23,32 +23,34 @@ export default defineConfig(
   {
     files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
     languageOptions: { globals: { ...globals.browser, ...globals.node } },
-    settings: {
-      react: { version: "detect" },
-    },
     extends: [
-      pluginReact.configs.flat.recommended,
-      pluginReact.configs.flat["jsx-runtime"],
+      pluginReact.configs["recommended-typescript"],
       pluginReactHooks.configs.flat["recommended-latest"],
+      pluginReact.configs["disable-conflict-eslint-plugin-react-hooks"],
       query.configs["flat/recommended"],
     ],
-    rules: {
-      "react/jsx-no-leaked-render": "warn",
-    },
   },
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/consistent-type-imports": "warn",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" },
+      ],
     },
   },
   {
     name: "shadcnui components",
-    files: ["src/components/ui/**/*.{ts,tsx}"],
+    files: ["src/components/ui/**/*.{ts,tsx}", "src/components/auth/**/*.{ts,tsx}"],
     rules: {
       "@typescript-eslint/consistent-type-imports": "off",
-      "react/jsx-no-leaked-render": "off",
-      "react/prop-types": "off",
+      "@eslint-react/no-nested-component-definitions": "off",
+      "@eslint-react/static-components": "off",
+      "@eslint-react/set-state-in-effect": "off",
+      "@eslint-react/naming-convention-ref-name": "off",
+      "@eslint-react/use-state": "off",
+      "react-hooks/preserve-manual-memoization": "off",
     },
   },
 );

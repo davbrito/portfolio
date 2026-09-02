@@ -41,7 +41,6 @@ export function VerifyEmail({ className }: VerifyEmailProps) {
   useEffect(() => {
     // Re-read after hydration: the initial `useState` value must match the
     // server-rendered markup, so the real value is only safe to read here.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setEmail(sessionStorage.getItem("better-auth-ui.verify-email") ?? "");
   }, []);
 

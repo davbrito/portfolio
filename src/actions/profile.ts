@@ -26,7 +26,7 @@ export const getProfileAction = createServerFn({ method: "GET" })
 
 export const upsertProfileAction = createServerFn({ method: "POST" })
   .middleware([adminMiddleware])
-  .inputValidator(profilePayloadSchema)
+  .validator(profilePayloadSchema)
   .handler(async ({ data: input, context: { user } }) => {
     await upsertProfile(user.id, input);
     await revalidatePortfolioPage();
