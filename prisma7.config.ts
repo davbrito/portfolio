@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import { defineConfig, env } from "prisma/config";
+import { defineConfig, env } from "@prisma/prisma7/config";
 
 config({ path: [".env", ".env.local"], quiet: true });
 

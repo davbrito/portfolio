@@ -1,3 +1,6 @@
+allowBuilds:
+  '@prisma/engines': true
+  prisma: true
 minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
   - globals@17.12.0
