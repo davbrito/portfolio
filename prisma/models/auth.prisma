@@ -34,6 +34,7 @@ model Sessions {
 
 model Accounts {
   id                    String    @id
+  issuer                String
   accountId             String
   providerId            String
   userId                String
@@ -48,6 +49,7 @@ model Accounts {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
+  @@unique([issuer, accountId], map: "accounts_issuer_accountId_uidx")
   @@index([userId])
   @@map("accounts")
 }
@@ -84,10 +86,11 @@ model Passkeys {
 }
 
 model RateLimits {
-  id          String  @id
-  key         String?
-  count       Int?
-  lastRequest BigInt?
+  id          String @id
+  key         String
+  count       Int
+  lastRequest BigInt
 
+  @@unique([key])
   @@map("rateLimits")
 }

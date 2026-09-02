@@ -9,17 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './pages/__root'
-import { Route as CurriculumDotpdfRouteImport } from './pages/curriculum[.]pdf'
-import { Route as AdminRouteRouteImport } from './pages/admin/route'
 import { Route as IndexRouteImport } from './pages/index'
+import { Route as AdminRouteRouteImport } from './pages/admin/route'
+import { Route as CurriculumDotpdfRouteImport } from './pages/curriculum[.]pdf'
 import { Route as AdminIndexRouteImport } from './pages/admin/index'
 import { Route as AuthPathRouteImport } from './pages/auth/$path'
-import { Route as ApiAuthSplatRouteImport } from './pages/api/auth/$'
 import { Route as ApiAdminExportProfileDotyamlRouteImport } from './pages/api/admin/export-profile[.]yaml'
+import { Route as ApiAuthSplatRouteImport } from './pages/api/auth/$'
 
-const CurriculumDotpdfRoute = CurriculumDotpdfRouteImport.update({
-  id: '/curriculum.pdf',
-  path: '/curriculum.pdf',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRouteRoute = AdminRouteRouteImport.update({
@@ -27,9 +27,9 @@ const AdminRouteRoute = AdminRouteRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const CurriculumDotpdfRoute = CurriculumDotpdfRouteImport.update({
+  id: '/curriculum.pdf',
+  path: '/curriculum.pdf',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -42,17 +42,17 @@ const AuthPathRoute = AuthPathRouteImport.update({
   path: '/auth/$path',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-  id: '/api/auth/$',
-  path: '/api/auth/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiAdminExportProfileDotyamlRoute =
   ApiAdminExportProfileDotyamlRouteImport.update({
     id: '/api/admin/export-profile.yaml',
     path: '/api/admin/export-profile.yaml',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -121,11 +121,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/curriculum.pdf': {
-      id: '/curriculum.pdf'
-      path: '/curriculum.pdf'
-      fullPath: '/curriculum.pdf'
-      preLoaderRoute: typeof CurriculumDotpdfRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -135,11 +135,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/curriculum.pdf': {
+      id: '/curriculum.pdf'
+      path: '/curriculum.pdf'
+      fullPath: '/curriculum.pdf'
+      preLoaderRoute: typeof CurriculumDotpdfRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -156,18 +156,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthPathRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/auth/$': {
-      id: '/api/auth/$'
-      path: '/api/auth/$'
-      fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/admin/export-profile.yaml': {
       id: '/api/admin/export-profile.yaml'
       path: '/api/admin/export-profile.yaml'
       fullPath: '/api/admin/export-profile.yaml'
       preLoaderRoute: typeof ApiAdminExportProfileDotyamlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
   }

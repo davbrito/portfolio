@@ -1,5 +1,5 @@
 import { createAuthPlugin } from "@better-auth-ui/core";
-import { passkeyPlugin as corePasskeyPlugin, type PasskeyPluginOptions } from "@better-auth-ui/core/plugins";
+import { passkeyPlugin as corePasskeyPlugin, type PasskeyPluginOptions } from "@better-auth-ui/core/plugins/passkey";
 
 import { PasskeyButton } from "@/components/auth/passkey/passkey-button";
 import { Passkeys } from "@/components/auth/passkey/passkeys";

@@ -18,11 +18,16 @@ import { useEffect } from "react";
 
 export const Route = createFileRoute("/")({
   ssr: true,
-  head: ({ loaderData }) => ({
-    meta: getMeta({
-      title: `${loaderData!.data.profile.name} - ${loaderData!.data.profile.title}`,
-    }),
-  }),
+
+  head: ({ loaderData }) => {
+    const title = loaderData ? `${loaderData.data.profile.name} - ${loaderData.data.profile.title}` : "Portfolio";
+
+    return {
+      meta: getMeta({
+        title,
+      }),
+    };
+  },
   loader: async () => {
     const data = await getPortfolioData();
     if (!data || !data.profile.active) {

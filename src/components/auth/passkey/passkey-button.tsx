@@ -1,7 +1,10 @@
-import { type AuthView, authMutationKeys } from "@better-auth-ui/core";
-import { type PasskeyAuthClient, useAuth, useAuthPlugin, useSignInPasskey } from "@better-auth-ui/react";
-import { useIsMutating } from "@tanstack/react-query";
+import { type AuthView, authMutationKeys, authQueryKeys } from "@better-auth-ui/core";
+import type { PasskeyAuthClient } from "@better-auth-ui/core/plugins/passkey";
+import { useAuth, useAuthPlugin } from "@better-auth-ui/react";
+import { usePasskeyAutoFill, useSignInPasskey } from "@better-auth-ui/react/plugins/passkey";
+import { useIsMutating, useQueryClient } from "@tanstack/react-query";
 import { Fingerprint } from "lucide-react";
+import { useCallback, useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -21,11 +24,23 @@ export type PasskeyButtonProps = {
  * @param view - Current auth view. Hides the button on `"signUp"`.
  */
 export function PasskeyButton({ view }: PasskeyButtonProps) {
-  const { authClient, localization, redirectTo, navigate } = useAuth();
+  const { authClient, localization, redirectTo, navigate } = useAuth<PasskeyAuthClient>();
   const { localization: passkeyLocalization } = useAuthPlugin(passkeyPlugin);
+  const queryClient = useQueryClient();
 
-  const { mutate: signInPasskey, isPending: passkeyPending } = useSignInPasskey(authClient as PasskeyAuthClient, {
-    onSuccess: () => navigate({ to: redirectTo }),
+  const handleSuccess = useCallback(async () => {
+    await queryClient.invalidateQueries({ queryKey: authQueryKeys.session }, { cancelRefetch: false });
+    navigate({ to: redirectTo });
+  }, [navigate, queryClient, redirectTo]);
+  const fetchOptions = useMemo(() => ({ onSuccess: handleSuccess }), [handleSuccess]);
+
+  const { mutate: signInPasskey, isPending: passkeyPending } = useSignInPasskey(authClient);
+
+  // Surface passkeys in the browser's autofill dropdown on every view where
+  // this button is shown.
+  usePasskeyAutoFill(authClient, {
+    enabled: view !== "signUp",
+    onSuccess: handleSuccess,
   });
 
   const signInMutating = useIsMutating({
@@ -45,7 +60,7 @@ export function PasskeyButton({ view }: PasskeyButtonProps) {
       variant="outline"
       disabled={isPending}
       className={cn("w-full", isPending && "pointer-events-none opacity-50")}
-      onClick={() => signInPasskey()}
+      onClick={() => signInPasskey({ autoFill: false, fetchOptions })}
     >
       {passkeyPending ? <Spinner /> : <Fingerprint />}
       {localization.auth.continueWith.replace("{{provider}}", passkeyLocalization.passkey)}

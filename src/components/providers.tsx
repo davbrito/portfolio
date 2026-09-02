@@ -4,7 +4,7 @@ import { authLocalization, passkeyLocalization, settingsLocalization } from "#/l
 import { QueryProvider } from "#/lib/query.ts";
 import { passkeyPlugin } from "#/lib/auth/passkey-plugin.ts";
 import type { AuthProviderProps } from "@better-auth-ui/react";
-import { captchaPlugin } from "@better-auth-ui/react/plugins";
+import { captchaPlugin } from "@better-auth-ui/react/plugins/captcha";
 import { Link, useNavigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { AuthProvider } from "./auth/auth-provider";
