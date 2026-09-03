@@ -17,11 +17,11 @@ function pickCurriculumKey(acceptLanguage: string | null): string {
 export const Route = createFileRoute("/curriculum.pdf")({
   server: {
     handlers: {
-      async GET({ request }) {
+      async GET({ request, context }) {
         const token = new URL(request.url).searchParams.get("cf_turnstile_token");
         if (!token) return new Response("Access denied.", { status: 403 });
 
-        const verification = await validateTurnstileToken(token);
+        const verification = await validateTurnstileToken(token, context.ip);
         if (!verification.success) return new Response("Access denied.", { status: 403 });
 
         const key = pickCurriculumKey(request.headers.get("accept-language"));

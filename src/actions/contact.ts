@@ -26,7 +26,7 @@ export const contactFormAction = createServerFn({ method: "POST" })
   .handler(async (ctx) => {
     const input = ctx.data;
 
-    const verification = await validateTurnstileToken(input.turnstileToken);
+    const verification = await validateTurnstileToken(input.turnstileToken, ctx.context.ip);
     if (!verification.success) {
       throw new Error("Verificación de seguridad fallida. Intenta nuevamente.");
     }
