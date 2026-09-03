@@ -13,6 +13,8 @@ export default defineConfig(
     "build/",
     ".astro/",
     "prisma/generated/",
+    "prisma8/generated/",
+    "migrations/",
     ".vercel/",
     ".output/",
     "src/routeTree.gen.ts",

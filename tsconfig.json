@@ -10,8 +10,8 @@
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "module": "ESNext",
-    "lib": ["ESNext", "DOM", "DOM.Iterable", "ESNext.Iterator"],
-    "types": ["vite/client"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "ESNext.Iterator", "ESNext.Temporal"],
+    "types": ["vite/client", "node"],
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
@@ -21,7 +21,8 @@
     "noUncheckedSideEffectImports": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@prisma-generated/*": ["./prisma/generated/*"]
+      "@prisma-generated/*": ["./prisma/generated/*"],
+      "@prisma8-generated/*": ["./prisma8/generated/*"]
     }
   }
 }

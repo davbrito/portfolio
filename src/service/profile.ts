@@ -1,36 +1,35 @@
 import "@tanstack/react-start/server-only";
 
-import { db } from "@/lib/db";
+import { db8 } from "@/lib/db8";
+import type { ProfileWithRelations } from "@/lib/db8-rows";
 import { siteUrl } from "@/lib/server-env";
 import type { ProfilePayload } from "@/lib/validators/profile";
 import { createServerOnlyFn } from "@tanstack/react-start";
 
 export async function findProfile(userId: string) {
-  const profile = await db.profile.findUnique({
-    where: { userId },
-    include: { experiences: true, skills: true, projects: { orderBy: { order: "asc" } } },
-  });
+  const profile = await db8.orm.public.Profile.where({ userId })
+    .include("experiences")
+    .include("skills")
+    .include("proyects", (q) => q.orderBy((p) => p.order.asc()))
+    .first();
 
-  return profile;
+  return profile as unknown as ProfileWithRelations | null;
 }
 
 export async function exportProfileYaml(userId: string) {
   const { stringify } = await import("yaml");
 
-  const profile = await db.profile.findUnique({
-    where: { userId },
-    include: { experiences: true, skills: true, projects: { orderBy: { order: "asc" } } },
-  });
+  const profile = await findProfile(userId);
 
   if (!profile) return null;
 
-  const { userId: _userId, ...profileData } = profile;
+  const { userId: _userId, experiences, skills, proyects, ...profileData } = profile;
 
   return stringify({
     ...profileData,
-    experiences: profile.experiences.map(({ id: _id, profileId: _profileId, ...exp }) => exp),
-    skills: profile.skills.map(({ id: _id, profileId: _profileId, ...skill }) => skill),
-    projects: profile.projects.map(({ id: _id, profileId: _profileId, ...project }) => project),
+    experiences: experiences.map(({ id: _id, profileId: _profileId, ...exp }) => exp),
+    skills: skills.map(({ id: _id, profileId: _profileId, ...skill }) => skill),
+    projects: proyects.map(({ id: _id, profileId: _profileId, ...project }) => project),
   });
 }
 
@@ -56,49 +55,29 @@ export async function upsertProfile(userId: string, data: ProfilePayload) {
     }))
     .filter((project) => [project.title, project.description].some((value) => value.length > 0));
 
-  await db.$transaction(async (tx) => {
-    await tx.profile.upsert({
-      where: { userId },
-      update: {
-        ...profileData,
-      },
-      create: {
-        ...profileData,
-        user: { connect: { id: userId } },
-      },
+  await db8.transaction(async (tx) => {
+    await tx.orm.public.Profile.upsert({
+      create: { ...profileData, userId },
+      update: { ...profileData },
     });
 
     const profileId = userId;
 
-    await tx.experience.deleteMany({ where: { profileId } });
+    await tx.orm.public.Experience.where({ profileId }).delete();
     if (cleanedExperiences.length > 0) {
-      await tx.experience.createMany({
-        data: cleanedExperiences.map((exp) => ({
-          ...exp,
-          profileId,
-        })),
-      });
+      await tx.orm.public.Experience.createAll(cleanedExperiences.map((exp) => ({ ...exp, profileId })));
     }
 
-    await tx.skills.deleteMany({ where: { profileId } });
+    await tx.orm.public.Skills.where({ profileId }).delete();
     if (cleanedSkills.length > 0) {
-      await tx.skills.createMany({
-        data: cleanedSkills.map((skill) => ({
-          ...skill,
-          profileId,
-        })),
-      });
+      await tx.orm.public.Skills.createAll(cleanedSkills.map((skill) => ({ ...skill, profileId })));
     }
 
-    await tx.proyects.deleteMany({ where: { profileId } });
+    await tx.orm.public.Proyects.where({ profileId }).delete();
     if (cleanedProjects.length > 0) {
-      await tx.proyects.createMany({
-        data: cleanedProjects.map((project, index) => ({
-          ...project,
-          profileId,
-          order: index,
-        })),
-      });
+      await tx.orm.public.Proyects.createAll(
+        cleanedProjects.map((project, index) => ({ ...project, profileId, order: index })),
+      );
     }
   });
 }

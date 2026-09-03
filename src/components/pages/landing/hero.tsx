@@ -1,12 +1,11 @@
 import { icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import type { SocialLink } from "@/data/portfolio";
-import type { ProfileModel } from "#prisma-generated/models.ts";
+import type { Profile, SocialLink } from "@/data/portfolio";
 import { ArrowRightIcon } from "lucide-react";
 
 interface HeroProps {
   socialLinks: SocialLink[];
-  profile: ProfileModel;
+  profile: Profile;
 }
 
 export function Hero({ socialLinks, profile }: HeroProps) {

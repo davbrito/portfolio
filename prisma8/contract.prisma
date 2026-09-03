@@ -1,0 +1,176 @@
+// use prisma-next
+// Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
+
+model Users {
+  id            String       @id(map: "users_pkey")
+  name          String
+  email         String
+  emailVerified Boolean      @default(false)
+  image         String?
+  createdAt     Timestamp(3) @default(now())
+  updatedAt     Timestamp(3)
+  profile       Profile?
+  accounts      Accounts[]
+  passkeys      Passkeys[]
+  sessions      Sessions[]
+
+  @@index([email], map: "users_email_key", unique: true)
+  @@map("users")
+}
+
+model Accounts {
+  id                    String        @id(map: "accounts_pkey")
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  Timestamp(3)?
+  refreshTokenExpiresAt Timestamp(3)?
+  scope                 String?
+  password              String?
+  createdAt             Timestamp(3)  @default(now())
+  updatedAt             Timestamp(3)
+  issuer                String
+  user                  Users         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "accounts_userId_fkey")
+
+  @@index([issuer, accountId], map: "accounts_issuer_accountId_uidx", unique: true)
+  @@index([userId], map: "accounts_userId_idx")
+  @@map("accounts")
+}
+
+model Profile {
+  userId        String       @id(map: "Profile_pkey")
+  name          String       @default("")
+  title         String       @default("")
+  location      String       @default("")
+  experience    String       @default("")
+  description   String       @default("")
+  brief         String       @default("")
+  aboutImage    String?
+  aboutImageAlt String       @default("")
+  aboutText     String       @default("")
+  githubUrl     String?
+  linkedinUrl   String?
+  email         String?
+  active        Boolean      @default(true)
+  experiences   Experience[]
+  messages      Messages[]
+  proyects      Proyects[]
+  skills        Skills[]
+  user          Users        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "Profile_userId_fkey")
+
+  @@map("Profile")
+}
+
+model Experience {
+  id         Uuid     @id(map: "Experience_pkey") @default(uuid(7))
+  profileId  String
+  title      String
+  company    String
+  location   String
+  period     String
+  highlights String[]? @noCheck(elementNotNull)
+  profile    Profile  @relation(fields: [profileId], references: [userId], onDelete: Cascade, onUpdate: Cascade, map: "Experience_profileId_fkey", index: false)
+
+  @@map("Experience")
+}
+
+model Messages {
+  id        Uuid          @id(map: "Messages_pkey") @default(uuid(7))
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt Timestamp(3)  @default(now())
+  readAt    Timestamp(3)?
+  profileId String
+  profile   Profile       @relation(fields: [profileId], references: [userId], onDelete: Cascade, onUpdate: Cascade, map: "Messages_profileId_fkey", index: false)
+
+  @@map("Messages")
+}
+
+model Passkeys {
+  id           String        @id(map: "passkeys_pkey")
+  name         String?
+  publicKey    String
+  userId       String
+  credentialID String
+  counter      Int
+  deviceType   String
+  backedUp     Boolean
+  transports   String?
+  createdAt    Timestamp(3)?
+  aaguid       String?
+  user         Users         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "passkeys_userId_fkey")
+
+  @@index([credentialID], map: "passkeys_credentialID_idx")
+  @@index([userId], map: "passkeys_userId_idx")
+  @@map("passkeys")
+}
+
+model Proyects {
+  id          Uuid     @id(map: "Proyects_pkey") @default(uuid(7))
+  profileId   String
+  title       String
+  description String
+  url         String?
+  repoUrl     String?
+  image       String?
+  imageAlt    String?
+  tags        String[]? @noCheck(elementNotNull)
+  order       Int      @default(0)
+  profile     Profile  @relation(fields: [profileId], references: [userId], onDelete: Cascade, onUpdate: Cascade, map: "Proyects_profileId_fkey", index: false)
+
+  @@map("Proyects")
+}
+
+model RateLimits {
+  id          String @id(map: "rateLimits_pkey")
+  key         String
+  count       Int
+  lastRequest BigInt
+
+  @@index([key], map: "rateLimits_key_key", unique: true)
+  @@map("rateLimits")
+}
+
+model Sessions {
+  id        String       @id(map: "sessions_pkey")
+  expiresAt Timestamp(3)
+  token     String
+  createdAt Timestamp(3) @default(now())
+  updatedAt Timestamp(3)
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      Users        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "sessions_userId_fkey")
+
+  @@index([token], map: "sessions_token_key", unique: true)
+  @@index([userId], map: "sessions_userId_idx")
+  @@map("sessions")
+}
+
+model Skills {
+  id        Uuid    @id(map: "Skills_pkey") @default(uuid(7))
+  profileId String
+  name      String
+  level     String
+  group     String
+  profile   Profile @relation(fields: [profileId], references: [userId], onDelete: Cascade, onUpdate: Cascade, map: "Skills_profileId_fkey", index: false)
+
+  @@map("Skills")
+}
+
+model Verifications {
+  id         String       @id(map: "verifications_pkey")
+  identifier String
+  value      String
+  expiresAt  Timestamp(3)
+  createdAt  Timestamp(3) @default(now())
+  updatedAt  Timestamp(3)
+
+  @@index([identifier], map: "verifications_identifier_idx")
+  @@map("verifications")
+}
