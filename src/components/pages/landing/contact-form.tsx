@@ -1,6 +1,7 @@
 import { FormInputField, FormTextareaField } from "@/components/form-fields";
 import { Button } from "@/components/ui/button";
 import { FieldError, FieldGroup } from "@/components/ui/field";
+import { useInvisibleTurnstile } from "@/hooks/use-invisible-turnstile";
 import { contactFormAction } from "#/actions/index.ts";
 import { SendIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -25,6 +26,7 @@ export default function ContactForm({ profileId }: ContactFormProps) {
     setError,
   } = form;
   const error = errors.root?.message;
+  const { widget: turnstileWidget, getToken: getTurnstileToken } = useInvisibleTurnstile();
   return (
     <>
       <div className="space-y-3 text-center">
@@ -39,9 +41,9 @@ export default function ContactForm({ profileId }: ContactFormProps) {
         className="space-y-4"
         id="contact-form"
         onSubmit={handleSubmit(async (data) => {
-          console.log("Submitting contact form with data:", data);
           try {
-            await contactFormAction({ data: { ...data, profileId } });
+            const turnstileToken = await getTurnstileToken();
+            await contactFormAction({ data: { ...data, profileId, turnstileToken } });
             form.setValue("name", "");
             form.setValue("email", "");
             form.setValue("subject", "");
@@ -96,6 +98,7 @@ export default function ContactForm({ profileId }: ContactFormProps) {
           error={errors.message}
           {...register("message")}
         />
+        {turnstileWidget}
         {error ? <FieldError>{error}</FieldError> : null}
 
         {isSubmitSuccessful ? <p className="text-sm text-green-600">¡Mensaje enviado con éxito!</p> : null}

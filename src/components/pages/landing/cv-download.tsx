@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { CircularProgress } from "@/components/ui/circular-progress";
+import { useInvisibleTurnstile } from "@/hooks/use-invisible-turnstile";
 import { Download } from "lucide-react";
 import type { ComponentProps } from "react";
 import { useState } from "react";
@@ -15,13 +16,15 @@ interface CvDownloadButtonProps {
 export function CvDownloadButton({ label, className, variant = "outline" }: CvDownloadButtonProps) {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState<number | null>(null);
+  const { widget: turnstileWidget, getToken: getTurnstileToken } = useInvisibleTurnstile();
 
   async function handleDownload() {
     setLoading(true);
     setProgress(null);
 
     try {
-      const res = await fetch("/curriculum.pdf");
+      const turnstileToken = await getTurnstileToken();
+      const res = await fetch(`/curriculum.pdf?cf_turnstile_token=${encodeURIComponent(turnstileToken)}`);
       if (!res.ok) throw new Error(`Error ${res.status}`);
 
       const contentLength = Number(res.headers.get("Content-Length"));
@@ -65,14 +68,17 @@ export function CvDownloadButton({ label, className, variant = "outline" }: CvDo
   }
 
   return (
-    <Button type="button" variant={variant} className={className} onClick={handleDownload} disabled={loading}>
-      <Download className="h-4 w-4" />
-      <span className="ml-2">{loading ? "Descargando" : label}</span>
-      {loading && (
-        <span className="ml-3 inline-flex h-5 w-5 items-center justify-center">
-          <CircularProgress progress={progress} />
-        </span>
-      )}
-    </Button>
+    <>
+      {turnstileWidget}
+      <Button type="button" variant={variant} className={className} onClick={handleDownload} disabled={loading}>
+        <Download className="h-4 w-4" />
+        <span className="ml-2">{loading ? "Descargando" : label}</span>
+        {loading && (
+          <span className="ml-3 inline-flex h-5 w-5 items-center justify-center">
+            <CircularProgress progress={progress} />
+          </span>
+        )}
+      </Button>
+    </>
   );
 }

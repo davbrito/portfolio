@@ -34,7 +34,6 @@
     "@tanstack/react-start": "^1.168.49",
     "@vercel/analytics": "^2.0.1",
     "better-auth": "^1.7.2",
-    "botid": "^1.5.11",
     "bowser": "^2.14.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

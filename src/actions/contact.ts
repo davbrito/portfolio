@@ -1,14 +1,14 @@
 import { adminMiddleware } from "@/lib/auth/middleware";
-import { botIdMiddleware } from "@/lib/botid/middleware";
+import { validateTurnstileToken } from "@/lib/captcha";
 import { db8 } from "@/lib/db8";
 import { createServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 
 export const contactFormAction = createServerFn({ method: "POST" })
-  .middleware([botIdMiddleware])
   .validator(
     z.object({
       profileId: z.string(),
+      turnstileToken: z.string().nonempty({ error: "Verificación de seguridad requerida" }),
       name: z.string().min(2, { error: "Nombre es requerido" }).max(100).nonempty({ error: "Nombre es requerido" }),
       email: z.email({ error: "Correo inválido" }),
       subject: z
@@ -25,6 +25,11 @@ export const contactFormAction = createServerFn({ method: "POST" })
   )
   .handler(async (ctx) => {
     const input = ctx.data;
+
+    const verification = await validateTurnstileToken(input.turnstileToken);
+    if (!verification.success) {
+      throw new Error("Verificación de seguridad fallida. Intenta nuevamente.");
+    }
 
     await db8.orm.public.Messages.create({
       profileId: input.profileId,

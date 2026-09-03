@@ -68,9 +68,6 @@ importers:
       better-auth:
         specifier: ^1.7.2
         version: 1.7.2(84d4841726a19d0328c69e1f8667e2b8)
-      botid:
-        specifier: ^1.5.11
-        version: 1.5.11(react@19.2.8)
       bowser:
         specifier: ^2.14.1
         version: 2.14.1
@@ -3300,17 +3297,6 @@ packages:
 
   birecord@0.1.2:
     resolution: {integrity: sha512-5PAPTTmMpMEb+GuMb5DebfBkipRGyIW9+gtwEBSoDA9xkhHILm04+hZQ702pMksu3d8YAuGkmgTzQWcKqTPScA==}
-
-  botid@1.5.11:
-    resolution: {integrity: sha512-KOO1A3+/vFVJk5aFoG3sNwiogKFPVR+x4aw4gQ1b2e0XoE+i5xp48/EZn+WqR07jRHeDGwHWQUOtV5WVm7xiww==}
-    peerDependencies:
-      next: '*'
-      react: ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      next:
-        optional: true
-      react:
-        optional: true
 
   bowser@2.14.1:
     resolution: {integrity: sha512-tzPjzCxygAKWFOJP011oxFHs57HzIhOEracIgAePE4pqB3LikALKnSzUyU4MGs9/iCEUuHlAJTjTc5M+u7YEGg==}
@@ -9027,10 +9013,6 @@ snapshots:
       file-uri-to-path: 1.0.0
 
   birecord@0.1.2: {}
-
-  botid@1.5.11(react@19.2.8):
-    optionalDependencies:
-      react: 19.2.8
 
   bowser@2.14.1: {}
 

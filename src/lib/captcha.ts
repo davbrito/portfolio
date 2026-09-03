@@ -3,7 +3,7 @@ import { createServerOnlyFn } from "@tanstack/react-start";
 export const validateTurnstileToken = createServerOnlyFn(
   async (
     token: string,
-    ipAddress: string,
+    ipAddress?: string,
   ): Promise<{
     success: boolean;
     challenge_ts: string;
@@ -19,7 +19,7 @@ export const validateTurnstileToken = createServerOnlyFn(
     const formData = new URLSearchParams();
     formData.append("secret", CF_TURNSTILE_SECRET_KEY);
     formData.append("response", token);
-    formData.append("remoteip", ipAddress);
+    if (ipAddress) formData.append("remoteip", ipAddress);
     const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
       method: "POST",
       body: formData,
