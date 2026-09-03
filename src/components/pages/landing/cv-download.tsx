@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { CircularProgress } from "@/components/ui/circular-progress";
 import { useInvisibleTurnstile } from "@/hooks/use-invisible-turnstile";
+import { cn } from "@/lib/utils";
 import { Download } from "lucide-react";
 import type { ComponentProps } from "react";
 import { useState } from "react";
@@ -16,7 +17,11 @@ interface CvDownloadButtonProps {
 export function CvDownloadButton({ label, className, variant = "outline" }: CvDownloadButtonProps) {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState<number | null>(null);
-  const { widget: turnstileWidget, getToken: getTurnstileToken } = useInvisibleTurnstile();
+  const {
+    widget: turnstileWidget,
+    getToken: getTurnstileToken,
+    needsInteraction: turnstileNeedsInteraction,
+  } = useInvisibleTurnstile();
 
   async function handleDownload() {
     setLoading(true);
@@ -69,7 +74,20 @@ export function CvDownloadButton({ label, className, variant = "outline" }: CvDo
 
   return (
     <>
-      {turnstileWidget}
+      <div
+        className={cn(
+          "fixed inset-0 z-50 items-center justify-center bg-black/10 p-4 supports-backdrop-filter:backdrop-blur-xs",
+          turnstileNeedsInteraction ? "flex" : "hidden",
+        )}
+      >
+        <div className="grid w-full max-w-[calc(100%-2rem)] gap-3 rounded-none bg-popover p-4 text-xs/relaxed text-popover-foreground ring-1 ring-foreground/10 sm:max-w-sm">
+          <p className="text-sm font-medium">Verificación de seguridad</p>
+          <p className="text-muted-foreground text-xs/relaxed">
+            Confirma que eres humano para continuar con la descarga.
+          </p>
+          <div className="flex justify-center">{turnstileWidget}</div>
+        </div>
+      </div>
       <Button type="button" variant={variant} className={className} onClick={handleDownload} disabled={loading}>
         <Download className="h-4 w-4" />
         <span className="ml-2">{loading ? "Descargando" : label}</span>

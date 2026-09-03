@@ -1,16 +1,18 @@
 import { CF_TURNSTILE_SITE_KEY } from "#/config.ts";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 
 /**
- * Runs the existing managed Turnstile widget (site key CF_TURNSTILE_SITE_KEY) in
- * invisible/non-interactive mode: it only surfaces a challenge UI if Cloudflare
- * decides one is required, otherwise it resolves silently.
+ * Runs the existing managed Turnstile widget (site key CF_TURNSTILE_SITE_KEY) with
+ * `appearance: "interaction-only"`: it resolves silently for most visitors, and only
+ * renders a visible challenge (tracked via `needsInteraction`) when Cloudflare decides
+ * the traffic is risky enough to require it.
  */
 export function useInvisibleTurnstile() {
   const ref = useRef<TurnstileInstance>(null);
   const resolveRef = useRef<((token: string) => void) | null>(null);
   const rejectRef = useRef<((error: Error) => void) | null>(null);
+  const [needsInteraction, setNeedsInteraction] = useState(false);
 
   const getToken = useCallback(() => {
     return new Promise<string>((resolve, reject) => {
@@ -31,8 +33,10 @@ export function useInvisibleTurnstile() {
         ref.current?.reset();
       }}
       onExpire={() => ref.current?.reset()}
+      onBeforeInteractive={() => setNeedsInteraction(true)}
+      onAfterInteractive={() => setNeedsInteraction(false)}
     />
   );
 
-  return { widget, getToken };
+  return { widget, getToken, needsInteraction };
 }
