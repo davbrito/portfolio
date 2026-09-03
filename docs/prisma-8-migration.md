@@ -30,12 +30,16 @@ Both connect to the same Neon database (`DATABASE_URL`). There is no data split 
 
 ## Production DB — what actually needs to happen
 
-**Nothing manual.** Every step above that touched the live database was either:
+Everything above (`contract infer`, `db sign`, `migration plan`, `db verify`) was run against the **development** database only. Production is a separate database and has no marker yet — **`db8` will throw `Database error while reading contract marker` on its first query in prod until this is done.**
 
-- Read-only (`contract infer`, `db schema`, `db verify`, `migration plan`'s offline planning), or
-- A single marker-row write (`db sign`, `migration ref set` — the latter is a local file, doesn't touch the DB at all).
+**One-time, before this branch first deploys:**
 
-No `CREATE`/`ALTER`/`DROP` has run against the live schema at any point in this migration — the baseline migration (`migrations/app/20260903T0300_baseline`) describes the schema that was already there; it was never applied via `db migrate` because the marker already matched it (confirmed via `db migrate --show`: "Already up to date — nothing to run").
+1. Make sure prod's schema is fully caught up with Prisma 7 migrations (`prisma7 migrate deploy` against prod, same as always, if there's anything pending).
+2. Check prod's schema doesn't differ from what the v8 contract expects: `pnpm prisma db verify --db "$PROD_DATABASE_URL"`. If this reports drift, it needs to be resolved (most likely the same `@@map`/nullability/`@default(uuid(7))` corrections already made in `prisma8/contract.prisma` — see _What was done_ above — will already cover it, since prod should have the same schema as dev; but verify, don't assume).
+3. If clean, sign prod's marker: `pnpm prisma db sign --db "$PROD_DATABASE_URL"`. This only writes a marker row — no schema change.
+4. Then deploy.
+
+This is a one-time step for the first deploy of this migration. No `CREATE`/`ALTER`/`DROP` runs against prod as part of it — steps 2-3 are read-only plus a single marker-row write. Once signed, ordinary deploys don't need to repeat this.
 
 Going forward, deploy pipeline changes:
 
