@@ -1,35 +1,43 @@
-import { CurriculumDocument } from "@/components/cv/curriculum-document";
-import { getPortfolioData } from "@/data/portfolio";
-import { isBot } from "@/lib/botid/validation";
-import { renderToBuffer } from "@react-pdf/renderer";
+import { validateTurnstileToken } from "@/lib/captcha";
+import { getStorageObject } from "@/lib/storage";
 import { createFileRoute } from "@tanstack/react-router";
-import deburr from "lodash-es/deburr.js";
-import snakeCase from "lodash-es/snakeCase.js";
-import { createElement } from "react";
+import Negotiator from "negotiator";
+
+const CURRICULUM_KEYS = {
+  en: "current/cv-en.pdf",
+  es: "current/cv-es-photo.pdf",
+} as const;
+
+function pickCurriculumKey(acceptLanguage: string | null): string {
+  const negotiator = new Negotiator({ headers: { "accept-language": acceptLanguage ?? "" } });
+  const language = negotiator.language(["es", "en"]);
+  return CURRICULUM_KEYS[language as keyof typeof CURRICULUM_KEYS] ?? CURRICULUM_KEYS.es;
+}
 
 export const Route = createFileRoute("/curriculum.pdf")({
   server: {
     handlers: {
-      async GET() {
-        if (await isBot()) return new Response("Access denied.", { status: 403 });
+      async GET({ request }) {
+        const token = new URL(request.url).searchParams.get("cf_turnstile_token");
+        if (!token) return new Response("Access denied.", { status: 403 });
 
-        const data = await getPortfolioData();
-        if (!data || !data.profile.active) {
-          return new Response("Profile is not active or not found.", { status: 404 });
+        const verification = await validateTurnstileToken(token);
+        if (!verification.success) return new Response("Access denied.", { status: 403 });
+
+        const key = pickCurriculumKey(request.headers.get("accept-language"));
+
+        const upstream = await getStorageObject(key);
+        if (!upstream.ok || !upstream.body) {
+          return new Response("Curriculum not available.", { status: 502 });
         }
 
-        const filename = `curriculum-${deburr(snakeCase(data.profile.name)) || "profile"}.pdf`;
+        const filename = key.split("/").pop() ?? "curriculum.pdf";
+        const contentLength = upstream.headers.get("Content-Length");
 
-        const pdfBuffer = await renderToBuffer(
-          createElement(CurriculumDocument, { data }) as unknown as Parameters<typeof renderToBuffer>[0],
-        );
-
-        const pdfBytes = new Uint8Array(pdfBuffer);
-
-        return new Response(pdfBytes, {
+        return new Response(upstream.body, {
           headers: {
             "Content-Type": "application/pdf",
-            "Content-Length": String(pdfBytes.byteLength),
+            ...(contentLength ? { "Content-Length": contentLength } : {}),
             "Content-Disposition": `inline; filename*=UTF-8''${encodeURIComponent(filename)}`,
           },
         });
