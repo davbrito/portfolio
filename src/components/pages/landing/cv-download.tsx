@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { CircularProgress } from "@/components/ui/circular-progress";
-import { useInvisibleTurnstile } from "@/hooks/use-invisible-turnstile";
+import { useTurnstile } from "@/hooks/use-turnstile";
 import { cn } from "@/lib/utils";
 import { Download } from "lucide-react";
 import type { ComponentProps } from "react";
@@ -21,7 +21,7 @@ export function CvDownloadButton({ label, className, variant = "outline" }: CvDo
     widget: turnstileWidget,
     getToken: getTurnstileToken,
     needsInteraction: turnstileNeedsInteraction,
-  } = useInvisibleTurnstile();
+  } = useTurnstile();
 
   async function handleDownload() {
     setLoading(true);

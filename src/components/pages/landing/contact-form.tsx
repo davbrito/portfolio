@@ -1,7 +1,7 @@
 import { FormInputField, FormTextareaField } from "@/components/form-fields";
 import { Button } from "@/components/ui/button";
 import { FieldError, FieldGroup } from "@/components/ui/field";
-import { useInvisibleTurnstile } from "@/hooks/use-invisible-turnstile";
+import { useTurnstile } from "@/hooks/use-turnstile";
 import { contactFormAction } from "#/actions/index.ts";
 import { SendIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -26,7 +26,7 @@ export default function ContactForm({ profileId }: ContactFormProps) {
     setError,
   } = form;
   const error = errors.root?.message;
-  const { widget: turnstileWidget, getToken: getTurnstileToken } = useInvisibleTurnstile();
+  const { widget: turnstileWidget, getToken: getTurnstileToken } = useTurnstile();
   return (
     <>
       <div className="space-y-3 text-center">
