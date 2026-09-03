@@ -3,6 +3,9 @@ name: Run database migrations
 on:
   workflow_dispatch: {}
 
+permissions:
+  contents: read
+
 jobs:
   migrate:
     name: Deploy Prisma migrations
