@@ -83,7 +83,7 @@ export async function upsertProfile(userId: string, data: ProfilePayload) {
 }
 
 export const revalidatePortfolioPage = createServerOnlyFn(async () => {
-  const urlsToRevalidate = ["/", "/curriculum.pdf"].map((path) => new URL(path, siteUrl));
+  const urlsToRevalidate = ["/"].map((path) => new URL(path, siteUrl));
 
   for (const url of urlsToRevalidate) {
     console.log("Revalidating ISR for", url.href);

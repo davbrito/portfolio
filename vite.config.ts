@@ -37,21 +37,6 @@ export default defineConfig({
             expiration: false,
           },
         },
-        "/curriculum.pdf": {
-          isr: {
-            expiration: false,
-          },
-        },
-        // Vercel Bot Protection routes
-        "/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/a-4-a/c.js": {
-          proxy: "https://api.vercel.com/bot-protection/v1/challenge",
-        },
-        "/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/**": {
-          proxy: "https://api.vercel.com/bot-protection/v1/proxy/**",
-          headers: {
-            "X-Frame-Options": "SAMEORIGIN",
-          },
-        },
       },
     }),
   ],
