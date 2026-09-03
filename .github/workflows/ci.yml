@@ -24,9 +24,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma client
-        run: pnpm exec prisma generate
+        run: pnpm exec prisma7 generate
         env:
-          # prisma.config.ts requires this to be set, but `generate` never connects to it
+          # prisma7.config.ts requires this to be set, but `generate` never connects to it
           DATABASE_URL_UNPOOLED: "dummy"
 
       - name: Typecheck
