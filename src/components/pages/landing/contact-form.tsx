@@ -26,7 +26,7 @@ export default function ContactForm({ profileId }: ContactFormProps) {
     setError,
   } = form;
   const error = errors.root?.message;
-  const { widget: turnstileWidget, getToken: getTurnstileToken } = useTurnstile();
+  const { widget: turnstileWidget, getToken: getTurnstileToken } = useTurnstile({ appearance: "interaction-only" });
   return (
     <>
       <div className="space-y-3 text-center">

@@ -1,45 +1,40 @@
 import { CF_TURNSTILE_SITE_KEY } from "#/config.ts";
-import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
-import { useCallback, useRef, useState } from "react";
+import { Turnstile, type AppearanceMode, type TurnstileInstance } from "@marsidev/react-turnstile";
+import { useRef, useState } from "react";
 
-/**
- * Renders the existing managed Turnstile widget (site key CF_TURNSTILE_SITE_KEY) only once
- * `getToken` is first called. Most visitors resolve silently, but Cloudflare may require an
- * interactive challenge, tracked via `needsInteraction` so the caller can surface it (e.g. in
- * a popup) instead of leaving it floating invisibly in the layout.
- */
-export function useTurnstile() {
-  const [mounted, setMounted] = useState(false);
+interface UseTurnstileOptions {
+  appearance?: AppearanceMode;
+  /** Called every time the widget resolves a token (including automatically, on mount/reset). */
+  onSuccess?: (token: string) => void;
+  /** Called when the widget fails to validate (network error or challenge failure). */
+  onError?: () => void;
+}
+
+export function useTurnstile({ onSuccess, onError, appearance }: UseTurnstileOptions = {}) {
   const ref = useRef<TurnstileInstance>(null);
-  const readyRef = useRef<(() => void) | null>(null);
   const [needsInteraction, setNeedsInteraction] = useState(false);
 
-  const getToken = useCallback(async () => {
-    if (!ref.current) {
-      await new Promise<void>((resolve) => {
-        readyRef.current = resolve;
-        setMounted(true);
-      });
-    } else {
-      // Tokens are single-use: get a fresh one on every subsequent call.
-      ref.current.reset();
-    }
-
+  const getToken = async () => {
     return ref.current!.getResponsePromise();
-  }, []);
+  };
 
-  const widget = mounted ? (
+  const reset = () => ref.current?.reset();
+
+  const widget = (
     <Turnstile
       ref={ref}
       siteKey={CF_TURNSTILE_SITE_KEY}
-      options={{ size: "invisible", appearance: "interaction-only", execution: "render" }}
-      onWidgetLoad={() => readyRef.current?.()}
-      onError={() => ref.current?.reset()}
+      onSuccess={onSuccess}
+      onError={() => {
+        ref.current?.reset();
+        onError?.();
+      }}
+      options={{ appearance }}
       onExpire={() => ref.current?.reset()}
       onBeforeInteractive={() => setNeedsInteraction(true)}
       onAfterInteractive={() => setNeedsInteraction(false)}
     />
-  ) : null;
+  );
 
-  return { widget, getToken, needsInteraction };
+  return { widget, getToken, reset, needsInteraction };
 }

@@ -1,12 +1,18 @@
 "use client";
 
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { CircularProgress } from "@/components/ui/circular-progress";
 import { useTurnstile } from "@/hooks/use-turnstile";
-import { cn } from "@/lib/utils";
 import { Download } from "lucide-react";
-import type { ComponentProps } from "react";
-import { useState } from "react";
+import type { ComponentProps, MouseEvent } from "react";
+import { useRef, useState } from "react";
 
 interface CvDownloadButtonProps {
   label: string;
@@ -16,48 +22,43 @@ interface CvDownloadButtonProps {
 
 export function CvDownloadButton({ label, className, variant = "outline" }: CvDownloadButtonProps) {
   const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState<number | null>(null);
-  const {
-    widget: turnstileWidget,
-    getToken: getTurnstileToken,
-    needsInteraction: turnstileNeedsInteraction,
-  } = useTurnstile();
+  const openInNewTabRef = useRef(false);
 
-  async function handleDownload() {
+  const { widget: turnstileWidget, reset: resetTurnstile } = useTurnstile({
+    onSuccess: (token) => {
+      void startDownload(token, openInNewTabRef.current);
+    },
+    onError: () => {
+      setLoading(false);
+    },
+  });
+
+  function handleDownload(event: MouseEvent<HTMLButtonElement>) {
+    // Ctrl/Cmd/Shift+click or a middle-click (auxclick, button 1) should open the CV in a
+    // new tab, like a regular link. Ignore other auxiliary buttons (e.g. right-click).
+    if (event.type === "auxclick" && event.button !== 1) return;
+
+    openInNewTabRef.current = event.ctrlKey || event.metaKey || event.shiftKey || event.button === 1;
     setLoading(true);
-    setProgress(null);
+    resetTurnstile();
+  }
 
+  async function startDownload(turnstileToken: string, openInNewTab: boolean) {
     try {
-      const turnstileToken = await getTurnstileToken();
-      const res = await fetch(`/curriculum.pdf?cf_turnstile_token=${encodeURIComponent(turnstileToken)}`);
-      if (!res.ok) throw new Error(`Error ${res.status}`);
+      const url = `/curriculum.pdf?cf_turnstile_token=${encodeURIComponent(turnstileToken)}`;
 
-      const contentLength = Number(res.headers.get("Content-Length"));
-      if (contentLength > 0) setProgress(0);
-
-      if (!res.body) {
-        const blob = await res.blob();
-        downloadBlob(blob, res);
+      if (openInNewTab) {
+        window.open(url, "_blank", "noopener,noreferrer");
         return;
       }
 
-      const chunks: BlobPart[] = [];
-      let receivedLength = 0;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`Error ${res.status}`);
 
-      for await (const chunk of res.body) {
-        chunks.push(chunk);
-        receivedLength += chunk.length;
-        if (contentLength > 0) {
-          setProgress(Math.round((receivedLength / contentLength) * 100));
-        }
-      }
-
-      setProgress(100);
-      const blob = new Blob(chunks, { type: "application/pdf" });
+      const blob = await res.blob();
       downloadBlob(blob, res);
     } finally {
       setLoading(false);
-      setProgress(null);
     }
   }
 
@@ -74,26 +75,28 @@ export function CvDownloadButton({ label, className, variant = "outline" }: CvDo
 
   return (
     <>
-      <div
-        className={cn(
-          "fixed inset-0 z-50 items-center justify-center bg-black/10 p-4 supports-backdrop-filter:backdrop-blur-xs",
-          turnstileNeedsInteraction ? "flex" : "hidden",
-        )}
-      >
-        <div className="grid w-full max-w-[calc(100%-2rem)] gap-3 rounded-none bg-popover p-4 text-xs/relaxed text-popover-foreground ring-1 ring-foreground/10 sm:max-w-sm">
-          <p className="text-sm font-medium">Verificación de seguridad</p>
-          <p className="text-muted-foreground text-xs/relaxed">
-            Confirma que eres humano para continuar con la descarga.
-          </p>
+      <AlertDialog open={loading}>
+        <AlertDialogContent size="sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Verificación de seguridad</AlertDialogTitle>
+            <AlertDialogDescription>Confirma que eres humano para continuar con la descarga.</AlertDialogDescription>
+          </AlertDialogHeader>
           <div className="flex justify-center">{turnstileWidget}</div>
-        </div>
-      </div>
-      <Button type="button" variant={variant} className={className} onClick={handleDownload} disabled={loading}>
+        </AlertDialogContent>
+      </AlertDialog>
+      <Button
+        type="button"
+        variant={variant}
+        className={className}
+        onClick={handleDownload}
+        onAuxClick={handleDownload}
+        disabled={loading}
+      >
         <Download className="h-4 w-4" />
         <span className="ml-2">{loading ? "Descargando" : label}</span>
         {loading && (
           <span className="ml-3 inline-flex h-5 w-5 items-center justify-center">
-            <CircularProgress progress={progress} />
+            <CircularProgress progress={null} />
           </span>
         )}
       </Button>
