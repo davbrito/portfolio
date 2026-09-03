@@ -74,7 +74,7 @@ export async function deobfuscateLink(el: HTMLElement, keyBase64: string) {
   el.removeAttribute("data-ob");
 
   // Get the encrypted value from the target attribute
-  let encryptedValue = "";
+  let encryptedValue: string;
   if (targetAttr === "innerText") {
     encryptedValue = el.innerText;
   } else {

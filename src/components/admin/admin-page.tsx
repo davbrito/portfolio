@@ -7,7 +7,6 @@ import { SecuritySettings } from "../auth/settings/security/security-settings";
 import { Skeleton } from "../ui/skeleton";
 import { MessagesSection } from "./messages";
 import { ProfileSettings } from "./profile-settings";
-import { useNavigate, useSearch } from "@tanstack/react-router";
 
 export default function AdminPage({ tab, onChangeTab }: { tab: string; onChangeTab: (tab: string) => void }) {
   return (
