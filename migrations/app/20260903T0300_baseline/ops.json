@@ -1,0 +1,1135 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.Experience",
+    "label": "Create table \"Experience\"",
+    "summary": "Creates table \"Experience\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Experience"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Experience\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Experience\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Experience\"",
+        "sql": "CREATE TABLE \"public\".\"Experience\" (\n  \"company\" text NOT NULL,\n  \"highlights\" text[],\n  \"id\" uuid NOT NULL,\n  \"location\" text NOT NULL,\n  \"period\" text NOT NULL,\n  \"profileId\" text NOT NULL,\n  \"title\" text NOT NULL,\n  CONSTRAINT \"Experience_pkey\" PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Experience\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Experience\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Messages",
+    "label": "Create table \"Messages\"",
+    "summary": "Creates table \"Messages\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Messages"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Messages\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Messages\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Messages\"",
+        "sql": "CREATE TABLE \"public\".\"Messages\" (\n  \"createdAt\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"message\" text NOT NULL,\n  \"name\" text NOT NULL,\n  \"profileId\" text NOT NULL,\n  \"readAt\" timestamp(3),\n  \"subject\" text NOT NULL,\n  CONSTRAINT \"Messages_pkey\" PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Messages\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Messages\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Profile",
+    "label": "Create table \"Profile\"",
+    "summary": "Creates table \"Profile\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Profile"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Profile\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Profile\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Profile\"",
+        "sql": "CREATE TABLE \"public\".\"Profile\" (\n  \"aboutImage\" text,\n  \"aboutImageAlt\" text DEFAULT '' NOT NULL,\n  \"aboutText\" text DEFAULT '' NOT NULL,\n  \"active\" bool DEFAULT true NOT NULL,\n  \"brief\" text DEFAULT '' NOT NULL,\n  \"description\" text DEFAULT '' NOT NULL,\n  \"email\" text,\n  \"experience\" text DEFAULT '' NOT NULL,\n  \"githubUrl\" text,\n  \"linkedinUrl\" text,\n  \"location\" text DEFAULT '' NOT NULL,\n  \"name\" text DEFAULT '' NOT NULL,\n  \"title\" text DEFAULT '' NOT NULL,\n  \"userId\" text NOT NULL,\n  CONSTRAINT \"Profile_pkey\" PRIMARY KEY (\"userId\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Profile\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Profile\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Proyects",
+    "label": "Create table \"Proyects\"",
+    "summary": "Creates table \"Proyects\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Proyects"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Proyects\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Proyects\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Proyects\"",
+        "sql": "CREATE TABLE \"public\".\"Proyects\" (\n  \"description\" text NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"image\" text,\n  \"imageAlt\" text,\n  \"order\" int4 DEFAULT 0 NOT NULL,\n  \"profileId\" text NOT NULL,\n  \"repoUrl\" text,\n  \"tags\" text[],\n  \"title\" text NOT NULL,\n  \"url\" text,\n  CONSTRAINT \"Proyects_pkey\" PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Proyects\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Proyects\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Skills",
+    "label": "Create table \"Skills\"",
+    "summary": "Creates table \"Skills\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Skills"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Skills\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Skills\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Skills\"",
+        "sql": "CREATE TABLE \"public\".\"Skills\" (\n  \"group\" text NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"level\" text NOT NULL,\n  \"name\" text NOT NULL,\n  \"profileId\" text NOT NULL,\n  CONSTRAINT \"Skills_pkey\" PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Skills\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Skills\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.accounts",
+    "label": "Create table \"accounts\"",
+    "summary": "Creates table \"accounts\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "accounts"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"accounts\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"accounts\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"accounts\"",
+        "sql": "CREATE TABLE \"public\".\"accounts\" (\n  \"accessToken\" text,\n  \"accessTokenExpiresAt\" timestamp(3),\n  \"accountId\" text NOT NULL,\n  \"createdAt\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"idToken\" text,\n  \"issuer\" text NOT NULL,\n  \"password\" text,\n  \"providerId\" text NOT NULL,\n  \"refreshToken\" text,\n  \"refreshTokenExpiresAt\" timestamp(3),\n  \"scope\" text,\n  \"updatedAt\" timestamp(3) NOT NULL,\n  \"userId\" text NOT NULL,\n  CONSTRAINT \"accounts_pkey\" PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"accounts\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"accounts\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.passkeys",
+    "label": "Create table \"passkeys\"",
+    "summary": "Creates table \"passkeys\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "passkeys"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"passkeys\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"passkeys\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"passkeys\"",
+        "sql": "CREATE TABLE \"public\".\"passkeys\" (\n  \"aaguid\" text,\n  \"backedUp\" bool NOT NULL,\n  \"counter\" int4 NOT NULL,\n  \"createdAt\" timestamp(3),\n  \"credentialID\" text NOT NULL,\n  \"deviceType\" text NOT NULL,\n  \"id\" text NOT NULL,\n  \"name\" text,\n  \"publicKey\" text NOT NULL,\n  \"transports\" text,\n  \"userId\" text NOT NULL,\n  CONSTRAINT \"passkeys_pkey\" PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"passkeys\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"passkeys\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.rateLimits",
+    "label": "Create table \"rateLimits\"",
+    "summary": "Creates table \"rateLimits\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "rateLimits"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"rateLimits\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"rateLimits\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"rateLimits\"",
+        "sql": "CREATE TABLE \"public\".\"rateLimits\" (\n  \"count\" int4 NOT NULL,\n  \"id\" text NOT NULL,\n  \"key\" text NOT NULL,\n  \"lastRequest\" int8 NOT NULL,\n  CONSTRAINT \"rateLimits_pkey\" PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"rateLimits\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"rateLimits\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.sessions",
+    "label": "Create table \"sessions\"",
+    "summary": "Creates table \"sessions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "sessions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"sessions\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"sessions\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"sessions\"",
+        "sql": "CREATE TABLE \"public\".\"sessions\" (\n  \"createdAt\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"expiresAt\" timestamp(3) NOT NULL,\n  \"id\" text NOT NULL,\n  \"ipAddress\" text,\n  \"token\" text NOT NULL,\n  \"updatedAt\" timestamp(3) NOT NULL,\n  \"userAgent\" text,\n  \"userId\" text NOT NULL,\n  CONSTRAINT \"sessions_pkey\" PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"sessions\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"sessions\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.users",
+    "label": "Create table \"users\"",
+    "summary": "Creates table \"users\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"users\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"users\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"users\"",
+        "sql": "CREATE TABLE \"public\".\"users\" (\n  \"createdAt\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"emailVerified\" bool DEFAULT false NOT NULL,\n  \"id\" text NOT NULL,\n  \"image\" text,\n  \"name\" text NOT NULL,\n  \"updatedAt\" timestamp(3) NOT NULL,\n  CONSTRAINT \"users_pkey\" PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"users\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"users\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.verifications",
+    "label": "Create table \"verifications\"",
+    "summary": "Creates table \"verifications\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "verifications"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"verifications\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"verifications\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"verifications\"",
+        "sql": "CREATE TABLE \"public\".\"verifications\" (\n  \"createdAt\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"expiresAt\" timestamp(3) NOT NULL,\n  \"id\" text NOT NULL,\n  \"identifier\" text NOT NULL,\n  \"updatedAt\" timestamp(3) NOT NULL,\n  \"value\" text NOT NULL,\n  CONSTRAINT \"verifications_pkey\" PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"verifications\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"verifications\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.accounts.accounts_issuer_accountId_uidx",
+    "label": "Create index \"accounts_issuer_accountId_uidx\" on \"accounts\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "accounts_issuer_accountId_uidx",
+        "table": "accounts"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"accounts_issuer_accountId_uidx\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"accounts_issuer_accountId_uidx\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"accounts_issuer_accountId_uidx\"",
+        "sql": "CREATE UNIQUE INDEX \"accounts_issuer_accountId_uidx\" ON \"public\".\"accounts\" (\"issuer\", \"accountId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"accounts_issuer_accountId_uidx\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"accounts_issuer_accountId_uidx\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.accounts.accounts_userId_idx",
+    "label": "Create index \"accounts_userId_idx\" on \"accounts\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "accounts_userId_idx",
+        "table": "accounts"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"accounts_userId_idx\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"accounts_userId_idx\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"accounts_userId_idx\"",
+        "sql": "CREATE INDEX \"accounts_userId_idx\" ON \"public\".\"accounts\" (\"userId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"accounts_userId_idx\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"accounts_userId_idx\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.passkeys.passkeys_credentialID_idx",
+    "label": "Create index \"passkeys_credentialID_idx\" on \"passkeys\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "passkeys_credentialID_idx",
+        "table": "passkeys"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"passkeys_credentialID_idx\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"passkeys_credentialID_idx\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"passkeys_credentialID_idx\"",
+        "sql": "CREATE INDEX \"passkeys_credentialID_idx\" ON \"public\".\"passkeys\" (\"credentialID\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"passkeys_credentialID_idx\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"passkeys_credentialID_idx\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.passkeys.passkeys_userId_idx",
+    "label": "Create index \"passkeys_userId_idx\" on \"passkeys\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "passkeys_userId_idx",
+        "table": "passkeys"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"passkeys_userId_idx\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"passkeys_userId_idx\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"passkeys_userId_idx\"",
+        "sql": "CREATE INDEX \"passkeys_userId_idx\" ON \"public\".\"passkeys\" (\"userId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"passkeys_userId_idx\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"passkeys_userId_idx\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.rateLimits.rateLimits_key_key",
+    "label": "Create index \"rateLimits_key_key\" on \"rateLimits\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "rateLimits_key_key",
+        "table": "rateLimits"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"rateLimits_key_key\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"rateLimits_key_key\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"rateLimits_key_key\"",
+        "sql": "CREATE UNIQUE INDEX \"rateLimits_key_key\" ON \"public\".\"rateLimits\" (\"key\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"rateLimits_key_key\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"rateLimits_key_key\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.sessions.sessions_token_key",
+    "label": "Create index \"sessions_token_key\" on \"sessions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "sessions_token_key",
+        "table": "sessions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"sessions_token_key\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"sessions_token_key\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"sessions_token_key\"",
+        "sql": "CREATE UNIQUE INDEX \"sessions_token_key\" ON \"public\".\"sessions\" (\"token\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"sessions_token_key\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"sessions_token_key\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.sessions.sessions_userId_idx",
+    "label": "Create index \"sessions_userId_idx\" on \"sessions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "sessions_userId_idx",
+        "table": "sessions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"sessions_userId_idx\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"sessions_userId_idx\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"sessions_userId_idx\"",
+        "sql": "CREATE INDEX \"sessions_userId_idx\" ON \"public\".\"sessions\" (\"userId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"sessions_userId_idx\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"sessions_userId_idx\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.users.users_email_key",
+    "label": "Create index \"users_email_key\" on \"users\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "users_email_key",
+        "table": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"users_email_key\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"users_email_key\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"users_email_key\"",
+        "sql": "CREATE UNIQUE INDEX \"users_email_key\" ON \"public\".\"users\" (\"email\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"users_email_key\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"users_email_key\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.verifications.verifications_identifier_idx",
+    "label": "Create index \"verifications_identifier_idx\" on \"verifications\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "verifications_identifier_idx",
+        "table": "verifications"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"verifications_identifier_idx\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"verifications_identifier_idx\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"verifications_identifier_idx\"",
+        "sql": "CREATE INDEX \"verifications_identifier_idx\" ON \"public\".\"verifications\" (\"identifier\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"verifications_identifier_idx\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"verifications_identifier_idx\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Experience.Experience_profileId_fkey",
+    "label": "Add foreign key \"Experience_profileId_fkey\" on \"Experience\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Experience_profileId_fkey",
+        "table": "Experience"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Experience_profileId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Experience_profileId_fkey",
+          "public",
+          "\"public\".\"Experience\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Experience_profileId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Experience\"\nADD CONSTRAINT \"Experience_profileId_fkey\"\nFOREIGN KEY (\"profileId\")\nREFERENCES \"public\".\"Profile\" (\"userId\")\nON DELETE CASCADE\nON UPDATE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Experience_profileId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Experience_profileId_fkey",
+          "public",
+          "\"public\".\"Experience\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Messages.Messages_profileId_fkey",
+    "label": "Add foreign key \"Messages_profileId_fkey\" on \"Messages\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Messages_profileId_fkey",
+        "table": "Messages"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Messages_profileId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Messages_profileId_fkey",
+          "public",
+          "\"public\".\"Messages\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Messages_profileId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Messages\"\nADD CONSTRAINT \"Messages_profileId_fkey\"\nFOREIGN KEY (\"profileId\")\nREFERENCES \"public\".\"Profile\" (\"userId\")\nON DELETE CASCADE\nON UPDATE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Messages_profileId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Messages_profileId_fkey",
+          "public",
+          "\"public\".\"Messages\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Profile.Profile_userId_fkey",
+    "label": "Add foreign key \"Profile_userId_fkey\" on \"Profile\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Profile_userId_fkey",
+        "table": "Profile"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Profile_userId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Profile_userId_fkey",
+          "public",
+          "\"public\".\"Profile\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Profile_userId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Profile\"\nADD CONSTRAINT \"Profile_userId_fkey\"\nFOREIGN KEY (\"userId\")\nREFERENCES \"public\".\"users\" (\"id\")\nON DELETE CASCADE\nON UPDATE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Profile_userId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Profile_userId_fkey",
+          "public",
+          "\"public\".\"Profile\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Proyects.Proyects_profileId_fkey",
+    "label": "Add foreign key \"Proyects_profileId_fkey\" on \"Proyects\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Proyects_profileId_fkey",
+        "table": "Proyects"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Proyects_profileId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Proyects_profileId_fkey",
+          "public",
+          "\"public\".\"Proyects\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Proyects_profileId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Proyects\"\nADD CONSTRAINT \"Proyects_profileId_fkey\"\nFOREIGN KEY (\"profileId\")\nREFERENCES \"public\".\"Profile\" (\"userId\")\nON DELETE CASCADE\nON UPDATE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Proyects_profileId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Proyects_profileId_fkey",
+          "public",
+          "\"public\".\"Proyects\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Skills.Skills_profileId_fkey",
+    "label": "Add foreign key \"Skills_profileId_fkey\" on \"Skills\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Skills_profileId_fkey",
+        "table": "Skills"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Skills_profileId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Skills_profileId_fkey",
+          "public",
+          "\"public\".\"Skills\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Skills_profileId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Skills\"\nADD CONSTRAINT \"Skills_profileId_fkey\"\nFOREIGN KEY (\"profileId\")\nREFERENCES \"public\".\"Profile\" (\"userId\")\nON DELETE CASCADE\nON UPDATE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Skills_profileId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Skills_profileId_fkey",
+          "public",
+          "\"public\".\"Skills\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.accounts.accounts_userId_fkey",
+    "label": "Add foreign key \"accounts_userId_fkey\" on \"accounts\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "accounts_userId_fkey",
+        "table": "accounts"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"accounts_userId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "accounts_userId_fkey",
+          "public",
+          "\"public\".\"accounts\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"accounts_userId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"accounts\"\nADD CONSTRAINT \"accounts_userId_fkey\"\nFOREIGN KEY (\"userId\")\nREFERENCES \"public\".\"users\" (\"id\")\nON DELETE CASCADE\nON UPDATE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"accounts_userId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "accounts_userId_fkey",
+          "public",
+          "\"public\".\"accounts\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.passkeys.passkeys_userId_fkey",
+    "label": "Add foreign key \"passkeys_userId_fkey\" on \"passkeys\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "passkeys_userId_fkey",
+        "table": "passkeys"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"passkeys_userId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "passkeys_userId_fkey",
+          "public",
+          "\"public\".\"passkeys\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"passkeys_userId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"passkeys\"\nADD CONSTRAINT \"passkeys_userId_fkey\"\nFOREIGN KEY (\"userId\")\nREFERENCES \"public\".\"users\" (\"id\")\nON DELETE CASCADE\nON UPDATE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"passkeys_userId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "passkeys_userId_fkey",
+          "public",
+          "\"public\".\"passkeys\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.sessions.sessions_userId_fkey",
+    "label": "Add foreign key \"sessions_userId_fkey\" on \"sessions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "sessions_userId_fkey",
+        "table": "sessions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"sessions_userId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "sessions_userId_fkey",
+          "public",
+          "\"public\".\"sessions\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"sessions_userId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"sessions\"\nADD CONSTRAINT \"sessions_userId_fkey\"\nFOREIGN KEY (\"userId\")\nREFERENCES \"public\".\"users\" (\"id\")\nON DELETE CASCADE\nON UPDATE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"sessions_userId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "sessions_userId_fkey",
+          "public",
+          "\"public\".\"sessions\""
+        ]
+      }
+    ]
+  }
+]

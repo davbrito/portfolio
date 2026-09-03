@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format:check": "prettier --check .",
-    "migrate:deploy": "prisma7 migrate deploy",
+    "migrate:deploy": "prisma db migrate",
     "contract:emit": "prisma contract emit"
   },
   "dependencies": {
