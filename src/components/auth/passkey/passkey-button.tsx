@@ -40,7 +40,7 @@ export function PasskeyButton({ view }: PasskeyButtonProps) {
   // this button is shown.
   usePasskeyAutoFill(authClient, {
     enabled: view !== "signUp",
-    onSuccess: handleSuccess,
+    fetchOptions,
   });
 
   const signInMutating = useIsMutating({

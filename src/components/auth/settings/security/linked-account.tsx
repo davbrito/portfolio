@@ -1,3 +1,5 @@
+"use client";
+
 import { type AuthSocialProvider, getProviderId, getProviderName, isSessionNotFreshError } from "@better-auth-ui/core";
 import { renderProviderIcon, useAccountInfo, useAuth, useLinkSocial, useUnlinkAccount } from "@better-auth-ui/react";
 import type { Account } from "better-auth";

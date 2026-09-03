@@ -1,5 +1,3 @@
-"use client";
-
 import { useAuth, useSendVerificationEmail } from "@better-auth-ui/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -39,8 +37,6 @@ export function VerifyEmail({ className }: VerifyEmailProps) {
   const [cooldown, setCooldown] = useState(RESEND_COOLDOWN_SECONDS);
 
   useEffect(() => {
-    // Re-read after hydration: the initial `useState` value must match the
-    // server-rendered markup, so the real value is only safe to read here.
     setEmail(sessionStorage.getItem("better-auth-ui.verify-email") ?? "");
   }, []);
 

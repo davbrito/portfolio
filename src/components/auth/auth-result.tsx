@@ -1,5 +1,3 @@
-"use client";
-
 import { type AuthResult, getAuthResultMessage, parseAuthResult } from "@better-auth-ui/core";
 import { useAuth } from "@better-auth-ui/react";
 import { CircleCheckIcon, CircleXIcon, TriangleAlertIcon } from "lucide-react";
