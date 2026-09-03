@@ -12,9 +12,6 @@ interface CvDownloadButtonProps {
   variant?: ComponentProps<typeof Button>["variant"];
 }
 
-const RADIUS = 8;
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
-
 export function CvDownloadButton({ label, className, variant = "outline" }: CvDownloadButtonProps) {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState<number | null>(null);
@@ -30,9 +27,7 @@ export function CvDownloadButton({ label, className, variant = "outline" }: CvDo
       const contentLength = Number(res.headers.get("Content-Length"));
       if (contentLength > 0) setProgress(0);
 
-      const reader = res.body?.getReader();
-
-      if (!reader) {
+      if (!res.body) {
         const blob = await res.blob();
         downloadBlob(blob, res);
         return;
@@ -41,18 +36,14 @@ export function CvDownloadButton({ label, className, variant = "outline" }: CvDo
       const chunks: BlobPart[] = [];
       let receivedLength = 0;
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        if (value) {
-          chunks.push(value);
-          receivedLength += value.length;
-          if (contentLength > 0) {
-            setProgress(Math.round((receivedLength / contentLength) * 100));
-          }
+      for await (const chunk of res.body) {
+        chunks.push(chunk);
+        receivedLength += chunk.length;
+        if (contentLength > 0) {
+          setProgress(Math.round((receivedLength / contentLength) * 100));
         }
       }
+
       setProgress(100);
       const blob = new Blob(chunks, { type: "application/pdf" });
       downloadBlob(blob, res);
@@ -72,8 +63,6 @@ export function CvDownloadButton({ label, className, variant = "outline" }: CvDo
     a.click();
     URL.revokeObjectURL(url);
   }
-
-  const progressOffset = progress !== null ? CIRCUMFERENCE - (CIRCUMFERENCE * progress) / 100 : 0;
 
   return (
     <Button type="button" variant={variant} className={className} onClick={handleDownload} disabled={loading}>

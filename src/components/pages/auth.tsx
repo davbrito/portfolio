@@ -1,10 +1,8 @@
 import { generateAdminSetupTokenAction } from "#/actions/index.ts";
 import { ENABLE_ADMIN_SETUP } from "#/config.ts";
-import { useEffect } from "react";
 import { Button } from "../ui/button";
 import { Auth } from "../auth/auth";
 import { viewPaths } from "@better-auth-ui/core";
-import { Navigate } from "@tanstack/react-router";
 
 export default function AuthPage({ path }: { path: string }) {
   return (
@@ -46,11 +44,4 @@ export default function AuthPage({ path }: { path: string }) {
       ) : null}
     </main>
   );
-}
-
-function RedirectToAdmin() {
-  useEffect(() => {
-    window.location.href = "/admin";
-  }, []);
-  return null;
 }
