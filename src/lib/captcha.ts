@@ -24,6 +24,16 @@ export const validateTurnstileToken = createServerOnlyFn(
       method: "POST",
       body: formData,
     });
-    return await res.json();
+    const result = await res.json();
+
+    if (!result.success) {
+      console.warn("Turnstile verification rejected:", {
+        "error-codes": result["error-codes"],
+        hostname: result.hostname,
+        ipAddress,
+      });
+    }
+
+    return result;
   },
 );

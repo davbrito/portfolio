@@ -25,12 +25,16 @@ export function useTurnstile({ onSuccess, onError, appearance }: UseTurnstileOpt
       ref={ref}
       siteKey={CF_TURNSTILE_SITE_KEY}
       onSuccess={onSuccess}
-      onError={() => {
+      onError={(error) => {
+        console.warn("Turnstile widget error:", error);
         ref.current?.reset();
         onError?.();
       }}
       options={{ appearance }}
-      onExpire={() => ref.current?.reset()}
+      onExpire={() => {
+        console.warn("Turnstile token expired");
+        ref.current?.reset();
+      }}
       onBeforeInteractive={() => setNeedsInteraction(true)}
       onAfterInteractive={() => setNeedsInteraction(false)}
     />
