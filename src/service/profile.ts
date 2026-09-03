@@ -23,13 +23,13 @@ export async function exportProfileYaml(userId: string) {
 
   if (!profile) return null;
 
-  const { userId: _userId, ...profileData } = profile;
+  const { userId: _userId, experiences, skills, proyects, ...profileData } = profile;
 
   return stringify({
     ...profileData,
-    experiences: profile.experiences.map(({ id: _id, profileId: _profileId, ...exp }) => exp),
-    skills: profile.skills.map(({ id: _id, profileId: _profileId, ...skill }) => skill),
-    projects: profile.proyects.map(({ id: _id, profileId: _profileId, ...project }) => project),
+    experiences: experiences.map(({ id: _id, profileId: _profileId, ...exp }) => exp),
+    skills: skills.map(({ id: _id, profileId: _profileId, ...skill }) => skill),
+    projects: proyects.map(({ id: _id, profileId: _profileId, ...project }) => project),
   });
 }
 
