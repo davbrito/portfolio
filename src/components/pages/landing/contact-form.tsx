@@ -94,10 +94,10 @@ export default function ContactForm({ profileId }: ContactFormProps) {
         <dl className="border-border divide-border mt-6 divide-y border-y">
           <div className="flex items-center justify-between gap-4 py-2.5">
             <dt>
-              <Mono className="text-muted-foreground">Protocolo</Mono>
+              <Mono className="text-muted-foreground">Respuesta</Mono>
             </dt>
             <dd>
-              <Mono className="text-foreground">Formulario cifrado</Mono>
+              <Mono className="text-foreground">Correo directo</Mono>
             </dd>
           </div>
           <div className="flex items-center justify-between gap-4 py-2.5">
@@ -110,7 +110,7 @@ export default function ContactForm({ profileId }: ContactFormProps) {
           </div>
           <div className="flex items-center justify-between gap-4 py-2.5">
             <dt>
-              <Mono className="text-muted-foreground">Respuesta estimada</Mono>
+              <Mono className="text-muted-foreground">Tiempo estimado</Mono>
             </dt>
             <dd>
               <Mono className="text-foreground">&lt; 48 h</Mono>
@@ -122,8 +122,7 @@ export default function ContactForm({ profileId }: ContactFormProps) {
       <div className="md:col-span-7">
         <Panel>
           <PanelHeader
-            id="LNK"
-            title="link://canal-de-contacto"
+            title="Formulario de contacto"
             meta={
               <span className="inline-flex items-center gap-2">
                 <StatusDot label={`Estado del canal: ${status}`} />

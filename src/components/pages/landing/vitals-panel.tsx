@@ -95,8 +95,7 @@ export function VitalsPanel() {
   return (
     <Panel>
       <PanelHeader
-        id="WV"
-        title="vitals://esta-sesión"
+        title="Web Vitals de esta página"
         meta={
           <span className="inline-flex items-center gap-2">
             <StatusDot label={measured > 0 ? "Midiendo" : "En espera de métricas"} idle={measured === 0} />

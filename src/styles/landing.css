@@ -13,7 +13,7 @@
   --radius: 0px;
 
   /* Rampa monocromática con temperatura fría (croma mínimo, hue 240) */
-  --carbon-900: oklch(0.148 0.008 240);
+  --carbon-900: oklch(0.138 0.008 240);
   --carbon-850: oklch(0.173 0.009 240);
   --carbon-800: oklch(0.198 0.009 240);
   --carbon-700: oklch(0.238 0.01 240);
@@ -27,7 +27,7 @@
 
   --background: var(--carbon-900);
   --foreground: var(--chalk);
-  --card: var(--carbon-850);
+  --card: var(--carbon-800);
   --card-foreground: var(--chalk);
   --popover: var(--carbon-800);
   --popover-foreground: var(--chalk);

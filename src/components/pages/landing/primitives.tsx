@@ -24,7 +24,7 @@ export function Panel({ className, ticks = true, children, ...props }: Component
   return (
     <div
       className={cn(
-        "border-border bg-card/60 relative min-w-0 border",
+        "border-border bg-card relative min-w-0 border",
         ticks && "corner-ticks corner-ticks-inset",
         className,
       )}

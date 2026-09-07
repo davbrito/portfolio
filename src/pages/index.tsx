@@ -40,7 +40,7 @@ export const Route = createFileRoute("/")({
 });
 
 const NAV_ITEMS = [
-  { href: "#perfil", label: "Perfil" },
+  { href: "#sobre-mi", label: "Sobre mí" },
   { href: "#experiencia", label: "Experiencia" },
   { href: "#stack", label: "Stack" },
   { href: "#proyectos", label: "Proyectos" },
@@ -59,11 +59,10 @@ function Index() {
   const { socialLinks, experience, technologies, profile, projects } = data;
 
   const ticker = [
-    { label: "Estado", value: "Disponible" },
+    { label: "Estado", value: "Disponible para proyectos" },
     { label: "Rol", value: profile.title },
-    { label: "Base", value: profile.location },
-    { label: "Capas", value: "Cliente · Lógica · Datos · Infra" },
-    { label: "Canal", value: "Abierto" },
+    { label: "Ubicación", value: profile.location },
+    { label: "Experiencia", value: profile.experience },
   ];
 
   return (
@@ -79,12 +78,12 @@ function Index() {
           <Hero socialLinks={socialLinks} profile={profile} />
         </section>
 
-        <section id="perfil" className="tech-reveal border-border scroll-mt-28 border-t py-12 md:py-16">
+        <section id="sobre-mi" className="tech-reveal border-border scroll-mt-28 border-t py-12 md:py-16">
           <SectionHeader
             number={1}
-            title="Perfil del operador"
-            meta="perfil/operador"
-            description="Contexto, base de operaciones y forma de trabajo."
+            title="Sobre mí"
+            meta="sobre-mi"
+            description="Quién soy, dónde estoy y cómo trabajo."
           />
           <About profile={profile} />
         </section>
@@ -92,9 +91,9 @@ function Index() {
         <section id="experiencia" className="tech-reveal border-border scroll-mt-28 border-t py-12 md:py-16">
           <SectionHeader
             number={2}
-            title="Registro de operaciones"
-            meta="registro/trayectoria"
-            description="Trayectoria por nodo: responsabilidades asumidas y resultados entregados."
+            title="Experiencia"
+            meta="experiencia"
+            description="Dónde he trabajado y qué construí en cada lugar."
           />
           <Experience experience={experience} />
         </section>
@@ -102,9 +101,9 @@ function Index() {
         <section id="stack" className="tech-reveal border-border scroll-mt-28 border-t py-12 md:py-16">
           <SectionHeader
             number={3}
-            title="Matriz de infraestructura"
-            meta="infra/capacidades"
-            description="Capacidades técnicas organizadas por capa lógica, del cliente a la infraestructura."
+            title="Stack técnico"
+            meta="stack"
+            description="Las tecnologías que uso, agrupadas por capa del sistema."
           />
           <Technologies technologies={technologies} />
         </section>
@@ -112,9 +111,9 @@ function Index() {
         <section id="proyectos" className="tech-reveal border-border scroll-mt-28 border-t py-12 md:py-16">
           <SectionHeader
             number={4}
-            title="Sistemas en catálogo"
-            meta="sistemas/fichas-tecnicas"
-            description="Cada proyecto documentado como especificación: flujo de datos, parámetros y accesos directos."
+            title="Proyectos"
+            meta="proyectos"
+            description="Qué resuelve cada proyecto, con qué está construido y dónde verlo funcionando."
           />
           <Projects projects={projects} />
         </section>
@@ -122,9 +121,9 @@ function Index() {
         <section id="contacto" className="tech-reveal border-border scroll-mt-28 border-t py-12 md:py-16">
           <SectionHeader
             number={5}
-            title="Terminal de enlace"
-            meta="link/canal-directo"
-            description="Canal directo y verificado. Sin intermediarios ni formularios genéricos."
+            title="Contacto"
+            meta="contacto"
+            description="Escríbeme y respondo con una lectura honesta de la viabilidad."
           />
           <Hydrate when={visible({ rootMargin: "400px" })}>
             <ContactForm profileId={profile.userId} />

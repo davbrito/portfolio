@@ -24,15 +24,15 @@ export default function About({ profile }: Props) {
 
         <dl className="mt-6">
           <SpecRow label="Rol" value={profile.title} />
-          <SpecRow label="Base de operaciones" value={profile.location} />
-          <SpecRow label="Tiempo en servicio" value={profile.experience} />
-          <SpecRow label="Modo" value="Remoto · Híbrido" />
+          <SpecRow label="Ubicación" value={profile.location} />
+          <SpecRow label="Experiencia" value={profile.experience} />
+          <SpecRow label="Modalidad" value="Remoto · Híbrido" />
         </dl>
       </div>
 
       <div className="md:col-span-5">
         <Panel>
-          <PanelHeader id="IMG" title="perfil/retrato" meta="400×600" />
+          <PanelHeader title="Foto" meta="400×600" />
           <div className="relative">
             <img
               src={profile.aboutImage ?? "https://placehold.co/400x600/png"}

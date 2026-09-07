@@ -13,19 +13,19 @@ const THESIS = ["Arquitecturas escalables", "Interfaces reactivas", "Sistemas ob
 
 export function Hero({ socialLinks, profile }: HeroProps) {
   const specs = [
-    { label: "Disciplina", value: profile.title },
+    { label: "Rol", value: profile.title },
     { label: "Experiencia", value: profile.experience },
     { label: "Ubicación", value: profile.location },
-    { label: "Estado", value: "Disponible" },
+    { label: "Disponibilidad", value: "Abierto a propuestas" },
   ];
 
   return (
     <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-12">
       <div className="lg:col-span-7">
         <div className="animate-fade-in-up flex items-center gap-3" style={{ animationDelay: "60ms" }}>
-          <Mono className="text-primary">00 / Perfil</Mono>
+          <Mono className="text-primary">Hola, soy</Mono>
           <span className="bg-border h-px flex-1" aria-hidden />
-          <Mono className="text-muted-foreground">Full-stack engineer</Mono>
+          <Mono className="text-muted-foreground">{profile.title}</Mono>
         </div>
 
         <h1

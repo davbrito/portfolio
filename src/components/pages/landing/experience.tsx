@@ -47,7 +47,7 @@ export function Experience({ experience }: { experience: ExperienceItem[] }) {
         className="border-border divide-border divide-y self-start border md:col-span-4"
         role="tablist"
         aria-orientation="vertical"
-        aria-label="Registro de operaciones"
+        aria-label="Empresas"
       >
         {experience.map((exp, index) => {
           const active = selected === index;
@@ -72,7 +72,7 @@ export function Experience({ experience }: { experience: ExperienceItem[] }) {
                   : "text-muted-foreground hover:bg-muted/60 hover:text-foreground border-l-transparent",
               )}
             >
-              <Mono className={active ? "text-primary" : "text-muted-foreground/70"}>NODE-{pad(index + 1)}</Mono>
+              <Mono className={active ? "text-primary" : "text-muted-foreground/70"}>{pad(index + 1)}</Mono>
               <span className="w-full truncate font-mono text-xs">{exp.company}</span>
               <Mono className="text-muted-foreground/70 truncate">{exp.period}</Mono>
             </button>
@@ -89,7 +89,7 @@ export function Experience({ experience }: { experience: ExperienceItem[] }) {
           tabIndex={0}
         >
           <Panel>
-            <PanelHeader id={`NODE-${pad(selected + 1)}`} title={`log://${item.company}`} meta={item.period} />
+            <PanelHeader id={pad(selected + 1)} title={item.company} meta={item.period} />
 
             <div className="border-border border-b px-4 py-4">
               <h3 className="text-foreground text-lg font-semibold tracking-[-0.01em]">{item.title}</h3>
