@@ -1,9 +1,9 @@
 /* ============================================================
    Landing — dirección de arte neoutilitaria high-tech.
 
-   Paleta monocromática (carbón → blanco de alto contraste) con un
-   único acento eléctrico reservado a indicadores, estados activos y
-   puntos de interacción (regla 95/5).
+   Paleta monocromática fría (carbón azulado → blanco de alto contraste)
+   con un único acento eléctrico —cian/azul— reservado a indicadores,
+   estados activos y puntos de interacción (regla 95/5).
 
    Todo vive bajo `.landing-shell` para que el panel de administración
    conserve el tema de la aplicación sin tocar `base.css`.
@@ -12,18 +12,18 @@
 .landing-shell {
   --radius: 0px;
 
-  /* Rampa monocromática */
-  --carbon-900: oklch(0.115 0 0);
-  --carbon-850: oklch(0.1375 0 0);
-  --carbon-800: oklch(0.16 0 0);
-  --carbon-700: oklch(0.2 0 0);
-  --carbon-600: oklch(0.245 0 0);
-  --carbon-500: oklch(0.3 0 0);
-  --graphite: oklch(0.64 0 0);
-  --chalk: oklch(0.97 0 0);
+  /* Rampa monocromática con temperatura fría (croma mínimo, hue 240) */
+  --carbon-900: oklch(0.148 0.008 240);
+  --carbon-850: oklch(0.173 0.009 240);
+  --carbon-800: oklch(0.198 0.009 240);
+  --carbon-700: oklch(0.238 0.01 240);
+  --carbon-600: oklch(0.285 0.011 240);
+  --carbon-500: oklch(0.34 0.012 240);
+  --graphite: oklch(0.685 0.014 240);
+  --chalk: oklch(0.97 0.004 240);
 
   /* Acento eléctrico — 5% de la superficie, 100% de la señal */
-  --electric: oklch(0.87 0.235 129);
+  --electric: oklch(0.8 0.155 222);
 
   --background: var(--carbon-900);
   --foreground: var(--chalk);
@@ -284,4 +284,26 @@
   opacity: 0.2;
   animation: none;
   transform: scale(1);
+}
+
+/* --- Entrada de banderas en el eco de terminal ---------------- */
+@keyframes flag-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-flag-in {
+  animation: flag-in 180ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-flag-in {
+    animation: none;
+  }
 }

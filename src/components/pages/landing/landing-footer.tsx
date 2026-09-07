@@ -30,11 +30,10 @@ export default function LandingFooter({ socialLinks, name }: Props) {
           <Mono className="text-muted-foreground">Build · TanStack Start · React 19 · Tailwind 4 · Prisma</Mono>
         </div>
 
-        <div className="flex flex-col gap-2 py-5 md:flex-row md:items-center md:justify-between">
+        <div className="py-5">
           <Mono className="text-muted-foreground">
             © {YEAR} {name} · Todos los derechos reservados
           </Mono>
-          <Mono className="text-muted-foreground/70">Diseñado y desarrollado en código, no en plantilla</Mono>
         </div>
       </div>
     </footer>

@@ -1,12 +1,14 @@
 import { Mono, Panel, PanelHeader, StatusDot } from "@/components/pages/landing/primitives";
+import { TerminalEcho } from "@/components/pages/landing/terminal-echo";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useTurnstile } from "@/hooks/use-turnstile";
 import { cn } from "@/lib/utils";
 import { contactFormAction } from "#/actions/index.ts";
 import { SendIcon } from "lucide-react";
-import type { ReactNode } from "react";
-import { useForm } from "react-hook-form";
+import type { FocusEvent, ReactNode } from "react";
+import { useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 
 interface ContactFormProps {
   profileId: string;
@@ -59,14 +61,30 @@ export default function ContactForm({ profileId }: ContactFormProps) {
     formState: { errors, isSubmitting, isSubmitSuccessful },
     setError,
   } = form;
+  const values = useWatch({ control: form.control });
+  const [activeField, setActiveField] = useState<string | null>(null);
   const error = errors.root?.message;
+
+  // El eco de terminal necesita saber en qué campo está el cursor.
+  const bind = (name: "name" | "email" | "subject" | "message") => {
+    const registered = register(name);
+
+    return {
+      ...registered,
+      onFocus: () => setActiveField(name),
+      onBlur: (event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setActiveField((current) => (current === name ? null : current));
+        return registered.onBlur(event);
+      },
+    };
+  };
   const { widget: turnstileWidget, getToken: getTurnstileToken } = useTurnstile({ appearance: "interaction-only" });
 
   const status = isSubmitting ? "Transmitiendo" : error ? "Error" : isSubmitSuccessful ? "Entregado" : "En espera";
 
   return (
     <div className="grid gap-8 md:grid-cols-12 md:gap-10">
-      <div className="md:col-span-5">
+      <div className="self-start md:sticky md:top-32 md:col-span-5">
         <p className="text-muted-foreground text-sm leading-relaxed text-pretty">
           Canal abierto para propuestas de proyecto, colaboraciones y consultas técnicas. Los mensajes llegan
           directamente a mi bandeja: describe el contexto, el alcance y las restricciones y respondo con una lectura
@@ -99,8 +117,6 @@ export default function ContactForm({ profileId }: ContactFormProps) {
             </dd>
           </div>
         </dl>
-
-        <p className="text-muted-foreground/70 caret-blink mt-6 font-mono text-[11px]">$ init canal --seguro</p>
       </div>
 
       <div className="md:col-span-7">
@@ -151,7 +167,7 @@ export default function ContactForm({ profileId }: ContactFormProps) {
                   placeholder="Pedro Pérez"
                   aria-invalid={!!errors.name}
                   className={fieldClass}
-                  {...register("name")}
+                  {...bind("name")}
                 />
               </TerminalField>
               <TerminalField id="contact-email" label="Email" error={errors.email?.message}>
@@ -160,7 +176,7 @@ export default function ContactForm({ profileId }: ContactFormProps) {
                   placeholder="pepe@ejemplo.com"
                   aria-invalid={!!errors.email}
                   className={fieldClass}
-                  {...register("email")}
+                  {...bind("email")}
                 />
               </TerminalField>
             </div>
@@ -172,7 +188,7 @@ export default function ContactForm({ profileId }: ContactFormProps) {
                 autoComplete="off"
                 aria-invalid={!!errors.subject}
                 className={fieldClass}
-                {...register("subject")}
+                {...bind("subject")}
               />
             </TerminalField>
 
@@ -183,9 +199,19 @@ export default function ContactForm({ profileId }: ContactFormProps) {
                 rows={5}
                 aria-invalid={!!errors.message}
                 className={cn(fieldClass, "h-auto min-h-32 py-2 leading-relaxed")}
-                {...register("message")}
+                {...bind("message")}
               />
             </TerminalField>
+
+            <TerminalEcho
+              activeField={activeField}
+              flags={[
+                { field: "name", flag: "name", value: values.name ?? "" },
+                { field: "email", flag: "email", value: values.email ?? "" },
+                { field: "subject", flag: "subject", value: values.subject ?? "" },
+                { field: "message", flag: "message", value: values.message ?? "" },
+              ]}
+            />
 
             {turnstileWidget}
 

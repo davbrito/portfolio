@@ -1,5 +1,5 @@
 import { icons } from "@/components/icons";
-import { OpsConsole } from "@/components/pages/landing/ops-console";
+import { VitalsPanel } from "@/components/pages/landing/vitals-panel";
 import { Mono } from "@/components/pages/landing/primitives";
 import type { Profile, SocialLink } from "@/data/portfolio";
 import { ArrowRightIcon } from "lucide-react";
@@ -111,7 +111,7 @@ export function Hero({ socialLinks, profile }: HeroProps) {
       </div>
 
       <div className="animate-fade-in-up lg:col-span-5" style={{ animationDelay: "260ms" }}>
-        <OpsConsole />
+        <VitalsPanel />
       </div>
     </div>
   );

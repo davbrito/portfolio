@@ -8,7 +8,6 @@ import LandingFooter from "@/components/pages/landing/landing-footer";
 import Projects from "@/components/pages/landing/projects";
 import { SectionHeader } from "@/components/pages/landing/section-header";
 import { TelemetryBar } from "@/components/pages/landing/telemetry-bar";
-import { pad } from "@/components/pages/landing/tech-layers";
 import Technologies from "@/components/pages/landing/technologies";
 import { getPortfolioData } from "@/data/portfolio";
 import { setupObfuscatedLinks } from "@/lib/obfuscation";
@@ -59,14 +58,11 @@ function Index() {
 
   const { socialLinks, experience, technologies, profile, projects } = data;
 
-  const modules = technologies.reduce((sum, group) => sum + group.skills.length, 0);
   const ticker = [
-    { label: "Estado", value: "Operativo" },
-    { label: "Sistemas", value: pad(projects.length) },
-    { label: "Módulos", value: pad(modules) },
-    { label: "Registros", value: pad(experience.length) },
-    { label: "Capas", value: "Cliente · Lógica · Datos · Infra" },
+    { label: "Estado", value: "Disponible" },
+    { label: "Rol", value: profile.title },
     { label: "Base", value: profile.location },
+    { label: "Capas", value: "Cliente · Lógica · Datos · Infra" },
     { label: "Canal", value: "Abierto" },
   ];
 
