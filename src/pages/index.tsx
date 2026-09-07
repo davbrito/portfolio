@@ -1,19 +1,20 @@
 import { getMeta } from "@/components/head";
 import About from "@/components/pages/landing/about";
 import ContactForm from "@/components/pages/landing/contact-form";
+import { DataTicker } from "@/components/pages/landing/data-ticker";
 import { Experience } from "@/components/pages/landing/experience";
 import { Hero } from "@/components/pages/landing/hero";
 import LandingFooter from "@/components/pages/landing/landing-footer";
-import { LandingHeader } from "@/components/pages/landing/landing-header";
 import Projects from "@/components/pages/landing/projects";
 import { SectionHeader } from "@/components/pages/landing/section-header";
+import { TelemetryBar } from "@/components/pages/landing/telemetry-bar";
+import { pad } from "@/components/pages/landing/tech-layers";
 import Technologies from "@/components/pages/landing/technologies";
 import { getPortfolioData } from "@/data/portfolio";
 import { setupObfuscatedLinks } from "@/lib/obfuscation";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { Hydrate } from "@tanstack/react-start";
 import { visible } from "@tanstack/react-start/hydration";
-import { ArrowDown } from "lucide-react";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/")({
@@ -39,6 +40,14 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+const NAV_ITEMS = [
+  { href: "#perfil", label: "Perfil" },
+  { href: "#experiencia", label: "Experiencia" },
+  { href: "#stack", label: "Stack" },
+  { href: "#proyectos", label: "Proyectos" },
+  { href: "#contacto", label: "Contacto" },
+];
+
 function Index() {
   const { data } = Route.useLoaderData();
 
@@ -49,72 +58,85 @@ function Index() {
   }, [data.obKey]);
 
   const { socialLinks, experience, technologies, profile, projects } = data;
+
+  const modules = technologies.reduce((sum, group) => sum + group.skills.length, 0);
+  const ticker = [
+    { label: "Estado", value: "Operativo" },
+    { label: "Sistemas", value: pad(projects.length) },
+    { label: "Módulos", value: pad(modules) },
+    { label: "Registros", value: pad(experience.length) },
+    { label: "Capas", value: "Cliente · Lógica · Datos · Infra" },
+    { label: "Base", value: profile.location },
+    { label: "Canal", value: "Abierto" },
+  ];
+
   return (
-    <>
-      <div className="bg-background text-foreground relative isolate min-h-screen font-sans">
-        {/* Reading progress bar */}
-        <div className="scroll-progress-bar bg-primary fixed top-0 left-0 z-50 h-0.5 w-full" aria-hidden />
-        {/* Background decorative elements */}
-        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden select-none" aria-hidden>
-          <div className="orb-parallax-1 bg-primary/16 absolute -top-72 -left-72 h-175 w-175 rounded-full blur-3xl" />
-          <div className="orb-parallax-2 bg-chart-4/14 absolute -right-72 -bottom-72 h-150 w-150 rounded-full blur-3xl" />
-          <div className="orb-parallax-3 bg-chart-1/7 absolute top-1/2 left-1/2 h-125 w-125 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" />
-          <div className="orb-parallax-4 bg-chart-5/8 absolute -top-40 -right-40 h-120 w-120 rounded-full blur-3xl" />
-          <div className="hero-gradient absolute inset-0" />
-          <div className="dot-grid absolute inset-0" />
-        </div>
-        <LandingHeader
-          navItems={[
-            { href: "#sobre-mi", label: "Sobre mi" },
-            { href: "#experiencia", label: "Experiencia" },
-            { href: "#tecnologias", label: "Tecnologías" },
-            { href: "#proyectos", label: "Proyectos" },
-            { href: "#contacto", label: "Contacto" },
-          ]}
-        />
-        <div className="px-5 pb-16 sm:px-8 md:px-10">
-          <main role="main" className="space-y-16 pt-10 md:pt-16">
-            <section className="mx-auto max-w-4xl">
-              <Hero socialLinks={socialLinks} profile={profile} />
-            </section>
+    <div className="landing-shell text-foreground relative isolate min-h-screen font-sans">
+      {/* Retícula técnica de fondo */}
+      <div className="blueprint-grid pointer-events-none fixed inset-0 -z-10" aria-hidden />
 
-            <div className="flex justify-center" aria-hidden>
-              <ArrowDown className="text-muted-foreground h-5 w-5 animate-bounce" />
-            </div>
+      <TelemetryBar navItems={NAV_ITEMS} profile={profile} />
+      <DataTicker items={ticker} />
 
-            <section id="sobre-mi" className="section-reveal mx-auto max-w-4xl">
-              <SectionHeader number={1} title="Sobre mí" />
+      <main role="main" className="border-border/60 mx-auto max-w-6xl px-4 sm:border-x sm:px-6">
+        <section id="inicio" className="py-12 md:py-16">
+          <Hero socialLinks={socialLinks} profile={profile} />
+        </section>
 
-              <About profile={profile} />
-            </section>
+        <section id="perfil" className="tech-reveal border-border scroll-mt-28 border-t py-12 md:py-16">
+          <SectionHeader
+            number={1}
+            title="Perfil del operador"
+            meta="perfil/operador"
+            description="Contexto, base de operaciones y forma de trabajo."
+          />
+          <About profile={profile} />
+        </section>
 
-            <section id="experiencia" className="section-reveal mx-auto max-w-4xl">
-              <SectionHeader number={2} title="Experiencia" />
+        <section id="experiencia" className="tech-reveal border-border scroll-mt-28 border-t py-12 md:py-16">
+          <SectionHeader
+            number={2}
+            title="Registro de operaciones"
+            meta="registro/trayectoria"
+            description="Trayectoria por nodo: responsabilidades asumidas y resultados entregados."
+          />
+          <Experience experience={experience} />
+        </section>
 
-              <Experience experience={experience} />
-            </section>
+        <section id="stack" className="tech-reveal border-border scroll-mt-28 border-t py-12 md:py-16">
+          <SectionHeader
+            number={3}
+            title="Matriz de infraestructura"
+            meta="infra/capacidades"
+            description="Capacidades técnicas organizadas por capa lógica, del cliente a la infraestructura."
+          />
+          <Technologies technologies={technologies} />
+        </section>
 
-            <section id="tecnologias" className="section-reveal mx-auto max-w-4xl">
-              <SectionHeader number={3} title="Tecnologías" />
+        <section id="proyectos" className="tech-reveal border-border scroll-mt-28 border-t py-12 md:py-16">
+          <SectionHeader
+            number={4}
+            title="Sistemas en catálogo"
+            meta="sistemas/fichas-tecnicas"
+            description="Cada proyecto documentado como especificación: flujo de datos, parámetros y accesos directos."
+          />
+          <Projects projects={projects} />
+        </section>
 
-              <Technologies technologies={technologies} />
-            </section>
+        <section id="contacto" className="tech-reveal border-border scroll-mt-28 border-t py-12 md:py-16">
+          <SectionHeader
+            number={5}
+            title="Terminal de enlace"
+            meta="link/canal-directo"
+            description="Canal directo y verificado. Sin intermediarios ni formularios genéricos."
+          />
+          <Hydrate when={visible({ rootMargin: "400px" })}>
+            <ContactForm profileId={profile.userId} />
+          </Hydrate>
+        </section>
+      </main>
 
-            <section id="proyectos" className="section-reveal mx-auto max-w-4xl">
-              <SectionHeader number={4} title="Proyectos" />
-
-              <Projects projects={projects} />
-            </section>
-
-            <section id="contacto" className="section-reveal mx-auto max-w-prose space-y-8">
-              <Hydrate when={visible({ rootMargin: "400px" })}>
-                <ContactForm profileId={profile.userId} />
-              </Hydrate>
-            </section>
-          </main>
-          <LandingFooter name={profile.name} socialLinks={socialLinks} />
-        </div>
-      </div>
-    </>
+      <LandingFooter name={profile.name} socialLinks={socialLinks} />
+    </div>
   );
 }

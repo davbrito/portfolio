@@ -6,6 +6,7 @@
 
 @import "./base.css";
 @import "./animations.css";
+@import "./landing.css";
 
 /* @custom-variant dark (&:is(.dark *)); */
 /* @custom-variant dark {
@@ -14,7 +15,7 @@
   }
 } */
 
-/* Dark developer portfolio theme - teal accent on dark blue-gray background */
+/* Tema base de la app (admin/auth). El landing redefine sus tokens en landing.css */
 
 @layer base {
   * {
@@ -65,23 +66,4 @@ input:-webkit-autofill:first-line {
   font-size: initial;
   line-height: inherit;
   /* font-family: font name; */
-}
-
-/* Background decorative helpers */
-.dot-grid {
-  background-image: radial-gradient(
-    circle,
-    color-mix(in oklch, var(--muted-foreground) 30%, transparent) 1px,
-    transparent 1px
-  );
-  background-size: 28px 28px;
-  opacity: 0.18;
-}
-
-.hero-gradient {
-  background: radial-gradient(
-    ellipse 110% 55% at 50% -5%,
-    color-mix(in oklch, var(--primary) 20%, transparent),
-    transparent 70%
-  );
 }
