@@ -1,59 +1,113 @@
+import { Mono, Panel, PanelHeader } from "@/components/pages/landing/primitives";
+import { pad } from "@/components/pages/landing/tech-layers";
 import type { ExperienceItem } from "@/data/portfolio";
-import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { useRef, useState } from "react";
 
 export function Experience({ experience }: { experience: ExperienceItem[] }) {
   const [selected, setSelected] = useState(0);
+  const tabsRef = useRef<(HTMLButtonElement | null)[]>([]);
 
   const item = experience[selected];
 
+  function focusTab(index: number) {
+    const next = (index + experience.length) % experience.length;
+    setSelected(next);
+    tabsRef.current[next]?.focus();
+  }
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>, index: number) {
+    switch (event.key) {
+      case "ArrowDown":
+      case "ArrowRight":
+        event.preventDefault();
+        focusTab(index + 1);
+        break;
+      case "ArrowUp":
+      case "ArrowLeft":
+        event.preventDefault();
+        focusTab(index - 1);
+        break;
+      case "Home":
+        event.preventDefault();
+        focusTab(0);
+        break;
+      case "End":
+        event.preventDefault();
+        focusTab(experience.length - 1);
+        break;
+    }
+  }
+
+  if (experience.length === 0) return null;
+
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-[170px_1fr] md:items-start">
-      <div className="flex flex-col items-stretch md:w-40" role="tablist" aria-orientation="vertical">
-        {experience.map((exp, index) => (
-          <button
-            key={index}
-            type="button"
-            role="tab"
-            id={`experience-tab-${index}`}
-            aria-expanded={selected === index}
-            aria-controls={`experience-tabpanel-${index}`}
-            onClick={() => setSelected(index)}
-            className="aria-expanded:bg-primary/8 border-primary text-primary mb-4 inline-flex items-center gap-2 px-6 py-2 font-mono text-sm aria-expanded:border-l-2"
-          >
-            {exp.title}
-          </button>
-        ))}
+    <div className="grid gap-6 md:grid-cols-12 md:gap-8">
+      <div
+        className="border-border divide-border divide-y self-start border md:col-span-4"
+        role="tablist"
+        aria-orientation="vertical"
+        aria-label="Empresas"
+      >
+        {experience.map((exp, index) => {
+          const active = selected === index;
+          return (
+            <button
+              key={exp.id}
+              ref={(node) => {
+                tabsRef.current[index] = node;
+              }}
+              type="button"
+              role="tab"
+              id={`experience-tab-${index}`}
+              aria-selected={active}
+              aria-controls={`experience-tabpanel-${index}`}
+              tabIndex={active ? 0 : -1}
+              onClick={() => setSelected(index)}
+              onKeyDown={(event) => handleKeyDown(event, index)}
+              className={cn(
+                "pressable focus-visible:ring-ring flex w-full flex-col items-start gap-1 border-l-2 px-3 py-3 text-left focus-visible:ring-1 focus-visible:outline-none",
+                active
+                  ? "border-l-primary bg-primary/8 text-foreground"
+                  : "text-muted-foreground hover:bg-muted/60 hover:text-foreground border-l-transparent",
+              )}
+            >
+              <Mono className={active ? "text-primary" : "text-muted-foreground/70"}>{pad(index + 1)}</Mono>
+              <span className="w-full truncate font-mono text-xs">{exp.company}</span>
+              <Mono className="text-muted-foreground/70 truncate">{exp.period}</Mono>
+            </button>
+          );
+        })}
       </div>
 
-      {/* Right panel: card with company, period and highlights */}
       {item ? (
         <div
-          className="flex-1"
+          className="md:col-span-8"
           role="tabpanel"
           id={`experience-tabpanel-${selected}`}
           aria-labelledby={`experience-tab-${selected}`}
+          tabIndex={0}
         >
-          <div className="text-foreground flex flex-col gap-2">
-            <div className="flex items-center gap-3">
-              <h3 className="text-foreground flex items-center gap-2 text-sm font-semibold">
-                {item.title}
-                <span className="text-primary underline-offset-4 hover:underline">@ {item.company}</span>
-              </h3>
+          <Panel>
+            <PanelHeader id={pad(selected + 1)} title={item.company} meta={item.period} />
+
+            <div className="border-border border-b px-4 py-4">
+              <h3 className="text-foreground text-lg font-semibold tracking-[-0.01em]">{item.title}</h3>
+              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
+                <Mono className="text-primary">@ {item.company}</Mono>
+                {item.location ? <Mono className="text-muted-foreground">{item.location}</Mono> : null}
+              </div>
             </div>
 
-            <div className="text-muted-foreground text-xs">
-              <span>{item.period}</span>
-            </div>
-          </div>
-
-          <ul className="text-foreground/80 mt-6 space-y-4 text-sm leading-relaxed">
-            {(item.highlights ?? []).map((item) => (
-              <li key={item} className="flex gap-3">
-                <span className="text-primary mt-1 text-lg leading-none">▹</span>
-                <span className="leading-relaxed">{item}</span>
-              </li>
-            ))}
-          </ul>
+            <ol className="divide-border/60 divide-y">
+              {(item.highlights ?? []).map((highlight, index) => (
+                <li key={highlight} className="flex gap-4 px-4 py-3">
+                  <Mono className="text-primary/70 shrink-0 pt-1">{pad(index + 1)}</Mono>
+                  <span className="text-muted-foreground text-sm leading-relaxed text-pretty">{highlight}</span>
+                </li>
+              ))}
+            </ol>
+          </Panel>
         </div>
       ) : null}
     </div>

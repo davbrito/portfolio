@@ -1,69 +1,124 @@
+import { Mono, Panel } from "@/components/pages/landing/primitives";
+import { layersOf, pad } from "@/components/pages/landing/tech-layers";
 import type { Project } from "@/data/portfolio";
+import { ArrowUpRightIcon } from "lucide-react";
 
 interface Props {
   projects: Project[];
 }
 
+function statusOf(project: Project) {
+  if (project.url) return "En producción";
+  if (project.repoUrl) return "Código abierto";
+  return "Privado";
+}
+
+function ProjectCard({ project, index }: { project: Project; index: number }) {
+  const tags = project.tags ?? [];
+  const layers = layersOf(tags);
+
+  return (
+    <Panel className="hover:border-primary/60 flex flex-col transition-colors duration-150 ease-out">
+      <div className="border-border flex items-center justify-between gap-3 border-b px-4 py-2">
+        <Mono className="text-primary">{pad(index + 1)}</Mono>
+        <Mono className="text-muted-foreground">{statusOf(project)}</Mono>
+      </div>
+
+      {project.image ? (
+        <div className="border-border border-b">
+          <img
+            src={project.image}
+            alt={project.imageAlt || project.title}
+            className="h-44 w-full object-cover grayscale transition-[filter] duration-300 ease-out hover:grayscale-0"
+            loading="lazy"
+          />
+        </div>
+      ) : null}
+
+      <div className="px-4 py-4">
+        <h3 className="text-foreground text-lg font-semibold tracking-[-0.01em]">{project.title}</h3>
+        <p className="text-muted-foreground mt-2 text-sm leading-relaxed text-pretty">{project.description}</p>
+      </div>
+
+      {tags.length > 0 ? (
+        <div className="border-border space-y-3 border-t px-4 py-3">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <Mono className="text-muted-foreground">Stack</Mono>
+            <ul className="flex flex-wrap gap-1.5">
+              {tags.map((tag) => (
+                <li key={tag} className="border-border/80 text-foreground border px-1.5 py-0.5">
+                  <Mono>{tag}</Mono>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {layers.length > 0 ? (
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <Mono className="text-muted-foreground">Capas</Mono>
+              <span className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                {layers.map((layer, position) => (
+                  <span key={layer.id} className="flex items-baseline gap-2">
+                    {position > 0 ? (
+                      <span className="text-muted-foreground/50 font-mono text-[10px]" aria-hidden>
+                        →
+                      </span>
+                    ) : null}
+                    <Mono className="text-foreground">
+                      <span className="text-primary">{layer.code}</span> {layer.name}
+                    </Mono>
+                  </span>
+                ))}
+              </span>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      <div className="border-border mt-auto flex flex-wrap items-center gap-2 border-t px-4 py-3">
+        {project.url ? (
+          <a
+            href={project.url}
+            target="_blank"
+            rel="noreferrer"
+            className="pressable border-primary/60 text-primary hover:bg-primary hover:text-primary-foreground focus-visible:ring-ring inline-flex items-center gap-1.5 border px-3 py-1.5 font-mono text-[11px] tracking-[0.12em] uppercase focus-visible:ring-1 focus-visible:outline-none"
+          >
+            Ver proyecto
+            <ArrowUpRightIcon className="h-3 w-3" />
+          </a>
+        ) : null}
+        {project.repoUrl ? (
+          <a
+            href={project.repoUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="pressable border-border text-muted-foreground hover:border-foreground hover:text-foreground focus-visible:ring-ring inline-flex items-center gap-1.5 border px-3 py-1.5 font-mono text-[11px] tracking-[0.12em] uppercase focus-visible:ring-1 focus-visible:outline-none"
+          >
+            Código
+            <ArrowUpRightIcon className="h-3 w-3" />
+          </a>
+        ) : null}
+        {!project.url && !project.repoUrl ? (
+          <Mono className="text-muted-foreground/70">Proyecto privado, sin enlace público</Mono>
+        ) : null}
+      </div>
+    </Panel>
+  );
+}
+
 export default function Projects({ projects }: Props) {
   if (projects.length === 0) {
     return (
-      <div className="border-primary/30 bg-card/40 text-muted-foreground rounded-2xl border border-dashed p-10 text-center">
-        Próximamente: una selección de proyectos destacados en los que he trabajado.
-      </div>
+      <Panel className="px-6 py-10 text-center">
+        <Mono className="text-muted-foreground">Pronto: una selección de proyectos en los que he trabajado</Mono>
+      </Panel>
     );
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
-      {projects.map((project) => (
-        <article
-          key={project.id}
-          className="border-border bg-card/60 flex h-full flex-col gap-4 rounded-2xl border p-6 shadow"
-        >
-          {project.image ? (
-            <div className="overflow-hidden rounded-xl border">
-              <img
-                src={project.image}
-                alt={project.imageAlt || project.title}
-                className="h-44 w-full object-cover"
-                loading="lazy"
-              />
-            </div>
-          ) : null}
-          <div className="space-y-2">
-            <h3 className="text-foreground text-lg font-semibold">{project.title}</h3>
-            <p className="text-muted-foreground text-sm leading-relaxed">{project.description}</p>
-          </div>
-          {project.tags?.length ? (
-            <div className="flex flex-wrap gap-2">
-              {project.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="bg-primary/10 text-primary rounded-full border px-2 py-0.5 text-[11px] font-medium tracking-wide"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          ) : null}
-          <div className="mt-auto flex flex-wrap gap-3 text-xs">
-            {project.url ? (
-              <a className="text-primary hover:underline" href={project.url} target="_blank" rel="noreferrer">
-                Ver proyecto
-              </a>
-            ) : null}
-            {project.repoUrl ? (
-              <a
-                className="text-muted-foreground hover:text-primary"
-                href={project.repoUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Repositorio
-              </a>
-            ) : null}
-          </div>
-        </article>
+    <div className="grid gap-6 lg:grid-cols-2">
+      {projects.map((project, index) => (
+        <ProjectCard key={project.id} project={project} index={index} />
       ))}
     </div>
   );
