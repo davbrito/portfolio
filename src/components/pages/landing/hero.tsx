@@ -84,7 +84,7 @@ export function Hero({ socialLinks, profile }: HeroProps) {
                 href={link.href}
                 target="_blank"
                 rel="noreferrer"
-                className="pressable border-border text-muted-foreground hover:border-primary hover:text-primary focus-visible:ring-ring inline-flex h-10 w-10 items-center justify-center border focus-visible:ring-1 focus-visible:outline-none"
+                className="pressable border-border text-foreground hover:border-primary hover:bg-muted focus-visible:ring-ring inline-flex h-10 w-10 items-center justify-center border focus-visible:ring-1 focus-visible:outline-none"
                 {...(link.obfuscated ? { "data-ob": link.obfuscationTarget } : {})}
                 aria-label={link.label}
               >

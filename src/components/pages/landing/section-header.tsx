@@ -1,5 +1,4 @@
-import { Mono } from "@/components/pages/landing/primitives";
-import { pad } from "@/components/pages/landing/tech-layers";
+import { Mono, pad } from "@/components/pages/landing/primitives";
 
 interface SectionHeaderProps {
   number: number;

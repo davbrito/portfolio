@@ -1,5 +1,4 @@
-import { Mono, Panel, PanelHeader } from "@/components/pages/landing/primitives";
-import { pad } from "@/components/pages/landing/tech-layers";
+import { Mono, Panel, PanelHeader, pad } from "@/components/pages/landing/primitives";
 import type { ExperienceItem } from "@/data/portfolio";
 import { cn } from "@/lib/utils";
 import { useRef, useState } from "react";

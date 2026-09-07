@@ -1,6 +1,5 @@
 import { CvDownloadButton } from "@/components/pages/landing/cv-download";
-import { Mono, StatusDot } from "@/components/pages/landing/primitives";
-import { pad } from "@/components/pages/landing/tech-layers";
+import { Mono, StatusDot, pad } from "@/components/pages/landing/primitives";
 import type { Profile } from "@/data/portfolio";
 import { useEffect, useState } from "react";
 

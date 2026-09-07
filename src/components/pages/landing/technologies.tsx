@@ -1,5 +1,4 @@
 import { Meter, Mono } from "@/components/pages/landing/primitives";
-import { classifyTech, getLayer, layerIndex } from "@/components/pages/landing/tech-layers";
 import type { TechnologyGroup } from "@/data/portfolio";
 
 interface Props {
@@ -14,23 +13,14 @@ const LEVEL_VALUE: Record<string, number> = {
 };
 
 export default function Technologies({ technologies }: Props) {
-  // Cada grupo del perfil se ancla a una capa del sistema y la lista se ordena
-  // de la superficie (cliente) hacia la infraestructura.
-  const groups = technologies
-    .map((group) => ({ group, layer: getLayer(classifyTech(group.title)) }))
-    .sort((a, b) => layerIndex(a.layer.id) - layerIndex(b.layer.id));
-
-  if (groups.length === 0) return null;
+  if (technologies.length === 0) return null;
 
   return (
     <div>
       <div className="border-border divide-border divide-y border-y">
-        {groups.map(({ group, layer }) => (
+        {technologies.map((group) => (
           <div key={group.title} className="grid gap-3 py-4 md:grid-cols-[180px_1fr] md:gap-8">
-            <div className="flex items-baseline gap-2">
-              <Mono className="text-primary">{layer.code}</Mono>
-              <Mono className="text-foreground">{group.title}</Mono>
-            </div>
+            <Mono className="text-foreground">{group.title}</Mono>
 
             <ul className="grid grid-cols-1 gap-x-8 gap-y-1.5 sm:grid-cols-2 lg:grid-cols-3">
               {group.skills.map((skill) => (
@@ -48,9 +38,7 @@ export default function Technologies({ technologies }: Props) {
       </div>
 
       <p className="mt-3">
-        <Mono className="text-muted-foreground/70">
-          Nivel: 1 barra principiante · 4 barras experto · L1–L4 marcan la capa del sistema
-        </Mono>
+        <Mono className="text-muted-foreground/70">Nivel: 1 barra principiante · 4 barras experto</Mono>
       </p>
     </div>
   );
