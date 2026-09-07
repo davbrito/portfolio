@@ -1,5 +1,4 @@
-import { Mono, Panel, PanelHeader, SpecRow } from "@/components/pages/landing/primitives";
-import { pad } from "@/components/pages/landing/tech-layers";
+import { Mono, Panel, PanelHeader, SpecRow, pad } from "@/components/pages/landing/primitives";
 import type { Profile } from "@/data/portfolio";
 
 interface Props {

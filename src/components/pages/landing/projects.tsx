@@ -1,5 +1,4 @@
-import { Mono, Panel } from "@/components/pages/landing/primitives";
-import { layersOf, pad } from "@/components/pages/landing/tech-layers";
+import { Mono, Panel, pad } from "@/components/pages/landing/primitives";
 import type { Project } from "@/data/portfolio";
 import { ArrowUpRightIcon } from "lucide-react";
 
@@ -15,7 +14,6 @@ function statusOf(project: Project) {
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const tags = project.tags ?? [];
-  const layers = layersOf(tags);
 
   return (
     <Panel className="hover:border-primary/60 flex flex-col transition-colors duration-150 ease-out">
@@ -41,7 +39,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       </div>
 
       {tags.length > 0 ? (
-        <div className="border-border space-y-3 border-t px-4 py-3">
+        <div className="border-border border-t px-4 py-3">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <Mono className="text-muted-foreground">Stack</Mono>
             <ul className="flex flex-wrap gap-1.5">
@@ -52,26 +50,6 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               ))}
             </ul>
           </div>
-
-          {layers.length > 0 ? (
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <Mono className="text-muted-foreground">Capas</Mono>
-              <span className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                {layers.map((layer, position) => (
-                  <span key={layer.id} className="flex items-baseline gap-2">
-                    {position > 0 ? (
-                      <span className="text-muted-foreground/50 font-mono text-[10px]" aria-hidden>
-                        →
-                      </span>
-                    ) : null}
-                    <Mono className="text-foreground">
-                      <span className="text-primary">{layer.code}</span> {layer.name}
-                    </Mono>
-                  </span>
-                ))}
-              </span>
-            </div>
-          ) : null}
         </div>
       ) : null}
 

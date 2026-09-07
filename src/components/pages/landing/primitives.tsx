@@ -1,6 +1,11 @@
 import { cn } from "@/lib/utils";
 import type { ComponentProps, ReactNode } from "react";
 
+/** `01`, `02`, … para numerar secciones, tarjetas y listas. */
+export function pad(value: number, size = 2): string {
+  return value.toString().padStart(size, "0");
+}
+
 /** Etiqueta monoespaciada para metadatos, unidades y encabezados de dato. */
 export function Mono({ className, ...props }: ComponentProps<"span">) {
   return <span className={cn("font-mono text-[10px] tracking-[0.18em] uppercase", className)} {...props} />;

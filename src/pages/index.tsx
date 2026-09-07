@@ -103,7 +103,7 @@ function Index() {
             number={3}
             title="Stack técnico"
             meta="stack"
-            description="Las tecnologías que uso, agrupadas por capa del sistema."
+            description="Las herramientas con las que trabajo y el nivel al que las manejo."
           />
           <Technologies technologies={technologies} />
         </section>
