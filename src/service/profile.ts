@@ -63,17 +63,17 @@ export async function upsertProfile(userId: string, data: ProfilePayload) {
 
     const profileId = userId;
 
-    await tx.orm.public.Experience.where({ profileId }).delete();
+    await tx.orm.public.Experience.where({ profileId }).deleteAll();
     if (cleanedExperiences.length > 0) {
       await tx.orm.public.Experience.createAll(cleanedExperiences.map((exp) => ({ ...exp, profileId })));
     }
 
-    await tx.orm.public.Skills.where({ profileId }).delete();
+    await tx.orm.public.Skills.where({ profileId }).deleteAll();
     if (cleanedSkills.length > 0) {
       await tx.orm.public.Skills.createAll(cleanedSkills.map((skill) => ({ ...skill, profileId })));
     }
 
-    await tx.orm.public.Proyects.where({ profileId }).delete();
+    await tx.orm.public.Proyects.where({ profileId }).deleteAll();
     if (cleanedProjects.length > 0) {
       await tx.orm.public.Proyects.createAll(
         cleanedProjects.map((project, index) => ({ ...project, profileId, order: index })),
