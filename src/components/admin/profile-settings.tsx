@@ -133,8 +133,10 @@ export function ProfileSettings() {
         <CardContent className="space-y-6">
           <div className="flex flex-wrap gap-2">
             <Button
+              type="button"
               variant="outline"
               size="sm"
+              disabled={isSubmitting}
               onClick={() => {
                 revalidateProfileAction();
               }}
