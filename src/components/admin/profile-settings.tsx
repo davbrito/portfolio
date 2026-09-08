@@ -20,7 +20,7 @@ import {
   SaveIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useId, useState } from "react";
+import { useState } from "react";
 import { ErrorCode, useDropzone, type FileRejection } from "react-dropzone";
 import {
   Controller,
@@ -33,6 +33,7 @@ import {
   type UseFormClearErrors,
   type UseFormRegister,
   type UseFormSetError,
+  type UseFormSetValue,
 } from "react-hook-form";
 import { FormInputField, FormSelectField, FormTextareaField } from "../form-fields";
 import {
@@ -81,7 +82,7 @@ export function ProfileSettings() {
     },
   });
 
-  const { handleSubmit, formState, register, setError, clearErrors, control } = useForm({
+  const { handleSubmit, formState, register, setError, clearErrors, control, setValue } = useForm({
     resolver: zodResolver(profilePayloadSchema),
     values: data ?? undefined,
   });
@@ -221,7 +222,13 @@ export function ProfileSettings() {
             <FieldSeparator />
             <FieldSet>
               <FieldLegend>Tecnologías</FieldLegend>
-              <SkillsSection control={control} register={register} errors={errors} groups={skillGroups} />
+              <SkillsSection
+                control={control}
+                register={register}
+                errors={errors}
+                setValue={setValue}
+                groups={skillGroups}
+              />
             </FieldSet>
             <FieldSeparator />
             <FieldSet>
@@ -491,18 +498,21 @@ function SkillsSection({
   control,
   register,
   errors,
+  setValue,
   groups,
 }: {
   control: Control<ProfilePayloadInput>;
   register: UseFormRegister<ProfilePayloadInput>;
   errors: FieldErrors<ProfilePayloadInput>;
+  setValue: UseFormSetValue<ProfilePayloadInput>;
   groups: string[];
 }) {
-  const id = useId();
   const skillFields = useFieldArray({ control, name: "skills" });
   const watchedSkills = useWatch({ control, name: "skills" }) ?? [];
   const [extraGroups, setExtraGroups] = useState<string[]>([]);
   const [newGroupName, setNewGroupName] = useState("");
+  const [editingGroup, setEditingGroup] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState("");
 
   const groupOf = (index: number) => watchedSkills[index]?.group?.trim() || UNGROUPED_LABEL;
 
@@ -515,24 +525,63 @@ function SkillsSection({
     if (!groupOrder.includes(group)) groupOrder.push(group);
   }
 
+  const renameGroup = (from: string, to: string) => {
+    const name = to.trim();
+    if (!name || name === from) return;
+    for (const index of skillFields.fields.keys()) {
+      if (groupOf(index) === from) setValue(`skills.${index}.group`, name, { shouldDirty: true });
+    }
+    setExtraGroups((prev) => prev.map((g) => (g === from ? name : g)));
+  };
+
   return (
     <FieldGroup className="gap-4">
-      <datalist id={`${id}-skill-groups`}>
-        {groupOrder.map((group) => (
-          <option key={group} value={group} />
-        ))}
-      </datalist>
       {skillFields.fields.length === 0 && extraGroups.length === 0 ? (
         <p className="text-muted-foreground text-sm">Añade las tecnologías y habilidades que deseas destacar.</p>
       ) : null}
       {groupOrder.map((group) => {
         const indices = skillFields.fields.map((_, index) => index).filter((index) => groupOf(index) === group);
+        const isEditing = editingGroup === group;
         return (
           <details key={group} className="group rounded-xl border" open>
             <summary className="flex cursor-pointer list-none items-center justify-between gap-2 p-4 select-none">
-              <span className="flex items-center gap-2 font-semibold">
+              <span className="flex flex-1 items-center gap-2 font-semibold">
                 <ChevronDownIcon className="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" />
-                {group}
+                {isEditing ? (
+                  <Input
+                    autoFocus
+                    value={editValue}
+                    className="h-8 max-w-52"
+                    onClick={(event) => event.preventDefault()}
+                    onChange={(event) => setEditValue(event.target.value)}
+                    onBlur={() => {
+                      renameGroup(group, editValue);
+                      setEditingGroup(null);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        renameGroup(group, editValue);
+                        setEditingGroup(null);
+                      } else if (event.key === "Escape") {
+                        event.preventDefault();
+                        setEditingGroup(null);
+                      }
+                    }}
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    className="hover:text-primary rounded px-1 text-left"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setEditValue(group);
+                      setEditingGroup(group);
+                    }}
+                  >
+                    {group}
+                  </button>
+                )}
                 <span className="text-muted-foreground bg-muted rounded-full px-2 py-0.5 text-xs font-normal">
                   {indices.length}
                 </span>
@@ -577,16 +626,10 @@ function SkillsSection({
                   <div key={field.id} className="space-y-1 border-b p-4 last:border-b-0">
                     <FieldGroup className="flex-row">
                       <FormInputField
-                        {...register(`skills.${index}.group`)}
-                        label="Grupo"
-                        error={errors.skills?.[index]?.group}
-                        containerClassName="col-span-2"
-                        list={`${id}-skill-groups`}
-                      />
-                      <FormInputField
                         {...register(`skills.${index}.name`)}
                         label="Nombre"
                         error={errors.skills?.[index]?.name}
+                        containerClassName="col-span-2"
                       />
                       <Controller
                         control={control}
@@ -620,9 +663,9 @@ function SkillsSection({
       })}
       <div className="flex flex-wrap items-end gap-2">
         <Field className="max-w-xs">
-          <FieldLabel htmlFor={`${id}-new-group`}>Nuevo grupo</FieldLabel>
+          <FieldLabel htmlFor="new-group">Nuevo grupo</FieldLabel>
           <Input
-            id={`${id}-new-group`}
+            id="new-group"
             value={newGroupName}
             placeholder="Ej. Bases de datos"
             onChange={(event) => setNewGroupName(event.target.value)}
