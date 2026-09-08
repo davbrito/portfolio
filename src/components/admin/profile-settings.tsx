@@ -13,12 +13,14 @@ import {
   ArrowDownIcon,
   ArrowUpIcon,
   CheckCircle2,
+  ChevronDownIcon,
   DownloadIcon,
   Loader2Icon,
+  PlusIcon,
   SaveIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useId } from "react";
+import { useState } from "react";
 import { ErrorCode, useDropzone, type FileRejection } from "react-dropzone";
 import {
   Controller,
@@ -31,6 +33,7 @@ import {
   type UseFormClearErrors,
   type UseFormRegister,
   type UseFormSetError,
+  type UseFormSetValue,
 } from "react-hook-form";
 import { FormInputField, FormSelectField, FormTextareaField } from "../form-fields";
 import {
@@ -79,7 +82,7 @@ export function ProfileSettings() {
     },
   });
 
-  const { handleSubmit, formState, register, setError, clearErrors, control } = useForm({
+  const { handleSubmit, formState, register, setError, clearErrors, control, setValue } = useForm({
     resolver: zodResolver(profilePayloadSchema),
     values: data ?? undefined,
   });
@@ -219,7 +222,13 @@ export function ProfileSettings() {
             <FieldSeparator />
             <FieldSet>
               <FieldLegend>Tecnologías</FieldLegend>
-              <SkillsSection control={control} register={register} errors={errors} groups={skillGroups} />
+              <SkillsSection
+                control={control}
+                register={register}
+                errors={errors}
+                setValue={setValue}
+                groups={skillGroups}
+              />
             </FieldSet>
             <FieldSeparator />
             <FieldSet>
@@ -483,79 +492,205 @@ function ExperienceSection({
   );
 }
 
+const UNGROUPED_LABEL = "Sin grupo";
+
 function SkillsSection({
   control,
   register,
   errors,
+  setValue,
   groups,
 }: {
   control: Control<ProfilePayloadInput>;
   register: UseFormRegister<ProfilePayloadInput>;
   errors: FieldErrors<ProfilePayloadInput>;
+  setValue: UseFormSetValue<ProfilePayloadInput>;
   groups: string[];
 }) {
-  const id = useId();
   const skillFields = useFieldArray({ control, name: "skills" });
+  const watchedSkills = useWatch({ control, name: "skills" }) ?? [];
+  const [extraGroups, setExtraGroups] = useState<string[]>([]);
+  const [newGroupName, setNewGroupName] = useState("");
+  const [editingGroup, setEditingGroup] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState("");
+
+  const groupOf = (index: number) => watchedSkills[index]?.group?.trim() || UNGROUPED_LABEL;
+
+  const groupOrder: string[] = [];
+  for (const group of [...groups, ...extraGroups]) {
+    if (group && !groupOrder.includes(group)) groupOrder.push(group);
+  }
+  for (const index of skillFields.fields.keys()) {
+    const group = groupOf(index);
+    if (!groupOrder.includes(group)) groupOrder.push(group);
+  }
+
+  const renameGroup = (from: string, to: string) => {
+    const name = to.trim();
+    if (!name || name === from) return;
+    for (const index of skillFields.fields.keys()) {
+      if (groupOf(index) === from) setValue(`skills.${index}.group`, name, { shouldDirty: true });
+    }
+    setExtraGroups((prev) => prev.map((g) => (g === from ? name : g)));
+  };
 
   return (
-    <FieldGroup className="gap-0">
-      <datalist id={`${id}-skill-groups`}>
-        {groups.map((group) => (
-          <option key={group} value={group} />
-        ))}
-      </datalist>
-      {skillFields.fields.length === 0 ? (
+    <FieldGroup className="gap-4">
+      {skillFields.fields.length === 0 && extraGroups.length === 0 ? (
         <p className="text-muted-foreground text-sm">Añade las tecnologías y habilidades que deseas destacar.</p>
       ) : null}
-      {skillFields.fields.map((field, index) => (
-        <div key={field.id} className="space-y-1 rounded-xl border-b p-4">
-          <FieldGroup className="flex-row">
-            <FormInputField
-              {...register(`skills.${index}.group`)}
-              label="Grupo"
-              error={errors.skills?.[index]?.group}
-              containerClassName="col-span-2"
-              list={`${id}-skill-groups`}
-            />
-            <FormInputField {...register(`skills.${index}.name`)} label="Nombre" error={errors.skills?.[index]?.name} />
-            <Controller
-              control={control}
-              name={`skills.${index}.level` as const}
-              render={({ field, fieldState }) => (
-                <FormSelectField
-                  label="Nivel"
-                  error={fieldState.error}
-                  {...field}
-                  options={SKILL_LEVELS.map((level) => ({ value: level, label: level }))}
-                  placeholder="Selecciona un nivel..."
-                />
-              )}
-            />
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="self-center"
-              onClick={() => skillFields.remove(index)}
-            >
-              <Trash2Icon />
-            </Button>
-          </FieldGroup>
-        </div>
-      ))}
-      <Button
-        type="button"
-        variant="secondary"
-        onClick={() =>
-          skillFields.append({
-            name: "",
-            level: "",
-            group: "",
-          })
-        }
-      >
-        Agregar skill
-      </Button>
+      {groupOrder.map((group) => {
+        const indices = skillFields.fields.map((_, index) => index).filter((index) => groupOf(index) === group);
+        const isEditing = editingGroup === group;
+        return (
+          <details key={group} className="group rounded-xl border" open>
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-2 p-4 select-none">
+              <span className="flex flex-1 items-center gap-2 font-semibold">
+                <ChevronDownIcon className="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" />
+                {isEditing ? (
+                  <Input
+                    autoFocus
+                    value={editValue}
+                    className="h-8 max-w-52"
+                    onClick={(event) => event.preventDefault()}
+                    onChange={(event) => setEditValue(event.target.value)}
+                    onBlur={() => {
+                      renameGroup(group, editValue);
+                      setEditingGroup(null);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        renameGroup(group, editValue);
+                        setEditingGroup(null);
+                      } else if (event.key === "Escape") {
+                        event.preventDefault();
+                        setEditingGroup(null);
+                      }
+                    }}
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    className="hover:text-primary rounded px-1 text-left"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setEditValue(group);
+                      setEditingGroup(group);
+                    }}
+                  >
+                    {group}
+                  </button>
+                )}
+                <span className="text-muted-foreground bg-muted rounded-full px-2 py-0.5 text-xs font-normal">
+                  {indices.length}
+                </span>
+              </span>
+              <div className="flex items-center gap-1">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    skillFields.append({
+                      name: "",
+                      level: "",
+                      group: group === UNGROUPED_LABEL ? "" : group,
+                    });
+                  }}
+                >
+                  <PlusIcon />
+                  Agregar skill
+                </Button>
+                {indices.length === 0 ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setExtraGroups((prev) => prev.filter((g) => g !== group));
+                    }}
+                    aria-label={`Quitar grupo ${group}`}
+                  >
+                    <Trash2Icon />
+                  </Button>
+                ) : null}
+              </div>
+            </summary>
+            <div className="space-y-1 border-t">
+              {indices.map((index) => {
+                const field = skillFields.fields[index];
+                return (
+                  <div key={field.id} className="space-y-1 border-b p-4 last:border-b-0">
+                    <FieldGroup className="flex-row">
+                      <FormInputField
+                        {...register(`skills.${index}.name`)}
+                        label="Nombre"
+                        error={errors.skills?.[index]?.name}
+                        containerClassName="col-span-2"
+                      />
+                      <Controller
+                        control={control}
+                        name={`skills.${index}.level` as const}
+                        render={({ field, fieldState }) => (
+                          <FormSelectField
+                            label="Nivel"
+                            error={fieldState.error}
+                            {...field}
+                            options={SKILL_LEVELS.map((level) => ({ value: level, label: level }))}
+                            placeholder="Selecciona un nivel..."
+                          />
+                        )}
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="self-center"
+                        onClick={() => skillFields.remove(index)}
+                      >
+                        <Trash2Icon />
+                      </Button>
+                    </FieldGroup>
+                  </div>
+                );
+              })}
+            </div>
+          </details>
+        );
+      })}
+      <div className="flex flex-wrap items-end gap-2">
+        <Field className="max-w-xs">
+          <FieldLabel htmlFor="new-group">Nuevo grupo</FieldLabel>
+          <Input
+            id="new-group"
+            value={newGroupName}
+            placeholder="Ej. Bases de datos"
+            onChange={(event) => setNewGroupName(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key !== "Enter") return;
+              event.preventDefault();
+              const name = newGroupName.trim();
+              if (name && !groupOrder.includes(name)) setExtraGroups((prev) => [...prev, name]);
+              setNewGroupName("");
+            }}
+          />
+        </Field>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => {
+            const name = newGroupName.trim();
+            if (name && !groupOrder.includes(name)) setExtraGroups((prev) => [...prev, name]);
+            setNewGroupName("");
+          }}
+        >
+          <PlusIcon />
+          Agregar grupo
+        </Button>
+      </div>
     </FieldGroup>
   );
 }
