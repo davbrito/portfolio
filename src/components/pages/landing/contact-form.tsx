@@ -85,10 +85,12 @@ export default function ContactForm({ profileId }: ContactFormProps) {
   return (
     <div className="grid gap-8 md:grid-cols-12 md:gap-10">
       <div className="self-start md:sticky md:top-32 md:col-span-5">
-        <p className="text-muted-foreground text-sm leading-relaxed text-pretty">
-          Canal abierto para propuestas de proyecto, colaboraciones y consultas técnicas. Los mensajes llegan
-          directamente a mi bandeja: describe el contexto, el alcance y las restricciones y respondo con una lectura
-          honesta de la viabilidad.
+        <p className="text-foreground text-lg leading-relaxed text-pretty">
+          ¿Tienes una vacante, un proyecto o simplemente quieres conversar?
+        </p>
+        <p className="text-muted-foreground mt-3 text-sm leading-relaxed text-pretty">
+          Los mensajes llegan directamente a mi bandeja. Cuéntame el rol o el contexto y te respondo personalmente con
+          una lectura honesta de cómo puedo aportar.
         </p>
 
         <dl className="border-border divide-border mt-6 divide-y border-y">
@@ -216,16 +218,16 @@ export default function ContactForm({ profileId }: ContactFormProps) {
 
             <div className="border-border flex flex-wrap items-center justify-between gap-3 border-t pt-4">
               <Mono className={cn("text-muted-foreground", error && "text-destructive")} aria-live="polite">
-                {error ? `err · ${error}` : isSubmitSuccessful ? "ok 200 · mensaje entregado" : "listo para transmitir"}
+                {error ? `err · ${error}` : isSubmitSuccessful ? "ok 200 · mensaje entregado" : "listo para enviar"}
               </Mono>
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="pressable bg-primary text-primary-foreground hover:bg-primary/85 focus-visible:ring-ring focus-visible:ring-offset-background inline-flex h-9 items-center justify-center gap-2 px-4 font-mono text-[11px] tracking-[0.14em] uppercase focus-visible:ring-1 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+                className="pressable bg-primary text-primary-foreground hover:bg-primary/85 focus-visible:ring-ring focus-visible:ring-offset-background inline-flex h-10 items-center justify-center gap-2 px-5 text-sm font-semibold focus-visible:ring-1 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
               >
                 <SendIcon className="h-3.5 w-3.5" />
-                {isSubmitting ? "Transmitiendo" : "Transmitir"}
+                {isSubmitting ? "Enviando" : "Enviar mensaje"}
               </button>
             </div>
           </form>

@@ -2,25 +2,35 @@ import { Mono, pad } from "@/components/pages/landing/primitives";
 
 interface SectionHeaderProps {
   number: number;
+  /** Etiqueta corta sobre el titular (p. ej. "Experiencia"). */
+  eyebrow: string;
   title: string;
-  /** Identificador técnico mostrado a la derecha de la regla. */
-  meta?: string;
+  /** Palabra final del titular que se escribe en serif cursiva. */
+  accent?: string;
   description?: string;
 }
 
-export function SectionHeader({ number, title, meta, description }: SectionHeaderProps) {
+export function SectionHeader({ number, eyebrow, title, accent, description }: SectionHeaderProps) {
   return (
-    <header className="mb-8">
+    <header className="mb-10 md:mb-12">
       <div className="flex items-center gap-3">
-        <Mono className="text-primary shrink-0">§ {pad(number)}</Mono>
-        <span className="bg-border h-px flex-1" aria-hidden />
-        {meta ? <Mono className="text-muted-foreground shrink-0">{meta}</Mono> : null}
+        <Mono className="text-primary shrink-0">{pad(number)}</Mono>
+        <span className="bg-primary/50 h-px w-8" aria-hidden />
+        <Mono className="text-muted-foreground shrink-0">{eyebrow}</Mono>
       </div>
 
-      <div className="mt-4 flex flex-col gap-2 md:flex-row md:items-end md:justify-between md:gap-8">
-        <h2 className="text-foreground text-2xl font-semibold tracking-[-0.02em] sm:text-3xl">{title}</h2>
+      <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between md:gap-10">
+        <h2 className="font-display text-foreground max-w-2xl text-3xl leading-[1.05] font-bold tracking-[-0.03em] text-balance sm:text-4xl md:text-5xl">
+          {title}
+          {accent ? (
+            <>
+              {" "}
+              <span className="accent-serif text-primary">{accent}</span>
+            </>
+          ) : null}
+        </h2>
         {description ? (
-          <p className="text-muted-foreground max-w-md text-xs leading-relaxed md:text-right">{description}</p>
+          <p className="text-muted-foreground max-w-sm text-sm leading-relaxed md:text-right">{description}</p>
         ) : null}
       </div>
     </header>

@@ -1,114 +1,55 @@
-import { Mono, Panel, PanelHeader, pad } from "@/components/pages/landing/primitives";
+import { Emphasize, Mono } from "@/components/pages/landing/primitives";
 import type { ExperienceItem } from "@/data/portfolio";
 import { cn } from "@/lib/utils";
-import { useRef, useState } from "react";
 
+/**
+ * Línea de tiempo con todo a la vista: quien evalúa un perfil lee en diagonal
+ * y no debería tener que hacer clic para ver qué se logró en cada puesto.
+ */
 export function Experience({ experience }: { experience: ExperienceItem[] }) {
-  const [selected, setSelected] = useState(0);
-  const tabsRef = useRef<(HTMLButtonElement | null)[]>([]);
-
-  const item = experience[selected];
-
-  function focusTab(index: number) {
-    const next = (index + experience.length) % experience.length;
-    setSelected(next);
-    tabsRef.current[next]?.focus();
-  }
-
-  function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>, index: number) {
-    switch (event.key) {
-      case "ArrowDown":
-      case "ArrowRight":
-        event.preventDefault();
-        focusTab(index + 1);
-        break;
-      case "ArrowUp":
-      case "ArrowLeft":
-        event.preventDefault();
-        focusTab(index - 1);
-        break;
-      case "Home":
-        event.preventDefault();
-        focusTab(0);
-        break;
-      case "End":
-        event.preventDefault();
-        focusTab(experience.length - 1);
-        break;
-    }
-  }
-
   if (experience.length === 0) return null;
 
   return (
-    <div className="grid gap-6 md:grid-cols-12 md:gap-8">
-      <div
-        className="border-border divide-border divide-y self-start border md:col-span-4"
-        role="tablist"
-        aria-orientation="vertical"
-        aria-label="Empresas"
-      >
-        {experience.map((exp, index) => {
-          const active = selected === index;
-          return (
-            <button
-              key={exp.id}
-              ref={(node) => {
-                tabsRef.current[index] = node;
-              }}
-              type="button"
-              role="tab"
-              id={`experience-tab-${index}`}
-              aria-selected={active}
-              aria-controls={`experience-tabpanel-${index}`}
-              tabIndex={active ? 0 : -1}
-              onClick={() => setSelected(index)}
-              onKeyDown={(event) => handleKeyDown(event, index)}
-              className={cn(
-                "pressable focus-visible:ring-ring flex w-full flex-col items-start gap-1 border-l-2 px-3 py-3 text-left focus-visible:ring-1 focus-visible:outline-none",
-                active
-                  ? "border-l-primary bg-primary/8 text-foreground"
-                  : "text-muted-foreground hover:bg-muted/60 hover:text-foreground border-l-transparent",
-              )}
-            >
-              <Mono className={active ? "text-primary" : "text-muted-foreground/70"}>{pad(index + 1)}</Mono>
-              <span className="w-full truncate font-mono text-xs">{exp.company}</span>
-              <Mono className="text-muted-foreground/70 truncate">{exp.period}</Mono>
-            </button>
-          );
-        })}
-      </div>
-
-      {item ? (
-        <div
-          className="md:col-span-8"
-          role="tabpanel"
-          id={`experience-tabpanel-${selected}`}
-          aria-labelledby={`experience-tab-${selected}`}
-          tabIndex={0}
-        >
-          <Panel>
-            <PanelHeader id={pad(selected + 1)} title={item.company} meta={item.period} />
-
-            <div className="border-border border-b px-4 py-4">
-              <h3 className="text-foreground text-lg font-semibold tracking-[-0.01em]">{item.title}</h3>
-              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
-                <Mono className="text-primary">@ {item.company}</Mono>
-                {item.location ? <Mono className="text-muted-foreground">{item.location}</Mono> : null}
-              </div>
+    <ol className="relative">
+      {experience.map((item, index) => {
+        const current = index === 0;
+        return (
+          <li key={item.id} className="group grid gap-3 md:grid-cols-12 md:gap-8">
+            {/* Columna de fecha */}
+            <div className="md:col-span-3 md:pt-1 md:text-right">
+              <Mono className={cn(current ? "text-primary" : "text-muted-foreground")}>{item.period}</Mono>
+              {item.location ? (
+                <span className="text-muted-foreground/80 mt-1 block text-xs md:mt-1.5">{item.location}</span>
+              ) : null}
             </div>
 
-            <ol className="divide-border/60 divide-y">
-              {(item.highlights ?? []).map((highlight, index) => (
-                <li key={highlight} className="flex gap-4 px-4 py-3">
-                  <Mono className="text-primary/70 shrink-0 pt-1">{pad(index + 1)}</Mono>
-                  <span className="text-muted-foreground text-sm leading-relaxed text-pretty">{highlight}</span>
-                </li>
-              ))}
-            </ol>
-          </Panel>
-        </div>
-      ) : null}
-    </div>
+            <div className="border-border relative border-l pb-12 pl-6 group-last:pb-0 md:col-span-9 md:pl-8">
+              <span
+                className={cn(
+                  "absolute top-1.5 -left-[6px] h-[11px] w-[11px] border",
+                  current ? "border-primary bg-primary" : "border-border bg-background group-hover:border-primary",
+                )}
+                aria-hidden
+              />
+              <h3 className="font-display text-foreground text-xl font-semibold tracking-[-0.02em]">{item.title}</h3>
+              <p className="text-primary mt-0.5 text-sm font-medium">{item.company}</p>
+
+              {(item.highlights ?? []).length > 0 ? (
+                <ul className="mt-4 space-y-2.5">
+                  {(item.highlights ?? []).map((highlight) => (
+                    <li key={highlight} className="text-muted-foreground flex gap-3 text-[15px] leading-relaxed">
+                      <span className="bg-primary/70 mt-[0.6em] h-1 w-1 shrink-0" aria-hidden />
+                      <span className="text-pretty">
+                        <Emphasize text={highlight} />
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+          </li>
+        );
+      })}
+    </ol>
   );
 }

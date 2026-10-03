@@ -19,7 +19,7 @@
   --carbon-700: oklch(0.238 0.01 240);
   --carbon-600: oklch(0.285 0.011 240);
   --carbon-500: oklch(0.34 0.012 240);
-  --graphite: oklch(0.685 0.014 240);
+  --graphite: oklch(0.74 0.014 240);
   --chalk: oklch(0.97 0.004 240);
 
   /* Acento eléctrico — 5% de la superficie, 100% de la señal */
@@ -305,5 +305,73 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-flag-in {
     animation: none;
+  }
+}
+
+/* ============================================================
+   Capa editorial — titulares con carácter y lectura en 7 segundos.
+   ============================================================ */
+
+/* Halo frío detrás del hero: da profundidad sin competir con el texto */
+.hero-glow {
+  background:
+    radial-gradient(60% 50% at 78% 30%, color-mix(in oklch, var(--electric) 16%, transparent), transparent 70%),
+    radial-gradient(40% 40% at 10% 0%, color-mix(in oklch, var(--electric) 7%, transparent), transparent 70%);
+}
+
+/* Palabra de acento en serif cursiva dentro de titulares sans */
+.accent-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Marco del retrato: desfase de 1px con el acento, firma visual del sitio */
+.portrait-frame {
+  position: relative;
+  isolation: isolate;
+}
+
+.portrait-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 1px solid color-mix(in oklch, var(--electric) 70%, transparent);
+  transform: translate(14px, 14px);
+  transition: transform 240ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.portrait-frame:hover::before {
+  transform: translate(8px, 8px);
+}
+
+/* Imagen de proyecto: zoom lento al pasar por la tarjeta */
+.project-media img {
+  transition: transform 600ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.project-card:hover .project-media img {
+  transform: scale(1.04);
+}
+
+/* Cifra de impacto resaltada dentro de un logro */
+.metric {
+  color: var(--foreground);
+  font-weight: 600;
+  background-image: linear-gradient(
+    color-mix(in oklch, var(--electric) 28%, transparent),
+    color-mix(in oklch, var(--electric) 28%, transparent)
+  );
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 100% 0.32em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portrait-frame::before,
+  .project-media img {
+    transition: none;
   }
 }

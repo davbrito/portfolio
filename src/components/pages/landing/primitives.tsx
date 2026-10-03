@@ -8,7 +8,7 @@ export function pad(value: number, size = 2): string {
 
 /** Etiqueta monoespaciada para metadatos, unidades y encabezados de dato. */
 export function Mono({ className, ...props }: ComponentProps<"span">) {
-  return <span className={cn("font-mono text-[10px] tracking-[0.18em] uppercase", className)} {...props} />;
+  return <span className={cn("font-mono text-[11px] tracking-[0.14em] uppercase", className)} {...props} />;
 }
 
 /**
@@ -108,5 +108,30 @@ export function SpecRow({ label, value, className }: { label: string; value: Rea
       <Mono className="text-muted-foreground">{label}</Mono>
       <span className="text-foreground truncate text-right font-mono text-xs">{value}</span>
     </div>
+  );
+}
+
+/**
+ * Cifras de impacto (`45%`, `+12k`, `200k`, `8 min`, `3x`…) que se resaltan
+ * dentro de un logro para que quien lee en diagonal se lleve el resultado.
+ */
+const METRIC_PATTERN = /([+-]?\d[\d.,]*\s?(?:%|[kKM]\b|x\b|min\b|ms\b|h\b|s\b)\+?|\+\d[\d.,]*)/g;
+
+export function Emphasize({ text }: { text: string }) {
+  const parts = text.split(METRIC_PATTERN);
+
+  return (
+    <>
+      {parts.map((part, index) =>
+        index % 2 === 1 ? (
+          // eslint-disable-next-line @eslint-react/no-array-index-key
+          <span key={index} className="metric">
+            {part}
+          </span>
+        ) : (
+          part
+        ),
+      )}
+    </>
   );
 }
