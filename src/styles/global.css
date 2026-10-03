@@ -3,6 +3,8 @@
 
 @import "@fontsource-variable/jetbrains-mono";
 @import "@fontsource-variable/inter";
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource/instrument-serif/latin-400-italic.css";
 
 @import "./base.css";
 @import "./animations.css";
