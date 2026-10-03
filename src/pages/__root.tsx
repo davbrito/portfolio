@@ -25,11 +25,9 @@ export const Route = createRootRoute({
         rel: "stylesheet",
         href: globalCss,
       },
-      {
-        rel: "icon",
-        href: "/favicon.png",
-        type: "image/png",
-      },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "icon", href: "/favicon.png", type: "image/png", sizes: "48x48" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
     ],
   }),
   headers: () => ({
@@ -49,7 +47,6 @@ function SiteLayout() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.png" type="image/png" />
         <HeadContent />
       </head>
       <body>
