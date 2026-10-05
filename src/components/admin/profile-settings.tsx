@@ -20,7 +20,7 @@ import {
   SaveIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ErrorCode, useDropzone, type FileRejection } from "react-dropzone";
 import {
   Controller,
@@ -86,9 +86,23 @@ export function ProfileSettings() {
     resolver: zodResolver(profilePayloadSchema),
     values: data ?? undefined,
   });
-  const { errors, isSubmitting, isSubmitSuccessful, isLoading } = formState;
+  const { errors, isSubmitting, isSubmitSuccessful, isLoading, isDirty } = formState;
 
   const rootError = errors.root?.message;
+  const hasFieldErrors = Object.keys(errors).some((key) => key !== "root");
+
+  // Ctrl/⌘ + S guarda desde cualquier punto del formulario.
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") {
+        event.preventDefault();
+        formRef.current?.requestSubmit();
+      }
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   if (!data) {
     return (
@@ -121,7 +135,7 @@ export function ProfileSettings() {
   const skillGroups = [...new Set(data?.skills?.map((skill) => skill.group).concat(DEFAULT_SKILL_GROUPS))];
 
   return (
-    <form className="space-y-6" onSubmit={onSubmit}>
+    <form ref={formRef} className="space-y-6 pb-28" onSubmit={onSubmit}>
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between gap-4">
@@ -289,8 +303,17 @@ export function ProfileSettings() {
           </FieldGroup>
         </CardContent>
       </Card>
-      <Field orientation="horizontal">
-        <Button type="submit" disabled={isSubmitting}>
+      {/* Guardado flotante: visible en cualquier punto de un formulario tan largo. */}
+      <div className="bg-card/95 fixed right-4 bottom-4 z-40 flex max-w-[calc(100vw-2rem)] flex-col items-end gap-2 rounded-xl border p-3 shadow-lg backdrop-blur sm:right-6 sm:bottom-6">
+        {rootError || hasFieldErrors ? (
+          <p className="text-destructive inline-flex items-center gap-1.5 text-xs" role="alert">
+            <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+            {rootError ?? "Revisa los campos marcados en rojo."}
+          </p>
+        ) : isDirty ? (
+          <p className="text-muted-foreground text-xs">Cambios sin guardar</p>
+        ) : null}
+        <Button type="submit" disabled={isSubmitting} title="Guardar cambios (Ctrl/⌘ + S)">
           {isSubmitting ? (
             <>
               <Loader2Icon className="animate-spin" /> Guardando
@@ -302,8 +325,7 @@ export function ProfileSettings() {
             </>
           )}
         </Button>
-        <FieldError>{rootError}</FieldError>
-      </Field>
+      </div>
     </form>
   );
 }
