@@ -15,19 +15,23 @@ function statusOf(project: Project) {
 
 function ProjectCard({ project, index, featured }: { project: Project; index: number; featured: boolean }) {
   const tags = project.tags ?? [];
+  // La rejilla imagen | texto sólo tiene sentido si hay imagen; sin ella el
+  // texto ocuparía una única columna de las 12.
+  const split = featured && Boolean(project.image);
 
   return (
     <article
       className={cn(
         "project-card border-border bg-card hover:border-primary/60 group flex flex-col overflow-hidden border transition-colors duration-200",
-        featured && "lg:col-span-2 lg:grid lg:grid-cols-12",
+        featured && "lg:col-span-2",
+        split && "lg:grid lg:grid-cols-12",
       )}
     >
       {project.image ? (
         <div
           className={cn(
             "project-media border-border relative overflow-hidden border-b",
-            featured ? "aspect-video lg:col-span-7 lg:aspect-auto lg:border-r lg:border-b-0" : "aspect-video",
+            split ? "aspect-video lg:col-span-7 lg:aspect-auto lg:border-r lg:border-b-0" : "aspect-video",
           )}
         >
           <img
@@ -39,7 +43,7 @@ function ProjectCard({ project, index, featured }: { project: Project; index: nu
         </div>
       ) : null}
 
-      <div className={cn("flex flex-1 flex-col p-5 md:p-6", featured && project.image && "lg:col-span-5")}>
+      <div className={cn("flex flex-1 flex-col p-5 md:p-6", split && "lg:col-span-5")}>
         <div className="flex items-center justify-between gap-3">
           <Mono className="text-primary">
             {pad(index + 1)}
@@ -59,7 +63,9 @@ function ProjectCard({ project, index, featured }: { project: Project; index: nu
         >
           {project.title}
         </h3>
-        <p className="text-muted-foreground mt-3 text-[15px] leading-relaxed text-pretty">{project.description}</p>
+        <p className="text-muted-foreground mt-3 max-w-2xl text-[15px] leading-relaxed text-pretty">
+          {project.description}
+        </p>
 
         {tags.length > 0 ? (
           <ul className="mt-5 flex flex-wrap gap-1.5" aria-label="Tecnologías">

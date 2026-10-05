@@ -72,12 +72,18 @@ const projectItemSchema = z.object({
     .nullable()
     .transform((val) => val || null)
     .pipe(z.url({ error: "URL inválida" }).max(500).nullable()),
+  // Igual que `aboutImage`: URL externa o data URL subida desde el admin.
   image: z
     .string()
     .trim()
     .nullable()
     .transform((val) => val || null)
-    .pipe(z.url({ error: "URL inválida" }).max(500).nullable()),
+    .pipe(
+      z
+        .url({ error: "URL inválida" })
+        .max(2 * 1024 * 1024)
+        .nullable(),
+    ),
   imageAlt: z
     .string()
     .trim()
