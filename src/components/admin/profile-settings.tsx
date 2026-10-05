@@ -233,7 +233,13 @@ export function ProfileSettings() {
             <FieldSeparator />
             <FieldSet>
               <FieldLegend>Proyectos</FieldLegend>
-              <ProjectsSection control={control} register={register} errors={errors} />
+              <ProjectsSection
+                control={control}
+                register={register}
+                errors={errors}
+                setError={setError}
+                clearErrors={clearErrors}
+              />
             </FieldSet>
             <FieldSeparator />
             <FieldSet>
@@ -242,6 +248,8 @@ export function ProfileSettings() {
                 <Field className="col-span-2" data-invalid={!!errors.aboutImage}>
                   <FieldLabel>Imagen</FieldLabel>
                   <ImageUpload
+                    name="aboutImage"
+                    altName="aboutImageAlt"
                     error={errors.aboutImage?.message}
                     control={control}
                     setError={setError}
@@ -320,28 +328,79 @@ function getCountries(lang = "es-VE"): string[] {
   return Array.from(countries).sort();
 }
 
+type ImageFieldName = "aboutImage" | `projects.${number}.image`;
+type ImageAltFieldName = "aboutImageAlt" | `projects.${number}.imageAlt`;
+
+/** Tamaño máximo guardado (tras comprimir), alineado con el validador. */
+const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
+/** Tamaño máximo del archivo original: se comprime antes de guardarlo. */
+const MAX_SOURCE_BYTES = 10 * 1024 * 1024;
+/** Lado mayor máximo tras reescalar: suficiente para las tarjetas y el retrato. */
+const MAX_IMAGE_DIMENSION = 1600;
+
+/**
+ * Reescala y recomprime a WebP en el navegador. Las imágenes viajan como data
+ * URL dentro del formulario, así que mantenerlas pequeñas evita superar el
+ * límite de tamaño de la petición cuando hay varias.
+ */
+async function compressImage(file: File): Promise<Blob> {
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, MAX_IMAGE_DIMENSION / Math.max(bitmap.width, bitmap.height));
+    const canvas = new OffscreenCanvas(Math.round(bitmap.width * scale), Math.round(bitmap.height * scale));
+    canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+    const blob = await canvas.convertToBlob({ type: "image/webp", quality: 0.85 });
+    return blob.size < file.size ? blob : file;
+  } catch {
+    return file;
+  }
+}
+
+/** `FileReader` en lugar de `Blob.bytes()`/`toBase64()`, que aún no están en todos los navegadores. */
+function toDataUrl(blob: Blob) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+
 function ImageUpload({
+  name,
+  altName,
   error,
   control,
   clearErrors,
   setError,
 }: {
+  name: ImageFieldName;
+  altName: ImageAltFieldName;
   error: string | undefined;
   control: Control<ProfilePayloadInput>;
   setError: UseFormSetError<ProfilePayloadInput>;
   clearErrors: UseFormClearErrors<ProfilePayloadInput>;
 }) {
-  const { field } = useController({ name: "aboutImage", control });
-  const { value: aboutImageValue, onChange } = field;
+  const { field } = useController({ name, control });
+  const { value: imageValue, onChange } = field;
+  const [processing, setProcessing] = useState(false);
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop: async ([file]) => {
       if (!file) return;
-      const buffer = await file.bytes();
-      const base64String = (buffer as any).toBase64();
-      const dataUrl = `data:${file.type};base64,${base64String}`;
-      onChange(dataUrl);
-      clearErrors("aboutImage");
+      setProcessing(true);
+      try {
+        const image = await compressImage(file);
+        if (image.size > MAX_IMAGE_BYTES) {
+          setError(name, { type: "manual", message: "La imagen sigue superando 2MB tras comprimirla." });
+          return;
+        }
+        onChange(await toDataUrl(image));
+        clearErrors(name);
+      } finally {
+        setProcessing(false);
+      }
     },
     onDropRejected: (fileRejections: FileRejection[]) => {
       const firstError = fileRejections[0]?.errors?.[0];
@@ -349,13 +408,13 @@ function ImageUpload({
 
       switch (code as ErrorCode) {
         case ErrorCode.FileTooLarge:
-          setError("aboutImage", {
+          setError(name, {
             type: "manual",
-            message: "La imagen supera 2MB.",
+            message: "La imagen supera 10MB.",
           });
           return;
         case ErrorCode.FileInvalidType:
-          setError("aboutImage", {
+          setError(name, {
             type: "manual",
             message: "Formato de imagen no soportado.",
           });
@@ -364,16 +423,14 @@ function ImageUpload({
     },
     accept: { "image/*": [".png", ".jpg", ".jpeg", ".webp"] },
     multiple: false,
-    maxSize: 2 * 1024 * 1024,
+    maxSize: MAX_SOURCE_BYTES,
     noClick: true,
     noKeyboard: true,
     useFsAccessApi: true,
   });
 
-  const aboutImageAlt = useWatch({
-    control,
-    name: "aboutImageAlt",
-  });
+  const imageAlt = useWatch({ control, name: altName });
+  const hasImage = typeof imageValue === "string" && imageValue.length > 0;
 
   return (
     <div className="space-y-3">
@@ -387,23 +444,24 @@ function ImageUpload({
       >
         <input {...getInputProps()} />
         <p className="text-muted-foreground">Arrastra una imagen o selecciona un archivo.</p>
-        <p className="text-muted-foreground text-xs">PNG, JPG o WebP. Máx 2MB.</p>
+        <p className="text-muted-foreground text-xs">PNG, JPG o WebP. Máx 10MB; se optimiza al subirla.</p>
       </div>
-      {typeof aboutImageValue === "string" && aboutImageValue ? (
+      {hasImage ? (
         <div className="overflow-hidden rounded-xl border">
           <img
-            src={aboutImageValue}
-            alt={typeof aboutImageAlt === "string" && aboutImageAlt ? aboutImageAlt : "Vista previa"}
+            src={imageValue}
+            alt={typeof imageAlt === "string" && imageAlt ? imageAlt : "Vista previa"}
             className="h-48 w-full object-contain"
           />
         </div>
       ) : null}
       <div className="flex flex-wrap items-center gap-2">
-        <Button type="button" variant="secondary" onClick={open}>
-          Seleccionar imagen
+        <Button type="button" variant="secondary" onClick={open} disabled={processing}>
+          {processing ? <Spinner /> : null}
+          {processing ? "Procesando…" : hasImage ? "Cambiar imagen" : "Seleccionar imagen"}
         </Button>
-        {typeof aboutImageValue === "string" && aboutImageValue ? (
-          <Button type="button" variant="ghost" onClick={() => onChange("")}>
+        {hasImage ? (
+          <Button type="button" variant="ghost" onClick={() => onChange("")} disabled={processing}>
             Quitar
           </Button>
         ) : null}
@@ -699,10 +757,14 @@ function ProjectsSection({
   control,
   register,
   errors,
+  setError,
+  clearErrors,
 }: {
   control: Control<ProfilePayloadInput>;
   register: UseFormRegister<ProfilePayloadInput>;
   errors: FieldErrors<ProfilePayloadInput>;
+  setError: UseFormSetError<ProfilePayloadInput>;
+  clearErrors: UseFormClearErrors<ProfilePayloadInput>;
 }) {
   const projectFields = useFieldArray({ control, name: "projects" });
   const tagError = (index: number) => errors.projects?.[index]?.tags;
@@ -763,13 +825,17 @@ function ProjectsSection({
               error={errors.projects?.[index]?.repoUrl}
               placeholder="https://github.com/..."
             />
-            <FormInputField
-              {...register(`projects.${index}.image`)}
-              label="Imagen"
-              type="url"
-              error={errors.projects?.[index]?.image}
-              placeholder="https://..."
-            />
+            <Field className="col-span-2" data-invalid={!!errors.projects?.[index]?.image}>
+              <FieldLabel>Imagen</FieldLabel>
+              <ImageUpload
+                name={`projects.${index}.image`}
+                altName={`projects.${index}.imageAlt`}
+                error={errors.projects?.[index]?.image?.message}
+                control={control}
+                setError={setError}
+                clearErrors={clearErrors}
+              />
+            </Field>
             <FormInputField
               {...register(`projects.${index}.imageAlt`)}
               label="Texto alternativo"
