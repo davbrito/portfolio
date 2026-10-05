@@ -7,6 +7,7 @@ import LandingFooter from "@/components/pages/landing/landing-footer";
 import Projects from "@/components/pages/landing/projects";
 import { SectionHeader } from "@/components/pages/landing/section-header";
 import { TelemetryBar } from "@/components/pages/landing/telemetry-bar";
+import { useSectionReveal } from "@/components/pages/landing/use-section-reveal";
 import Technologies, { isCoreSkill } from "@/components/pages/landing/technologies";
 import type { PortfolioData } from "@/data/portfolio";
 import { Hydrate } from "@tanstack/react-start";
@@ -24,6 +25,8 @@ const sectionClass = "tech-reveal border-border scroll-mt-24 border-t py-16 md:p
 
 export function LandingPage({ data }: { data: PortfolioData }) {
   const { socialLinks, experience, technologies, profile, projects } = data;
+
+  useSectionReveal();
 
   const allSkills = technologies.flatMap((group) => group.skills);
   const coreSkills = allSkills.filter((skill) => isCoreSkill(skill.level)).map((skill) => skill.name);
