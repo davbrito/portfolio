@@ -239,15 +239,18 @@
   }
 }
 
+/*
+ * El progreso depende de la posición de la sección, no de un evento de
+ * cruce: al recargar a mitad de página, lo que ya pasó o está en pantalla
+ * se pinta visible de inmediato sin tener que mover el scroll.
+ * Sin soporte de scroll-driven animations no hay animación (contenido visible).
+ */
 @utility tech-reveal {
-  timeline-trigger: --tech-reveal view() entry 0% cover 22%;
-  trigger-scope: --tech-reveal;
-
-  animation-name: tech-reveal;
-  animation-duration: 0.45s;
-  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
-  animation-fill-mode: both;
-  animation-trigger: --tech-reveal play-forwards;
+  @supports (animation-timeline: view()) {
+    animation: tech-reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 240px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
