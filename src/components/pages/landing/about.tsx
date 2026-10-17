@@ -35,7 +35,7 @@ export default function About({ profile }: Props) {
     <div className="grid gap-12 md:grid-cols-12 md:gap-10">
       <div className="md:col-span-7">
         {lead ? (
-          <p className="font-display text-foreground text-2xl leading-snug font-medium tracking-[-0.02em] text-pretty sm:text-[1.7rem]">
+          <p className="text-foreground/90 text-lg leading-relaxed font-normal text-pretty">
             {lead}
           </p>
         ) : null}
