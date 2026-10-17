@@ -5,8 +5,7 @@ export const Route = createFileRoute("/profile/assets/$")({
   server: {
     handlers: {
       async GET({ request, params }: { request: Request; params: { _splat?: string } }) {
-        const filename =
-          params._splat || new URL(request.url).pathname.replace(/^\/profile\/assets\/?/, "");
+        const filename = params._splat || new URL(request.url).pathname.replace(/^\/profile\/assets\/?/, "");
 
         if (!filename) {
           return new Response("Asset not found", { status: 404 });

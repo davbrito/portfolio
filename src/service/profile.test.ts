@@ -7,10 +7,10 @@ describe("profile service with storage", () => {
     expect(stored).not.toBeNull();
     expect(stored?.name).toBe("David Brito");
     expect(stored?.title).toBe("Full-Stack Developer");
-    expect(stored?.aboutImage).toBe("/profile/assets/profile-about-image.jpeg");
+    expect(stored?.aboutImage).toBe("/profile/assets/profile-about-image-b4696c.jpeg");
     expect(stored?.projects.length).toBeGreaterThan(0);
-    expect(stored?.projects[0].image).toBe("/profile/assets/project-tasa-de-cambio-venezuela-image.webp");
-    expect(stored?.projects[1].image).toBe("/profile/assets/project-minurl-image.webp");
+    expect(stored?.projects[0].image).toBe("/profile/assets/project-tasa-de-cambio-venezuela-image-442b89.webp");
+    expect(stored?.projects[1].image).toBe("/profile/assets/project-minurl-image-2d37d2.webp");
   });
 
   it("findProfile adapts storage data for portfolio view", async () => {

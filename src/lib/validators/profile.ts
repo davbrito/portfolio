@@ -49,8 +49,7 @@ const skillItemSchema = z.object({
     .max(120, { error: "El grupo es muy largo" }),
 });
 
-const isValidImageSource = (val: string) =>
-  val.startsWith("/") || val.startsWith("data:") || URL.canParse(val);
+const isValidImageSource = (val: string) => val.startsWith("/") || val.startsWith("data:") || URL.canParse(val);
 
 const projectItemSchema = z.object({
   title: z
@@ -225,4 +224,3 @@ export const storedProfileDataSchema = z.object({
 });
 
 export type StoredProfileData = z.infer<typeof storedProfileDataSchema>;
-

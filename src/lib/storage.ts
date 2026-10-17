@@ -14,11 +14,7 @@ export async function getStorageObject(key: string): Promise<Response> {
   return client.fetch(url);
 }
 
-export async function putStorageObject(
-  key: string,
-  body: BodyInit,
-  headers?: HeadersInit,
-): Promise<Response> {
+export async function putStorageObject(key: string, body: BodyInit, headers?: HeadersInit): Promise<Response> {
   const url = new URL(`/${STORAGE_BUCKET}/${key}`, STORAGE_ENPOINT);
   return client.fetch(url, {
     method: "PUT",
@@ -33,4 +29,3 @@ export async function deleteStorageObject(key: string): Promise<Response> {
     method: "DELETE",
   });
 }
-

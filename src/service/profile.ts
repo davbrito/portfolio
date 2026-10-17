@@ -4,14 +4,11 @@ import { db8 } from "@/lib/db8";
 import type { ProfileWithRelations } from "@/lib/db8-rows";
 import { ADMIN_EMAIL, siteUrl } from "@/lib/server-env";
 import { getStorageObject, putStorageObject } from "@/lib/storage";
-import {
-  storedProfileDataSchema,
-  type ProfilePayload,
-  type StoredProfileData,
-} from "@/lib/validators/profile";
+import { storedProfileDataSchema, type ProfilePayload, type StoredProfileData } from "@/lib/validators/profile";
 import { createServerOnlyFn } from "@tanstack/react-start";
 import deburr from "lodash-es/deburr.js";
 import kebabCase from "lodash-es/kebabCase.js";
+import { createHash } from "node:crypto";
 import { parse, stringify } from "yaml";
 
 export type { StoredProfileData };
@@ -22,6 +19,10 @@ function parseDataUrl(dataUrl: string) {
   const contentType = match[1];
   const buffer = Buffer.from(match[2], "base64");
   return { contentType, buffer };
+}
+
+function computeHash6(buffer: Buffer): string {
+  return createHash("sha256").update(buffer).digest("hex").slice(0, 6);
 }
 
 function getExtension(contentType: string): string {
@@ -49,7 +50,6 @@ export async function getProfileFromStorage(): Promise<StoredProfileData | null>
     return null;
   }
 }
-
 
 export async function findProfile(userId?: string): Promise<ProfileWithRelations | null> {
   const stored = await getProfileFromStorage();
@@ -129,8 +129,9 @@ export async function upsertProfile(_userId: string, data: ProfilePayload) {
   if (aboutImage && aboutImage.startsWith("data:")) {
     const { contentType, buffer } = parseDataUrl(aboutImage);
     const ext = getExtension(contentType);
-    // Deterministic: entity "profile", property "aboutImage"
-    const filename = `profile-about-image.${ext}`;
+    const hash = computeHash6(buffer);
+    // Deterministic: entity "profile", property "aboutImage", 6-char hash for cache-busting
+    const filename = `profile-about-image-${hash}.${ext}`;
     const storageKey = `profile/assets/${filename}`;
     const res = await putStorageObject(storageKey, buffer, { "Content-Type": contentType });
     if (!res.ok) {
@@ -144,12 +145,13 @@ export async function upsertProfile(_userId: string, data: ProfilePayload) {
     company: exp.company,
     location: exp.location,
     period: exp.period,
-    highlights: typeof exp.highlights === "string"
-      ? exp.highlights
-          .split(/[\r\n]+/)
-          .map((item) => item.trim())
-          .filter(Boolean)
-      : (exp.highlights ?? []),
+    highlights:
+      typeof exp.highlights === "string"
+        ? exp.highlights
+            .split(/[\r\n]+/)
+            .map((item) => item.trim())
+            .filter(Boolean)
+        : (exp.highlights ?? []),
   }));
 
   const cleanedSkills = skills.filter((skill) =>
@@ -165,9 +167,10 @@ export async function upsertProfile(_userId: string, data: ProfilePayload) {
     if (image && image.startsWith("data:")) {
       const { contentType, buffer } = parseDataUrl(image);
       const ext = getExtension(contentType);
-      // Deterministic: entity "project-{slug}", property "image"
+      const hash = computeHash6(buffer);
+      // Deterministic: entity "project-{slug}", property "image", 6-char hash for cache-busting
       const slug = toSafeSlug(project.title || `project-${i}`);
-      const filename = `project-${slug}-image.${ext}`;
+      const filename = `project-${slug}-image-${hash}.${ext}`;
       const storageKey = `profile/assets/${filename}`;
       const res = await putStorageObject(storageKey, buffer, { "Content-Type": contentType });
       if (!res.ok) {
