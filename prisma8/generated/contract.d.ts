@@ -33,9 +33,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'ff7145e9d6f826f9f689b384af74c220e2254d3caa16c05ef88f1ecd46da08b6'>;
+  StorageHashBase<'1a618afee07d9850550e9341f1f6c6fe80e0622ad8a1f21934ead63e6a4a4c9d'>;
 export type ExecutionHash =
-  ExecutionHashBase<'c2de2c325b58e4c5d003cb484283b46e7397956180a78424ef884182af20bf06'>;
+  ExecutionHashBase<'cf79d0cbde73dec24d64d1aec7cf6e1948952abf31022d518a303020b23a587c'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -257,15 +257,6 @@ export type FieldOutputTypes = {
       readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
       readonly issuer: CodecTypes['pg/text@1']['output'];
     };
-    readonly Experience: {
-      readonly id: CodecTypes['pg/uuid@1']['output'];
-      readonly profileId: CodecTypes['pg/text@1']['output'];
-      readonly title: CodecTypes['pg/text@1']['output'];
-      readonly company: CodecTypes['pg/text@1']['output'];
-      readonly location: CodecTypes['pg/text@1']['output'];
-      readonly period: CodecTypes['pg/text@1']['output'];
-      readonly highlights: ReadonlyArray<CodecTypes['pg/text@1']['output']> | null;
-    };
     readonly Messages: {
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
@@ -305,18 +296,6 @@ export type FieldOutputTypes = {
       readonly email: CodecTypes['pg/text@1']['output'] | null;
       readonly active: CodecTypes['pg/bool@1']['output'];
     };
-    readonly Proyects: {
-      readonly id: CodecTypes['pg/uuid@1']['output'];
-      readonly profileId: CodecTypes['pg/text@1']['output'];
-      readonly title: CodecTypes['pg/text@1']['output'];
-      readonly description: CodecTypes['pg/text@1']['output'];
-      readonly url: CodecTypes['pg/text@1']['output'] | null;
-      readonly repoUrl: CodecTypes['pg/text@1']['output'] | null;
-      readonly image: CodecTypes['pg/text@1']['output'] | null;
-      readonly imageAlt: CodecTypes['pg/text@1']['output'] | null;
-      readonly tags: ReadonlyArray<CodecTypes['pg/text@1']['output']> | null;
-      readonly order: CodecTypes['pg/int4@1']['output'];
-    };
     readonly RateLimits: {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly key: CodecTypes['pg/text@1']['output'];
@@ -332,13 +311,6 @@ export type FieldOutputTypes = {
       readonly ipAddress: CodecTypes['pg/text@1']['output'] | null;
       readonly userAgent: CodecTypes['pg/text@1']['output'] | null;
       readonly userId: CodecTypes['pg/text@1']['output'];
-    };
-    readonly Skills: {
-      readonly id: CodecTypes['pg/uuid@1']['output'];
-      readonly profileId: CodecTypes['pg/text@1']['output'];
-      readonly name: CodecTypes['pg/text@1']['output'];
-      readonly level: CodecTypes['pg/text@1']['output'];
-      readonly group: CodecTypes['pg/text@1']['output'];
     };
     readonly Users: {
       readonly id: CodecTypes['pg/text@1']['output'];
@@ -377,15 +349,6 @@ export type FieldInputTypes = {
       readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['input'];
       readonly issuer: CodecTypes['pg/text@1']['input'];
     };
-    readonly Experience: {
-      readonly id: CodecTypes['pg/uuid@1']['input'];
-      readonly profileId: CodecTypes['pg/text@1']['input'];
-      readonly title: CodecTypes['pg/text@1']['input'];
-      readonly company: CodecTypes['pg/text@1']['input'];
-      readonly location: CodecTypes['pg/text@1']['input'];
-      readonly period: CodecTypes['pg/text@1']['input'];
-      readonly highlights: ReadonlyArray<CodecTypes['pg/text@1']['input']> | null;
-    };
     readonly Messages: {
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
@@ -425,18 +388,6 @@ export type FieldInputTypes = {
       readonly email: CodecTypes['pg/text@1']['input'] | null;
       readonly active: CodecTypes['pg/bool@1']['input'];
     };
-    readonly Proyects: {
-      readonly id: CodecTypes['pg/uuid@1']['input'];
-      readonly profileId: CodecTypes['pg/text@1']['input'];
-      readonly title: CodecTypes['pg/text@1']['input'];
-      readonly description: CodecTypes['pg/text@1']['input'];
-      readonly url: CodecTypes['pg/text@1']['input'] | null;
-      readonly repoUrl: CodecTypes['pg/text@1']['input'] | null;
-      readonly image: CodecTypes['pg/text@1']['input'] | null;
-      readonly imageAlt: CodecTypes['pg/text@1']['input'] | null;
-      readonly tags: ReadonlyArray<CodecTypes['pg/text@1']['input']> | null;
-      readonly order: CodecTypes['pg/int4@1']['input'];
-    };
     readonly RateLimits: {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly key: CodecTypes['pg/text@1']['input'];
@@ -452,13 +403,6 @@ export type FieldInputTypes = {
       readonly ipAddress: CodecTypes['pg/text@1']['input'] | null;
       readonly userAgent: CodecTypes['pg/text@1']['input'] | null;
       readonly userId: CodecTypes['pg/text@1']['input'];
-    };
-    readonly Skills: {
-      readonly id: CodecTypes['pg/uuid@1']['input'];
-      readonly profileId: CodecTypes['pg/text@1']['input'];
-      readonly name: CodecTypes['pg/text@1']['input'];
-      readonly level: CodecTypes['pg/text@1']['input'];
-      readonly group: CodecTypes['pg/text@1']['input'];
     };
     readonly Users: {
       readonly id: CodecTypes['pg/text@1']['input'];
@@ -496,15 +440,6 @@ export type StorageColumnTypes = {
       readonly scope: CodecTypes['pg/text@1']['output'] | null;
       readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
       readonly userId: CodecTypes['pg/text@1']['output'];
-    };
-    readonly Experience: {
-      readonly company: CodecTypes['pg/text@1']['output'];
-      readonly highlights: ReadonlyArray<CodecTypes['pg/text@1']['output']> | null;
-      readonly id: CodecTypes['pg/uuid@1']['output'];
-      readonly location: CodecTypes['pg/text@1']['output'];
-      readonly period: CodecTypes['pg/text@1']['output'];
-      readonly profileId: CodecTypes['pg/text@1']['output'];
-      readonly title: CodecTypes['pg/text@1']['output'];
     };
     readonly Messages: {
       readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['output'];
@@ -545,18 +480,6 @@ export type StorageColumnTypes = {
       readonly title: CodecTypes['pg/text@1']['output'];
       readonly userId: CodecTypes['pg/text@1']['output'];
     };
-    readonly Proyects: {
-      readonly description: CodecTypes['pg/text@1']['output'];
-      readonly id: CodecTypes['pg/uuid@1']['output'];
-      readonly image: CodecTypes['pg/text@1']['output'] | null;
-      readonly imageAlt: CodecTypes['pg/text@1']['output'] | null;
-      readonly order: CodecTypes['pg/int4@1']['output'];
-      readonly profileId: CodecTypes['pg/text@1']['output'];
-      readonly repoUrl: CodecTypes['pg/text@1']['output'] | null;
-      readonly tags: ReadonlyArray<CodecTypes['pg/text@1']['output']> | null;
-      readonly title: CodecTypes['pg/text@1']['output'];
-      readonly url: CodecTypes['pg/text@1']['output'] | null;
-    };
     readonly rateLimits: {
       readonly count: CodecTypes['pg/int4@1']['output'];
       readonly id: CodecTypes['pg/text@1']['output'];
@@ -572,13 +495,6 @@ export type StorageColumnTypes = {
       readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
       readonly userAgent: CodecTypes['pg/text@1']['output'] | null;
       readonly userId: CodecTypes['pg/text@1']['output'];
-    };
-    readonly Skills: {
-      readonly group: CodecTypes['pg/text@1']['output'];
-      readonly id: CodecTypes['pg/uuid@1']['output'];
-      readonly level: CodecTypes['pg/text@1']['output'];
-      readonly name: CodecTypes['pg/text@1']['output'];
-      readonly profileId: CodecTypes['pg/text@1']['output'];
     };
     readonly users: {
       readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['output'];
@@ -616,15 +532,6 @@ export type StorageColumnInputTypes = {
       readonly scope: CodecTypes['pg/text@1']['input'] | null;
       readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['input'];
       readonly userId: CodecTypes['pg/text@1']['input'];
-    };
-    readonly Experience: {
-      readonly company: CodecTypes['pg/text@1']['input'];
-      readonly highlights: ReadonlyArray<CodecTypes['pg/text@1']['input']> | null;
-      readonly id: CodecTypes['pg/uuid@1']['input'];
-      readonly location: CodecTypes['pg/text@1']['input'];
-      readonly period: CodecTypes['pg/text@1']['input'];
-      readonly profileId: CodecTypes['pg/text@1']['input'];
-      readonly title: CodecTypes['pg/text@1']['input'];
     };
     readonly Messages: {
       readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['input'];
@@ -665,18 +572,6 @@ export type StorageColumnInputTypes = {
       readonly title: CodecTypes['pg/text@1']['input'];
       readonly userId: CodecTypes['pg/text@1']['input'];
     };
-    readonly Proyects: {
-      readonly description: CodecTypes['pg/text@1']['input'];
-      readonly id: CodecTypes['pg/uuid@1']['input'];
-      readonly image: CodecTypes['pg/text@1']['input'] | null;
-      readonly imageAlt: CodecTypes['pg/text@1']['input'] | null;
-      readonly order: CodecTypes['pg/int4@1']['input'];
-      readonly profileId: CodecTypes['pg/text@1']['input'];
-      readonly repoUrl: CodecTypes['pg/text@1']['input'] | null;
-      readonly tags: ReadonlyArray<CodecTypes['pg/text@1']['input']> | null;
-      readonly title: CodecTypes['pg/text@1']['input'];
-      readonly url: CodecTypes['pg/text@1']['input'] | null;
-    };
     readonly rateLimits: {
       readonly count: CodecTypes['pg/int4@1']['input'];
       readonly id: CodecTypes['pg/text@1']['input'];
@@ -692,13 +587,6 @@ export type StorageColumnInputTypes = {
       readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['input'];
       readonly userAgent: CodecTypes['pg/text@1']['input'] | null;
       readonly userId: CodecTypes['pg/text@1']['input'];
-    };
-    readonly Skills: {
-      readonly group: CodecTypes['pg/text@1']['input'];
-      readonly id: CodecTypes['pg/uuid@1']['input'];
-      readonly level: CodecTypes['pg/text@1']['input'];
-      readonly name: CodecTypes['pg/text@1']['input'];
-      readonly profileId: CodecTypes['pg/text@1']['input'];
     };
     readonly users: {
       readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['input'];
@@ -842,63 +730,6 @@ type ContractBase = Omit<
                     readonly columns: readonly ['id'];
                   };
                   readonly name: 'accounts_userId_fkey';
-                },
-              ];
-            };
-            readonly Experience: {
-              columns: {
-                readonly id: {
-                  readonly nativeType: 'uuid';
-                  readonly codecId: 'pg/uuid@1';
-                  readonly nullable: false;
-                };
-                readonly profileId: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly title: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly company: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly location: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly period: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly highlights: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
-                };
-              };
-              primaryKey: { readonly columns: readonly ['id']; readonly name: 'Experience_pkey' };
-              uniques: readonly [];
-              indexes: readonly [];
-              foreignKeys: readonly [
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Experience';
-                    readonly columns: readonly ['profileId'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Profile';
-                    readonly columns: readonly ['userId'];
-                  };
-                  readonly name: 'Experience_profileId_fkey';
                 },
               ];
             };
@@ -1184,82 +1015,6 @@ type ContractBase = Omit<
                 },
               ];
             };
-            readonly Proyects: {
-              columns: {
-                readonly id: {
-                  readonly nativeType: 'uuid';
-                  readonly codecId: 'pg/uuid@1';
-                  readonly nullable: false;
-                };
-                readonly profileId: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly title: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly description: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly url: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
-                };
-                readonly repoUrl: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
-                };
-                readonly image: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
-                };
-                readonly imageAlt: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
-                };
-                readonly tags: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
-                };
-                readonly order: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
-                  };
-                };
-              };
-              primaryKey: { readonly columns: readonly ['id']; readonly name: 'Proyects_pkey' };
-              uniques: readonly [];
-              indexes: readonly [];
-              foreignKeys: readonly [
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Proyects';
-                    readonly columns: readonly ['profileId'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Profile';
-                    readonly columns: readonly ['userId'];
-                  };
-                  readonly name: 'Proyects_profileId_fkey';
-                },
-              ];
-            };
             readonly rateLimits: {
               columns: {
                 readonly id: {
@@ -1368,53 +1123,6 @@ type ContractBase = Omit<
                     readonly columns: readonly ['id'];
                   };
                   readonly name: 'sessions_userId_fkey';
-                },
-              ];
-            };
-            readonly Skills: {
-              columns: {
-                readonly id: {
-                  readonly nativeType: 'uuid';
-                  readonly codecId: 'pg/uuid@1';
-                  readonly nullable: false;
-                };
-                readonly profileId: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly name: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly level: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly group: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-              };
-              primaryKey: { readonly columns: readonly ['id']; readonly name: 'Skills_pkey' };
-              uniques: readonly [];
-              indexes: readonly [];
-              foreignKeys: readonly [
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Skills';
-                    readonly columns: readonly ['profileId'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Profile';
-                    readonly columns: readonly ['userId'];
-                  };
-                  readonly name: 'Skills_profileId_fkey';
                 },
               ];
             };
@@ -1539,19 +1247,13 @@ type ContractBase = Omit<
     readonly users: { readonly namespace: 'public' & NamespaceId; readonly model: 'Users' };
     readonly accounts: { readonly namespace: 'public' & NamespaceId; readonly model: 'Accounts' };
     readonly Profile: { readonly namespace: 'public' & NamespaceId; readonly model: 'Profile' };
-    readonly Experience: {
-      readonly namespace: 'public' & NamespaceId;
-      readonly model: 'Experience';
-    };
     readonly Messages: { readonly namespace: 'public' & NamespaceId; readonly model: 'Messages' };
     readonly passkeys: { readonly namespace: 'public' & NamespaceId; readonly model: 'Passkeys' };
-    readonly Proyects: { readonly namespace: 'public' & NamespaceId; readonly model: 'Proyects' };
     readonly rateLimits: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'RateLimits';
     };
     readonly sessions: { readonly namespace: 'public' & NamespaceId; readonly model: 'Sessions' };
-    readonly Skills: { readonly namespace: 'public' & NamespaceId; readonly model: 'Skills' };
     readonly verifications: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Verifications';
@@ -1667,65 +1369,6 @@ type ContractBase = Omit<
                 readonly createdAt: { readonly column: 'createdAt' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
                 readonly issuer: { readonly column: 'issuer' };
-              };
-            };
-          };
-          readonly Experience: {
-            readonly fields: {
-              readonly id: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
-              };
-              readonly profileId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly title: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly company: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly location: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly period: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly highlights: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-                readonly many: true;
-              };
-            };
-            readonly relations: {
-              readonly profile: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Profile';
-                };
-                readonly cardinality: 'N:1';
-                readonly on: {
-                  readonly localFields: readonly ['profileId'];
-                  readonly targetFields: readonly ['userId'];
-                };
-              };
-            };
-            readonly storage: {
-              readonly table: 'Experience';
-              readonly namespaceId: 'public';
-              readonly fields: {
-                readonly id: { readonly column: 'id' };
-                readonly profileId: { readonly column: 'profileId' };
-                readonly title: { readonly column: 'title' };
-                readonly company: { readonly column: 'company' };
-                readonly location: { readonly column: 'location' };
-                readonly period: { readonly column: 'period' };
-                readonly highlights: { readonly column: 'highlights' };
               };
             };
           };
@@ -1942,43 +1585,10 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
-              readonly experiences: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Experience';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['userId'];
-                  readonly targetFields: readonly ['profileId'];
-                };
-              };
               readonly messages: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
                   readonly model: 'Messages';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['userId'];
-                  readonly targetFields: readonly ['profileId'];
-                };
-              };
-              readonly proyects: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Proyects';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['userId'];
-                  readonly targetFields: readonly ['profileId'];
-                };
-              };
-              readonly skills: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Skills';
                 };
                 readonly cardinality: '1:N';
                 readonly on: {
@@ -2016,80 +1626,6 @@ type ContractBase = Omit<
                 readonly linkedinUrl: { readonly column: 'linkedinUrl' };
                 readonly email: { readonly column: 'email' };
                 readonly active: { readonly column: 'active' };
-              };
-            };
-          };
-          readonly Proyects: {
-            readonly fields: {
-              readonly id: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
-              };
-              readonly profileId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly title: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly description: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly url: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly repoUrl: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly image: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly imageAlt: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly tags: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-                readonly many: true;
-              };
-              readonly order: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
-            };
-            readonly relations: {
-              readonly profile: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Profile';
-                };
-                readonly cardinality: 'N:1';
-                readonly on: {
-                  readonly localFields: readonly ['profileId'];
-                  readonly targetFields: readonly ['userId'];
-                };
-              };
-            };
-            readonly storage: {
-              readonly table: 'Proyects';
-              readonly namespaceId: 'public';
-              readonly fields: {
-                readonly id: { readonly column: 'id' };
-                readonly profileId: { readonly column: 'profileId' };
-                readonly title: { readonly column: 'title' };
-                readonly description: { readonly column: 'description' };
-                readonly url: { readonly column: 'url' };
-                readonly repoUrl: { readonly column: 'repoUrl' };
-                readonly image: { readonly column: 'image' };
-                readonly imageAlt: { readonly column: 'imageAlt' };
-                readonly tags: { readonly column: 'tags' };
-                readonly order: { readonly column: 'order' };
               };
             };
           };
@@ -2196,54 +1732,6 @@ type ContractBase = Omit<
                 readonly ipAddress: { readonly column: 'ipAddress' };
                 readonly userAgent: { readonly column: 'userAgent' };
                 readonly userId: { readonly column: 'userId' };
-              };
-            };
-          };
-          readonly Skills: {
-            readonly fields: {
-              readonly id: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
-              };
-              readonly profileId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly name: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly level: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly group: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-            };
-            readonly relations: {
-              readonly profile: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Profile';
-                };
-                readonly cardinality: 'N:1';
-                readonly on: {
-                  readonly localFields: readonly ['profileId'];
-                  readonly targetFields: readonly ['userId'];
-                };
-              };
-            };
-            readonly storage: {
-              readonly table: 'Skills';
-              readonly namespaceId: 'public';
-              readonly fields: {
-                readonly id: { readonly column: 'id' };
-                readonly profileId: { readonly column: 'profileId' };
-                readonly name: { readonly column: 'name' };
-                readonly level: { readonly column: 'level' };
-                readonly group: { readonly column: 'group' };
               };
             };
           };
@@ -2429,31 +1917,7 @@ type ContractBase = Omit<
         {
           readonly ref: {
             readonly namespace: 'public';
-            readonly table: 'Experience';
-            readonly column: 'id';
-          };
-          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv7' };
-        },
-        {
-          readonly ref: {
-            readonly namespace: 'public';
             readonly table: 'Messages';
-            readonly column: 'id';
-          };
-          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv7' };
-        },
-        {
-          readonly ref: {
-            readonly namespace: 'public';
-            readonly table: 'Proyects';
-            readonly column: 'id';
-          };
-          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv7' };
-        },
-        {
-          readonly ref: {
-            readonly namespace: 'public';
-            readonly table: 'Skills';
             readonly column: 'id';
           };
           readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv7' };
