@@ -44,7 +44,12 @@ pnpm-debug.log*
 .wrangler
 
 # agent skills / assistants
-.agents/
-.claude/
-.cursor/
-.devin/
+# `.agents/skills` es la fuente de verdad y se versiona completa. Los demás
+# directorios de asistentes solo espejan `skills/` con symlinks, así que el
+# resto de su contenido (ajustes locales, cachés) sigue ignorado.
+.claude/*
+!.claude/skills/
+.cursor/*
+!.cursor/skills/
+.devin/*
+!.devin/skills/
