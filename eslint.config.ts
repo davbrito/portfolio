@@ -18,6 +18,10 @@ export default defineConfig(
     ".vercel/",
     ".output/",
     "src/routeTree.gen.ts",
+    ".agents/",
+    ".claude/",
+    ".cursor/",
+    ".devin/",
   ]),
 
   js.configs.recommended,

@@ -4,3 +4,7 @@ pnpm-workspace.yaml
 src/routeTree.gen.ts
 prisma8/generated/
 migrations/
+.agents/
+.claude/
+.cursor/
+.devin/

@@ -1,0 +1,113 @@
+[
+  {
+    "id": "dropTable.Experience",
+    "label": "Drop table \"Experience\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Experience"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Experience\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Experience\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop table \"Experience\"",
+        "sql": "DROP TABLE \"public\".\"Experience\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Experience\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Experience\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropTable.Proyects",
+    "label": "Drop table \"Proyects\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Proyects"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Proyects\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Proyects\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop table \"Proyects\"",
+        "sql": "DROP TABLE \"public\".\"Proyects\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Proyects\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Proyects\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropTable.Skills",
+    "label": "Drop table \"Skills\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Skills"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Skills\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Skills\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop table \"Skills\"",
+        "sql": "DROP TABLE \"public\".\"Skills\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Skills\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Skills\""
+        ]
+      }
+    ]
+  }
+]

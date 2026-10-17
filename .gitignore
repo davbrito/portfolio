@@ -42,3 +42,9 @@ pnpm-debug.log*
 .nitro
 .output
 .wrangler
+
+# agent skills / assistants
+.agents/
+.claude/
+.cursor/
+.devin/

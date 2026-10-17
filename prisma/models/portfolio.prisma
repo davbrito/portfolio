@@ -14,9 +14,6 @@ model Profile {
   linkedinUrl   String?
   email         String?
   active        Boolean      @default(true)
-  experiences   Experience[]
-  skills        Skills[]
-  projects      Proyects[]
   messages      Messages[]
 }
 
@@ -30,38 +27,4 @@ model Messages {
   message   String
   createdAt DateTime  @default(now())
   readAt    DateTime?
-}
-
-model Experience {
-  id         String   @id @default(uuid(7)) @db.Uuid
-  profileId  String
-  profile    Profile  @relation(fields: [profileId], references: [userId], onDelete: Cascade)
-  title      String
-  company    String
-  location   String
-  period     String
-  highlights String[]
-}
-
-model Skills {
-  id        String  @id @default(uuid(7)) @db.Uuid
-  profileId String
-  profile   Profile @relation(fields: [profileId], references: [userId], onDelete: Cascade)
-  name      String
-  level     String
-  group     String
-}
-
-model Proyects {
-  id          String   @id @default(uuid(7)) @db.Uuid
-  profileId   String
-  profile     Profile  @relation(fields: [profileId], references: [userId], onDelete: Cascade)
-  title       String
-  description String
-  url         String?
-  repoUrl     String?
-  image       String?
-  imageAlt    String?
-  tags        String[]
-  order       Int      @default(0)
 }
