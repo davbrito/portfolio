@@ -34,11 +34,7 @@ export default function About({ profile }: Props) {
   return (
     <div className="grid gap-12 md:grid-cols-12 md:gap-10">
       <div className="md:col-span-7">
-        {lead ? (
-          <p className="text-foreground/90 text-lg leading-relaxed font-normal text-pretty">
-            {lead}
-          </p>
-        ) : null}
+        {lead ? <p className="text-foreground/90 text-lg leading-relaxed font-normal text-pretty">{lead}</p> : null}
         <div className="mt-6 space-y-4">
           {rest.map((paragraph, index) => (
             // eslint-disable-next-line @eslint-react/no-array-index-key
