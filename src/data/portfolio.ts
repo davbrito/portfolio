@@ -1,16 +1,10 @@
 import type { IconName } from "@/components/icons";
-import { db8 } from "@/lib/db8";
-import type { ProfileWithRelations } from "@/lib/db8-rows";
 import { createObfuscationKey, obfuscate, serializeObfuscationKey } from "@/lib/obfuscation";
+import { findProfile } from "@/service/profile";
 import { createServerFn } from "@tanstack/react-start";
 
 export const getPortfolioData = createServerFn().handler(async () => {
-  const result = await db8.orm.public.Profile.include("experiences")
-    .include("skills")
-    .include("proyects", (q) => q.orderBy((p) => p.order.asc()))
-    .first();
-
-  const profile = result as unknown as ProfileWithRelations | null;
+  const profile = await findProfile();
 
   if (!profile) return null;
 

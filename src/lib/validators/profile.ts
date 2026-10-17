@@ -49,6 +49,8 @@ const skillItemSchema = z.object({
     .max(120, { error: "El grupo es muy largo" }),
 });
 
+const isValidImageSource = (val: string) => val.startsWith("/") || val.startsWith("data:") || URL.canParse(val);
+
 const projectItemSchema = z.object({
   title: z
     .string()
@@ -72,7 +74,7 @@ const projectItemSchema = z.object({
     .nullable()
     .transform((val) => val || null)
     .pipe(z.url({ error: "URL inválida" }).max(500).nullable()),
-  // Igual que `aboutImage`: URL externa o data URL subida desde el admin.
+  // URL externa, ruta relativa (ej. /profile/assets/...) o data URL subida desde el admin.
   image: z
     .string()
     .trim()
@@ -80,8 +82,9 @@ const projectItemSchema = z.object({
     .transform((val) => val || null)
     .pipe(
       z
-        .url({ error: "URL inválida" })
+        .string()
         .max(2 * 1024 * 1024)
+        .refine(isValidImageSource, { message: "URL o ruta de imagen inválida" })
         .nullable(),
     ),
   imageAlt: z
@@ -139,9 +142,10 @@ export const profilePayloadSchema = z.object({
   aboutImage: z.preprocess(
     (value) => value || null,
     z
-      .url({ error: "URL inválida" })
+      .string()
       .trim()
       .max(2 * 1024 * 1024)
+      .refine(isValidImageSource, { message: "URL o ruta de imagen inválida" })
       .nullable(),
   ),
   aboutImageAlt: z
@@ -175,3 +179,48 @@ export const profilePayloadSchema = z.object({
 
 export type ProfilePayload = z.infer<typeof profilePayloadSchema>;
 export type ProfilePayloadInput = z.input<typeof profilePayloadSchema>;
+
+export const storedExperienceSchema = z.object({
+  title: z.string().default(""),
+  company: z.string().default(""),
+  location: z.string().default(""),
+  period: z.string().default(""),
+  highlights: z.array(z.string()).default([]),
+});
+
+export const storedSkillSchema = z.object({
+  name: z.string().default(""),
+  level: z.string().default(""),
+  group: z.string().default(""),
+});
+
+export const storedProjectSchema = z.object({
+  title: z.string().default(""),
+  description: z.string().default(""),
+  url: z.string().nullable().default(null),
+  repoUrl: z.string().nullable().default(null),
+  image: z.string().nullable().default(null),
+  imageAlt: z.string().nullable().default(null),
+  tags: z.array(z.string()).default([]),
+});
+
+export const storedProfileDataSchema = z.object({
+  name: z.string().default(""),
+  title: z.string().default(""),
+  location: z.string().default(""),
+  experience: z.string().default(""),
+  description: z.string().default(""),
+  brief: z.string().default(""),
+  aboutText: z.string().default(""),
+  aboutImage: z.string().nullable().default(null),
+  aboutImageAlt: z.string().default(""),
+  githubUrl: z.string().nullable().default(null),
+  linkedinUrl: z.string().nullable().default(null),
+  email: z.string().nullable().default(null),
+  active: z.boolean().default(false),
+  experiences: z.array(storedExperienceSchema).default([]),
+  skills: z.array(storedSkillSchema).default([]),
+  projects: z.array(storedProjectSchema).default([]),
+});
+
+export type StoredProfileData = z.infer<typeof storedProfileDataSchema>;
