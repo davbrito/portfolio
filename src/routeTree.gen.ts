@@ -16,6 +16,7 @@ import { Route as AdminIndexRouteImport } from './pages/admin/index'
 import { Route as AuthPathRouteImport } from './pages/auth/$path'
 import { Route as ApiAdminExportProfileDotyamlRouteImport } from './pages/api/admin/export-profile[.]yaml'
 import { Route as ApiAuthSplatRouteImport } from './pages/api/auth/$'
+import { Route as ProfileAssetsSplatRouteImport } from './pages/profile/assets/$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -53,6 +54,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileAssetsSplatRoute = ProfileAssetsSplatRouteImport.update({
+  id: '/profile/assets/$',
+  path: '/profile/assets/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -62,6 +68,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/api/admin/export-profile.yaml': typeof ApiAdminExportProfileDotyamlRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/profile/assets/$': typeof ProfileAssetsSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/api/admin/export-profile.yaml': typeof ApiAdminExportProfileDotyamlRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/profile/assets/$': typeof ProfileAssetsSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/api/admin/export-profile.yaml': typeof ApiAdminExportProfileDotyamlRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/profile/assets/$': typeof ProfileAssetsSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/api/admin/export-profile.yaml'
     | '/api/auth/$'
+    | '/profile/assets/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/api/admin/export-profile.yaml'
     | '/api/auth/$'
+    | '/profile/assets/$'
   id:
     | '__root__'
     | '/'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/api/admin/export-profile.yaml'
     | '/api/auth/$'
+    | '/profile/assets/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -117,6 +129,7 @@ export interface RootRouteChildren {
   AuthPathRoute: typeof AuthPathRoute
   ApiAdminExportProfileDotyamlRoute: typeof ApiAdminExportProfileDotyamlRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ProfileAssetsSplatRoute: typeof ProfileAssetsSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -170,6 +183,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile/assets/$': {
+      id: '/profile/assets/$'
+      path: '/profile/assets/$'
+      fullPath: '/profile/assets/$'
+      preLoaderRoute: typeof ProfileAssetsSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -192,6 +212,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthPathRoute: AuthPathRoute,
   ApiAdminExportProfileDotyamlRoute: ApiAdminExportProfileDotyamlRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ProfileAssetsSplatRoute: ProfileAssetsSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
