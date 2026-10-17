@@ -1,3 +1,5 @@
+"use client";
+
 import { getViewURL, validateEmailAddress } from "@better-auth-ui/core";
 import { useAuth, useChangeEmail, useSession } from "@better-auth-ui/react";
 import { useEffect } from "react";
@@ -7,7 +9,6 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import { isAuthFormFieldInvalid, useAuthForm } from "../../auth-form";
 
@@ -28,14 +29,14 @@ export function ChangeEmail({ className }: ChangeEmailProps) {
   const { authClient, basePaths, baseURL, localization, viewPaths } = useAuth();
   const { data: session } = useSession(authClient);
 
-  const { mutate: changeEmail, isPending } = useChangeEmail(authClient, {
+  const { mutateAsync: changeEmail, isPending } = useChangeEmail(authClient, {
     onSuccess: () => toast.success(localization.settings.changeEmailSuccess),
   });
 
   const form = useAuthForm({
     defaultValues: { email: "" },
-    onSubmit: ({ value }) =>
-      changeEmail({
+    onSubmit: async ({ value }) =>
+      await changeEmail({
         callbackURL: getViewURL(baseURL, basePaths.settings, viewPaths.settings.account),
         newEmail: value.email,
       }),
@@ -95,9 +96,7 @@ export function ChangeEmail({ className }: ChangeEmailProps) {
             </CardContent>
 
             <CardFooter>
-              <form.AuthFormSubmitButton size="sm" disabled={isPending || !session}>
-                {isPending && <Spinner />}
-
+              <form.AuthFormSubmitButton isPending={isPending} size="sm" disabled={isPending || !session}>
                 {localization.settings.updateEmail}
               </form.AuthFormSubmitButton>
             </CardFooter>

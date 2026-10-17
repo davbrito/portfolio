@@ -4,7 +4,6 @@ import { useAuth, useFetchOptions, useRequestPasswordReset } from "@better-auth-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import { isAuthFormFieldInvalid, useAuthForm } from "./auth-form";
 import { RESET_LINK_SENT_STORAGE_KEY } from "./reset-link-sent";
@@ -29,7 +28,7 @@ export function ForgotPassword({ className }: ForgotPasswordProps) {
 
   const { fetchOptions, resetFetchOptions } = useFetchOptions();
 
-  const { mutate: requestPasswordReset, isPending } = useRequestPasswordReset(authClient, {
+  const { mutateAsync: requestPasswordReset, isPending } = useRequestPasswordReset(authClient, {
     onError: () => {
       resetFetchOptions();
     },
@@ -41,8 +40,8 @@ export function ForgotPassword({ className }: ForgotPasswordProps) {
 
   const form = useAuthForm({
     defaultValues: { email: "" },
-    onSubmit: ({ value }) =>
-      requestPasswordReset({
+    onSubmit: async ({ value }) =>
+      await requestPasswordReset({
         email: value.email,
         redirectTo: getViewURL(baseURL, basePaths.auth, viewPaths.auth.resetPassword),
         fetchOptions,
@@ -98,8 +97,7 @@ export function ForgotPassword({ className }: ForgotPasswordProps) {
               {Captcha && <div className="flex justify-center">{Captcha}</div>}
 
               <div className="flex flex-col gap-3">
-                <form.AuthFormSubmitButton disabled={isPending}>
-                  {isPending && <Spinner />}
+                <form.AuthFormSubmitButton isPending={isPending} disabled={isPending}>
                   {localization.auth.sendResetLink}
                 </form.AuthFormSubmitButton>
               </div>

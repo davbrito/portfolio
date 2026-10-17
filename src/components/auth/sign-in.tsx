@@ -12,12 +12,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSeparator } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
-import { Spinner } from "@/components/ui/spinner";
 import { useSignInContinuation } from "@/lib/auth/use-sign-in-continuation";
 import { cn } from "@/lib/utils";
 import { isAuthFormFieldInvalid, useAuthForm } from "./auth-form";
 import { LastUsedBadge } from "./last-login-method/last-used-badge";
 import { ProviderButtons, type SocialLayout } from "./provider-buttons";
+import { ReauthenticationNotice } from "./reauthentication";
 
 export type SignInProps = {
   className?: string;
@@ -40,7 +40,7 @@ export function SignIn({ className, socialLayout, socialPosition = "bottom" }: S
   const { fetchOptions, resetFetchOptions } = useFetchOptions();
   const continueSignIn = useSignInContinuation();
 
-  const { mutate: signInEmail, isPending: signInEmailPending } = useSignInEmail(authClient, {
+  const { mutateAsync: signInEmail, isPending: signInEmailPending } = useSignInEmail(authClient, {
     onError: (error, { email }) => {
       form.setFieldValue("password", "");
 
@@ -71,8 +71,8 @@ export function SignIn({ className, socialLayout, socialPosition = "bottom" }: S
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const form = useAuthForm({
     defaultValues: { email: "", password: "", rememberMe: false },
-    onSubmit: ({ value }) =>
-      signInEmail({
+    onSubmit: async ({ value }) =>
+      await signInEmail({
         email: value.email,
         password: value.password,
         ...(emailAndPassword?.rememberMe ? { rememberMe: value.rememberMe } : {}),
@@ -85,6 +85,7 @@ export function SignIn({ className, socialLayout, socialPosition = "bottom" }: S
   return (
     <Card className={cn("w-full max-w-sm", className)}>
       <AuthPrompts view="signIn" />
+      <ReauthenticationNotice />
       <CardHeader>
         <CardTitle className="text-xl font-semibold">{localization.auth.signIn}</CardTitle>
       </CardHeader>
@@ -235,9 +236,11 @@ export function SignIn({ className, socialLayout, socialPosition = "bottom" }: S
                   {Captcha && <div className="flex justify-center">{Captcha}</div>}
 
                   <div className="flex flex-col gap-3">
-                    <form.AuthFormSubmitButton className="relative overflow-visible" disabled={isPending}>
-                      {signInEmailPending && <Spinner />}
-
+                    <form.AuthFormSubmitButton
+                      isPending={signInEmailPending}
+                      className="relative overflow-visible"
+                      disabled={isPending}
+                    >
                       {localization.auth.signIn}
 
                       <LastUsedBadge method="email" floating />

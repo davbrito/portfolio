@@ -1,6 +1,12 @@
 "use client";
 
-import { type AuthSocialProvider, getProviderId, getProviderName, isSessionNotFreshError } from "@better-auth-ui/core";
+import {
+  type AuthSocialProvider,
+  getAuthErrorMessage,
+  getProviderId,
+  getProviderName,
+  isReauthenticationRequiredError,
+} from "@better-auth-ui/core";
 import { renderProviderIcon, useAccountInfo, useAuth, useLinkSocial, useUnlinkAccount } from "@better-auth-ui/react";
 import type { Account } from "better-auth";
 import { Link2, Link2Off, Plug } from "lucide-react";
@@ -12,7 +18,7 @@ import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle }
 import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
-import { FreshSessionPrompt } from "./fresh-session-prompt";
+import { ReauthenticationAction } from "../../reauthentication";
 
 export type LinkedAccountProps = {
   account?: Account;
@@ -40,6 +46,16 @@ export function LinkedAccount({ account, canUnlink = true, provider }: LinkedAcc
   const { mutate: linkSocial, isPending: isLinking } = useLinkSocial(authClient);
 
   const unlinkAccount = useUnlinkAccount(authClient, {
+    meta: { errorPresentation: "inline" },
+    onError: (error) => {
+      if (!isReauthenticationRequiredError(error)) {
+        const message = getAuthErrorMessage(error, localization);
+        if (message) {
+          console.error("[Better Auth UI]", error);
+          toast.error(message);
+        }
+      }
+    },
     onSuccess: () => toast.success(localization.settings.accountUnlinked),
   });
 
@@ -55,7 +71,7 @@ export function LinkedAccount({ account, canUnlink = true, provider }: LinkedAcc
     accountInfo?.user?.name ||
     account?.accountId;
 
-  const needsFreshSession = isSessionNotFreshError(unlinkAccount.error);
+  const needsReauthentication = isReauthenticationRequiredError(unlinkAccount.error);
 
   return (
     <>
@@ -107,16 +123,16 @@ export function LinkedAccount({ account, canUnlink = true, provider }: LinkedAcc
       </Item>
       {account && (
         <Dialog
-          open={needsFreshSession}
+          open={needsReauthentication}
           onOpenChange={(nextOpen) => {
             if (!nextOpen) unlinkAccount.reset();
           }}
         >
           <DialogContent>
             <DialogHeader>
-              <DialogTitle className="sr-only">{localization.settings.freshSessionTitle}</DialogTitle>
+              <DialogTitle className="sr-only">{localization.settings.reauthenticationTitle}</DialogTitle>
             </DialogHeader>
-            <FreshSessionPrompt onFresh={() => unlinkAccount.mutate({ accountId: account.id })} />
+            <ReauthenticationAction showTitle={false} />
           </DialogContent>
         </Dialog>
       )}

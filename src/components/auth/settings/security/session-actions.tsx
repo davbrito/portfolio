@@ -1,5 +1,3 @@
-"use client";
-
 import { useAuth, useRevokeOtherSessions, useRevokeSessions } from "@better-auth-ui/react";
 import { LogOut } from "lucide-react";
 import { useState } from "react";

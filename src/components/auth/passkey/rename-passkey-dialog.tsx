@@ -8,7 +8,6 @@ import { buttonVariants } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
 import { passkeyPlugin } from "@/lib/auth/passkey-plugin";
 import { useAuthForm } from "../auth-form";
 import type { ListedPasskey } from "./delete-passkey-dialog";
@@ -29,9 +28,9 @@ export function RenamePasskeyDialog({
   });
   const form = useAuthForm({
     defaultValues: { name: passkey.name ?? "" },
-    onSubmit: ({ value }) => {
+    onSubmit: async ({ value }) => {
       const name = value.name.trim();
-      if (name) updatePasskey.mutate({ id: passkey.id, name });
+      if (name) await updatePasskey.mutateAsync({ id: passkey.id, name });
     },
   });
 
@@ -67,8 +66,7 @@ export function RenamePasskeyDialog({
               <DialogClose className={buttonVariants({ variant: "outline" })} type="button">
                 {localization.settings.cancel}
               </DialogClose>
-              <form.AuthFormSubmitButton disabled={updatePasskey.isPending}>
-                {updatePasskey.isPending && <Spinner />}
+              <form.AuthFormSubmitButton isPending={updatePasskey.isPending} disabled={updatePasskey.isPending}>
                 {localization.settings.saveChanges}
               </form.AuthFormSubmitButton>
             </DialogFooter>
