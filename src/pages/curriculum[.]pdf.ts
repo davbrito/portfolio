@@ -4,8 +4,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import Negotiator from "negotiator";
 
 const CURRICULUM_KEYS = {
-  en: "current/cv-en.pdf",
-  es: "current/cv-es-photo.pdf",
+  en: "current/cv-david-brito-en.pdf",
+  es: "current/cv-david-brito-es-photo.pdf",
 } as const;
 
 function isCurriculumLanguage(value: string | null): value is keyof typeof CURRICULUM_KEYS {
